@@ -55,13 +55,13 @@ const App = () => {
             <Route path="/ttms/spare" element={<TTMSSparePage />} />
 
             {/* PTMS Routes */}
-            <Route path="/ptms" element={<Navigate to="/hmi-01" replace />} />
-            <Route path="/hmi-01" element={
+            <Route path="/ptms" element={<Navigate to="/ptms/hmi-01" replace />} />
+            <Route path="/ptms/hmi-01" element={
               <PTMSLayout>
                 <HMI01Overview />
               </PTMSLayout>
             } />
-            <Route path="/hmi-01/*" element={
+            <Route path="/ptms/hmi-01/*" element={
               <PTMSLayout>
                 <HMI01Tabs />
               </PTMSLayout>
@@ -71,27 +71,27 @@ const App = () => {
               <Route path="pickling" element={<HMI02PicklingSection />} />
               <Route path="legends" element={<HMI02LegendsSection />} />
             </Route>
-            <Route path="/pump-operation" element={
+            <Route path="/ptms/pump-operation" element={
               <PTMSLayout>
                 <HMI03PumpOperation />
               </PTMSLayout>
             } />
-            <Route path="/trends" element={
+            <Route path="/ptms/trends" element={
               <PTMSLayout>
                 <HMI04Trends />
               </PTMSLayout>
             } />
-            <Route path="/alarms" element={
+            <Route path="/ptms/alarms" element={
               <PTMSLayout>
                 <HMI05Alarms />
               </PTMSLayout>
             } />
-            <Route path="/reports" element={
+            <Route path="/ptms/reports" element={
               <PTMSLayout>
                 <HMI06Reports />
               </PTMSLayout>
             } />
-            <Route path="/historical" element={
+            <Route path="/ptms/historical" element={
               <PTMSLayout>
                 <HMI07Historical />
               </PTMSLayout>
