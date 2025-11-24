@@ -45,7 +45,8 @@ export default function SystemAlertsBanner() {
       const mapped = combined.slice(0, 10).map((a: any) => {
         const rawLevel = a.alertLevel || 'warning'
         const severity: Severity = rawLevel === 'critical' || rawLevel === 'danger' ? 'critical' : rawLevel === 'info' ? 'info' : 'warning'
-        return { id: a.id, text: a.message || `Vehicle ${a.vehicleRegNo} - ${a.stage}`, severity, ts: new Date(a.timestamp).getTime() }
+        const text = a.message || a.description || `${a.equipment || a.equipmentId || 'System'} - ${a.type || 'Alert'}`
+        return { id: a.id, text, severity, ts: new Date(a.timestamp).getTime() }
       }) as Row[]
       setRows(mapped)
     }, 5000)
