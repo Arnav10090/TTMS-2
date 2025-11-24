@@ -8,8 +8,20 @@
   --success: #10b981;
   --warning: #f59e0b;
   --danger: #ef4444;
+  --destructive: #ef4444;
   --background: #f8fafc;
   --card: #ffffff;
+  --foreground: #1e293b;
+  --muted-foreground: #64748b;
+  --border: #e2e8f0;
+  --popover: #ffffff;
+}
+
+.dark {
+  --foreground: #f1f5f9;
+  --muted-foreground: #94a3b8;
+  --border: #334155;
+  --popover: #1e293b;
 }
 
 html, body { height: 100%; }
