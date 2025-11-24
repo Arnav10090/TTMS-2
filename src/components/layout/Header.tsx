@@ -16,8 +16,8 @@ export default function Header() {
     return () => clearInterval(t)
   }, [])
 
-  const ptmsRoutes = ['/ptms', '/hmi-01', '/pump-operation', '/trends', '/historical']
-  const isPtms = ptmsRoutes.some(route => pathname.startsWith(route)) && !pathname.startsWith('/ttms')
+  const ptmsRoutes = ['/ptms', '/hmi-01', '/pump-operation', '/trends', '/alarms', '/reports', '/historical']
+  const isPtms = ptmsRoutes.some(route => pathname.startsWith(route))
   const title = isPtms
     ? 'Pickling Tank Monitoring System (PTMS)'
     : 'Truck Turnaround Time Monitoring System (TTMS)'
