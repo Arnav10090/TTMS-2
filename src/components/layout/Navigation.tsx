@@ -3,7 +3,7 @@
 import { Link, useLocation } from 'react-router-dom'
 
 const tabs = [
-  { label: 'Main Dashboard', href: '/ttms' },
+  { label: 'Main Dashboard', href: '/ttms/dashboard' },
   { label: 'Document Verification', href: '/ttms/document-verification' },
   { label: 'Scheduling', href: '/ttms/scheduling' },
   { label: 'Reports', href: '/ttms/reports' },
