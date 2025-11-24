@@ -492,7 +492,7 @@ const HMI07Historical = () => {
               {pageRows.map((record:any) => (
                 <tr
                   key={record.id}
-                  className="border-b border-border/30 hover:bg-muted/10 transition-colors"
+                  className="border-b border-border/30 hover:bg-primary/8 hover:shadow-sm transition-all duration-150 cursor-pointer"
                 >
                   <td className="py-2 px-4 text-xs font-mono border border-border/30">{formatDateTimeDisplay(record.timestamp)}</td>
                   <td className="py-2 px-4 text-xs font-medium border border-border/30">{record.equipmentId}</td>
