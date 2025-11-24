@@ -45,9 +45,9 @@ const parameters = {
 };
 
 const legendItems = [
-  { label: '#1 Tank', color: '#0891b2', dashed: false },
-  { label: '#2 Tank', color: '#ef4444', dashed: false },
-  { label: '#3 Tank', color: '#10b981', dashed: false }
+  { label: '#1 Tank', color: 'hsl(var(--primary))', dashed: false },
+  { label: '#2 Tank', color: 'hsl(var(--destructive))', dashed: false },
+  { label: '#3 Tank', color: 'hsl(var(--success))', dashed: false }
 ];
 
 const parameterGroupLabels: Record<keyof typeof parameters, string> = {
@@ -67,11 +67,11 @@ const HMI04Trends = () => {
   // default to day view (24-hour day)
   const [timeframe, setTimeframe] = useState<'day' | 'week' | 'month'>('day');
 
-  const { chartData, xLabel, xDomain, xTicks, xTickFormatter } = useMemo(() => {
+  const { chartData, xLabel, xDomain, xTicks, xTickFormatter, tooltipFormatter } = useMemo(() => {
     const now = new Date();
     const weekLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                        'July', 'August', 'September', 'October', 'November', 'December'];
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
 
     // Generate unique seed based on selected parameter
     const paramSeed = `${selectedParam.group}-${selectedParam.label}`.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
@@ -102,7 +102,7 @@ const HMI04Trends = () => {
 
       const ticks = data.map((d) => d.time);
       const domain: [number, number] = [start, start + count - 1];
-      
+
       const dayLabel = `${getOrdinalSuffix(now.getDate())} ${monthNames[now.getMonth()]} ${now.getFullYear()}`;
 
       return {
@@ -111,6 +111,7 @@ const HMI04Trends = () => {
         xDomain: domain,
         xTicks: ticks,
         xTickFormatter: (t: number) => `${t}:00`,
+        tooltipFormatter: (t: number) => `Hour: ${t}`,
       };
     }
 
@@ -132,7 +133,7 @@ const HMI04Trends = () => {
 
       const ticks = data.map((d) => d.time);
       const domain: [number, number] = [start, start + count - 1];
-      
+
       const weekNum = getWeekOfMonth(now);
       const weekLabel = `${getOrdinalSuffix(weekNum)} week of ${monthNames[now.getMonth()]} ${now.getFullYear()}`;
 
@@ -142,6 +143,7 @@ const HMI04Trends = () => {
         xDomain: domain,
         xTicks: ticks,
         xTickFormatter: (t: number) => weekLabels[t] ?? String(t),
+        tooltipFormatter: (t: number) => `Day: ${weekLabels[t] ?? ''}`,
       };
     }
 
@@ -157,15 +159,23 @@ const HMI04Trends = () => {
       return {
         time: t,
         tank1: genSeriesValue(i, count, tank1Base, tank1Amp, tank1Phase),
-        tank2: genSeriesValue(i, count, tank2Base, tank2Amp, tank2Phase),
+        tank2: genSeriesValue(i, count, tank2Base, tank2Amp, tank3Phase),
         tank3: genSeriesValue(i, count, tank3Base, tank3Amp, tank3Phase),
       };
     });
 
     const ticks = data.map((d) => d.time);
     const domain: [number, number] = [start, start + count - 1];
-    
+
     const monthLabel = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
+
+    const tooltipFormatter = (t: number) => {
+      const date = new Date(now.getFullYear(), now.getMonth(), t);
+      const dayNum = date.getDate();
+      const monthName = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+      return `Date: ${getOrdinalSuffix(dayNum)} ${monthName} ${year}`;
+    };
 
     return {
       chartData: data,
@@ -173,6 +183,7 @@ const HMI04Trends = () => {
       xDomain: domain,
       xTicks: ticks,
       xTickFormatter: (t: number) => String(t),
+      tooltipFormatter,
     };
   }, [timeframe, selectedParam]);
 
@@ -184,7 +195,7 @@ const HMI04Trends = () => {
         {/* Parameter Selection Panel */}
         <div className="hmi-card">
           <h2 className="panel-title">List of Parameters</h2>
-          
+
           <div className="space-y-6 max-h-[600px] overflow-y-auto pr-2">
             {/* Pickling Tank Parameters */}
             <div>
@@ -299,14 +310,14 @@ const HMI04Trends = () => {
         {/* Interactive Graph Panel */}
         <div className="lg:col-span-2 hmi-card">
           <h2 className="panel-title">Parameter Trend</h2>
-          
+
           <div className="glass-panel p-6">
             <ResponsiveContainer width="100%" height={400}>
               <LineChart
                 data={chartData}
                 margin={{ top: 20, right: 20, left: 25, bottom: 40 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.3} />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
                 <XAxis
                   dataKey="time"
                   type="number"
@@ -314,7 +325,7 @@ const HMI04Trends = () => {
                   ticks={xTicks}
                   interval={0}
                   allowDecimals={false}
-                  stroke="#64748b"
+                  stroke="hsl(var(--muted-foreground))"
                   tickMargin={8}
                   tickFormatter={xTickFormatter as any}
                 >
@@ -322,11 +333,11 @@ const HMI04Trends = () => {
                     value={xLabel}
                     position="bottom"
                     offset={20}
-                    style={{ fill: '#64748b' }}
+                    style={{ fill: 'hsl(var(--muted-foreground))' }}
                   />
                 </XAxis>
                 <YAxis
-                  stroke="#64748b"
+                  stroke="hsl(var(--muted-foreground))"
                   tickMargin={4}
                   domain={["auto", "auto"]}
                 >
@@ -335,43 +346,43 @@ const HMI04Trends = () => {
                     angle={-90}
                     position="left"
                     offset={0}
-                    style={{ fill: '#64748b', textAnchor: 'middle' }}
+                    style={{ fill: 'hsl(var(--muted-foreground))', textAnchor: 'middle' }}
                   />
                 </YAxis>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: '#ffffff',
-                    border: '1px solid #e2e8f0',
+                    backgroundColor: 'hsl(var(--popover))',
+                    border: '1px solid hsl(var(--border))',
                     borderRadius: '8px'
                   }}
-                  labelFormatter={(value) => `Time: ${value}`}
+                  labelFormatter={(value) => tooltipFormatter(value as number)}
                 />
                 <Line
                   type="monotone"
                   dataKey="tank1"
-                  stroke="#0891b2"
+                  stroke="hsl(var(--primary))"
                   strokeWidth={2}
                   name="#1 Tank"
-                  dot={false}
-                  isAnimationActive={true}
+                  dot={{ fill: 'hsl(var(--primary))', r: 4 }}
+                  activeDot={{ r: 6 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="tank2"
-                  stroke="#ef4444"
+                  stroke="hsl(var(--destructive))"
                   strokeWidth={2}
                   name="#2 Tank"
-                  dot={false}
-                  isAnimationActive={true}
+                  dot={{ fill: 'hsl(var(--destructive))', r: 4 }}
+                  activeDot={{ r: 6 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="tank3"
-                  stroke="#10b981"
+                  stroke="hsl(var(--success))"
                   strokeWidth={2}
                   name="#3 Tank"
-                  dot={false}
-                  isAnimationActive={true}
+                  dot={{ fill: 'hsl(var(--success))', r: 4 }}
+                  activeDot={{ r: 6 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -393,25 +404,22 @@ const HMI04Trends = () => {
             <div className="flex justify-center gap-4 mt-6">
               <button
                 onClick={() => setTimeframe('day')}
-                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
-                  timeframe === 'day' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/30 text-muted-foreground'
-                }`}
+                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${timeframe === 'day' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/30 text-muted-foreground'
+                  }`}
               >
                 Day
               </button>
               <button
                 onClick={() => setTimeframe('week')}
-                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
-                  timeframe === 'week' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/30 text-muted-foreground'
-                }`}
+                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${timeframe === 'week' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/30 text-muted-foreground'
+                  }`}
               >
                 Week
               </button>
               <button
                 onClick={() => setTimeframe('month')}
-                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${
-                  timeframe === 'month' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/30 text-muted-foreground'
-                }`}
+                className={`px-4 py-2 rounded-lg font-semibold text-sm transition-colors ${timeframe === 'month' ? 'bg-primary/20 text-primary' : 'hover:bg-muted/30 text-muted-foreground'
+                  }`}
               >
                 Month
               </button>
