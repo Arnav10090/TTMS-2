@@ -37,7 +37,7 @@ import Index from "./app/ptms/Index";
 const queryClient = new QueryClient();
 
 const isPtmsRoute = (pathname: string): boolean => {
-  const ptmsRoutes = ['/hmi-01', '/pump-operation', '/trends', '/alarms', '/reports', '/historical'];
+  const ptmsRoutes = ['/ptms', '/hmi-01', '/pump-operation', '/trends', '/alarms', '/reports', '/historical'];
   return ptmsRoutes.some(route => pathname.startsWith(route));
 };
 
