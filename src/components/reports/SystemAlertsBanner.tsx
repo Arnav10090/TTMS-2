@@ -1,17 +1,26 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { AlertTriangle, ChevronUp, ChevronDown, RefreshCw } from 'lucide-react'
 
 type Severity = 'warning'|'critical'|'info'
 type Row = { id: string; text: string; severity: Severity; ts: number }
 
 const now = Date.now()
-const initial: Row[] = [
+
+const ptmsInitial: Row[] = [
   { id: '1', text: 'Tank #2 HCl concentration exceeds safe limit (165 g/l)', severity: 'critical', ts: now - 1000 * 60 * 5 },
   { id: '2', text: 'Pickling Line-1 temperature warning: 72°C threshold exceeded', severity: 'warning', ts: now - 1000 * 60 * 3 },
   { id: '3', text: 'Sensor #12 communication loss detected', severity: 'warning', ts: now - 1000 * 60 * 2 },
   { id: '4', text: 'Hot Rinse Tank level trending low at 18%', severity: 'info', ts: now - 1000 * 60 * 1 },
+]
+
+const ttmsInitial: Row[] = [
+  { id: '1', text: 'Vehicle MH12-2145 waiting longer than expected at Loading Bay A (22 min)', severity: 'critical', ts: now - 1000 * 60 * 5 },
+  { id: '2', text: 'Vehicle MH12-2090 experiencing delay at Fuel Station (15 min)', severity: 'warning', ts: now - 1000 * 60 * 3 },
+  { id: '3', text: 'Gate 5 congestion: 3 vehicles in queue', severity: 'warning', ts: now - 1000 * 60 * 2 },
+  { id: '4', text: 'Minor congestion cleared at Gate 5', severity: 'info', ts: now - 1000 * 60 * 1 },
 ]
 
 function rowCls(s: Severity) {
