@@ -78,7 +78,7 @@ export default function SystemAlertsBanner() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="card p-0 overflow-hidden border border-red-200">
           <div className="flex items-center justify-between bg-gradient-to-r from-orange-500 to-red-600 px-3 py-2 text-white">
-            <div className="flex items-center gap-2 text-sm font-semibold"><AlertTriangle size={16}/> System & Solutions related Alarms</div>
+            <div className="flex items-center gap-2 text-sm font-semibold"><AlertTriangle size={16}/> {isPtms ? 'Process & Equipment related Alarms' : 'Vehicle & Logistics related Alarms'}</div>
             <div className="flex items-center gap-2">
               <button className="px-2 py-1 rounded-ui bg-white/20 hover:bg-white/30 active:translate-y-[1px]" aria-label="Refresh">
                 <RefreshCw size={16} className="animate-spin" />
