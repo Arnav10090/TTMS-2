@@ -358,15 +358,13 @@ const HMI05Alarms = () => {
 
   return (
     <div className="p-6 space-y-6 animate-fade-in">
-      <div className="flex items-center justify-end">
-        <div className="flex items-center gap-2">
-          <div className="px-4 py-2 rounded-lg bg-destructive/20 border border-destructive/30">
-            <span className="text-sm font-semibold text-destructive">{activeCount} Active Alarms</span>
-          </div>
+      <TopInfoPanel />
+
+      <div className="flex items-center justify-center">
+        <div className="px-4 py-2 rounded-lg bg-destructive/20 border border-destructive/30">
+          <span className="text-sm font-semibold text-destructive">{activeCount} Active Alarms</span>
         </div>
       </div>
-
-      <TopInfoPanel />
 
       <div className="hmi-card">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
