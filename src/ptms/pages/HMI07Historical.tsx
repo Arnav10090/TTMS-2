@@ -535,16 +535,16 @@ const HMI07Historical = () => {
             <div className="flex items-center gap-2">
               <label className="text-sm text-muted-foreground">Rows per page:</label>
               <Select value={String(rowsPerPage)} onValueChange={(v: string)=>setRowsPerPage(Number(v))}>
-                <SelectTrigger className="w-20 h-8 bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
+                <SelectTrigger className="w-20 h-8 bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border z-50">
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                  <SelectItem value="250">250</SelectItem>
-                  <SelectItem value="500">500</SelectItem>
-                  <SelectItem value="1000">1000</SelectItem>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="25" className="hover:bg-primary/10 cursor-pointer">25</SelectItem>
+                  <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50</SelectItem>
+                  <SelectItem value="100" className="hover:bg-primary/10 cursor-pointer">100</SelectItem>
+                  <SelectItem value="250" className="hover:bg-primary/10 cursor-pointer">250</SelectItem>
+                  <SelectItem value="500" className="hover:bg-primary/10 cursor-pointer">500</SelectItem>
+                  <SelectItem value="1000" className="hover:bg-primary/10 cursor-pointer">1000</SelectItem>
                 </SelectContent>
               </Select>
             </div>
