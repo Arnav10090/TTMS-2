@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { format } from 'date-fns'
 
 export default function Header() {
   const [now, setNow] = useState<Date | null>(null)
   const [mounted, setMounted] = useState(false)
+  const { pathname } = useLocation()
 
   useEffect(() => {
     setMounted(true)
@@ -14,6 +16,11 @@ export default function Header() {
     return () => clearInterval(t)
   }, [])
 
+  const isPtms = pathname.startsWith('/ptms')
+  const title = isPtms
+    ? 'Pickling Tank Monitoring System (PTMS)'
+    : 'Truck Turnaround Time Monitoring System (TTMS)'
+
   return (
     <header className="bg-white border-b border-slate-200">
       <div className="w-full px-6 py-3 flex items-center justify-between">
@@ -21,7 +28,7 @@ export default function Header() {
           <span className="text-slate-700 text-lg font-bold">Customer Name</span>
         </div>
         <h1 className="text-center text-lg md:text-xl font-bold text-slate-800">
-          Truck Turnaround Time Monitoring System (TTMS)
+          {title}
         </h1>
         <div className="flex items-center gap-3">
           <div className="text-slate-600 text-lg hidden md:block font-bold" suppressHydrationWarning>
