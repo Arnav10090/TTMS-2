@@ -1,5 +1,5 @@
 import { Download, Printer } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -307,7 +307,6 @@ const HMI06Reports = () => {
 
   return (
     <div className="p-6 space-y-6 animate-fade-in">
-<<<<<<< HEAD
       <div className="flex items-center gap-3">
         <FileText className="w-8 h-8 text-primary" />
         <div>
@@ -318,8 +317,6 @@ const HMI06Reports = () => {
         </div>
       </div>
 
-=======
->>>>>>> 4752917b9256b7a185682f5674d64a817c7397e0
       <TopInfoPanel />
 
       {/* Coil Report */}
