@@ -311,7 +311,7 @@ const HMI07Historical = () => {
             </span>
           )
         : (
-            <Button key={n} {...({ variant: 'outline', size: 'sm' } as any)} className={currentPage === n ? 'bg-primary text-primary-foreground' : ''} onClick={() => setPage(n as number)}>
+            <Button key={n} {...({ variant: 'outline', size: 'sm' } as any)} className={`transition-colors ${currentPage === n ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90' : 'hover:bg-primary/10 hover:text-primary hover:border-primary/50'}`} onClick={() => setPage(n as number)}>
               {n}
             </Button>
           ),
