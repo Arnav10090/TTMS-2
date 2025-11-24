@@ -4,6 +4,7 @@ import Header from './Header'
 import PTMSNavigation from './PTMSNavigation'
 import AlertBanner from '@/components/dashboard/AlertBanner'
 import AlarmsFooter from '@/components/AlarmsFooter'
+import SystemAlertsBanner from '@/components/reports/SystemAlertsBanner'
 
 export default function PTMSLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,10 +12,11 @@ export default function PTMSLayout({ children }: { children: React.ReactNode }) 
       <Header />
       <AlertBanner />
       <PTMSNavigation />
-      <main className="flex-1 pb-20 w-full px-6 py-6">
+      <main className="flex-1 pb-28 w-full px-6 py-6">
         {children}
       </main>
       <AlarmsFooter />
+      <SystemAlertsBanner />
     </div>
   )
 }
