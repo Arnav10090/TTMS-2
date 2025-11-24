@@ -42,14 +42,17 @@ const App = () => {
           <Toaster />
           <Sonner />
           <Routes>
+            {/* Default redirect to TTMS */}
+            <Route path="/" element={<Navigate to="/ttms" replace />} />
+
             {/* TTMS Routes */}
-            <Route path="/" element={<TTMSDashboardPage />} />
-            <Route path="/document-verification" element={<TTMSDocumentVerificationPage />} />
-            <Route path="/scheduling" element={<TTMSSchedulingPage />} />
-            <Route path="/ttms-reports" element={<TTMSReportsPage />} />
-            <Route path="/ttms-alarms" element={<TTMSAlarmsPage />} />
-            <Route path="/history" element={<TTMSHistoryPage />} />
-            <Route path="/spare" element={<TTMSSparePage />} />
+            <Route path="/ttms" element={<TTMSDashboardPage />} />
+            <Route path="/ttms/document-verification" element={<TTMSDocumentVerificationPage />} />
+            <Route path="/ttms/scheduling" element={<TTMSSchedulingPage />} />
+            <Route path="/ttms/reports" element={<TTMSReportsPage />} />
+            <Route path="/ttms/alarms" element={<TTMSAlarmsPage />} />
+            <Route path="/ttms/history" element={<TTMSHistoryPage />} />
+            <Route path="/ttms/spare" element={<TTMSSparePage />} />
 
             {/* PTMS Routes */}
             <Route path="/ptms" element={<Navigate to="/hmi-01" replace />} />
