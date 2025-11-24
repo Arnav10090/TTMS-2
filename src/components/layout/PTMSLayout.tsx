@@ -3,7 +3,6 @@
 import Header from './Header'
 import PTMSNavigation from './PTMSNavigation'
 import AlertBanner from '@/components/dashboard/AlertBanner'
-import AlarmsFooter from '@/components/AlarmsFooter'
 import SystemAlertsBanner from '@/components/reports/SystemAlertsBanner'
 
 export default function PTMSLayout({ children }: { children: React.ReactNode }) {
