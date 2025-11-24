@@ -10,6 +10,7 @@ const tabs = [
   { label: 'Alarms', href: '/alarms' },
   { label: 'Historical Data', href: '/history' },
   { label: 'Spare Tab', href: '/spare' },
+  { label: 'PTMS', href: '/ptms' },
 ]
 
 export default function Navigation() {
