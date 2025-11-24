@@ -45,9 +45,9 @@ const parameters = {
 };
 
 const legendItems = [
-  { label: '#1 Tank', color: 'hsl(var(--primary))', dashed: false },
-  { label: '#2 Tank', color: 'hsl(var(--destructive))', dashed: false },
-  { label: '#3 Tank', color: 'hsl(var(--success))', dashed: false }
+  { label: '#1 Tank', color: '#0891b2', dashed: false },
+  { label: '#2 Tank', color: '#ef4444', dashed: false },
+  { label: '#3 Tank', color: '#10b981', dashed: false }
 ];
 
 const parameterGroupLabels: Record<keyof typeof parameters, string> = {
