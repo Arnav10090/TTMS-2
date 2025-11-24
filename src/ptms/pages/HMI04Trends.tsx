@@ -392,10 +392,11 @@ const HMI04Trends = () => {
                 {legendItems.map((item) => (
                   <div key={item.label} className="flex items-center gap-2">
                     <div
-                      className="w-8 h-0.5"
+                      className="w-8"
                       style={{
-                        backgroundColor: item.color,
-                        borderStyle: item.dashed ? 'dashed' : 'solid'
+                        borderBottomWidth: '2px',
+                        borderBottomStyle: item.dashed ? 'dashed' : 'solid',
+                        borderBottomColor: item.color
                       }}
                     />
                     <span>{item.label}</span>
