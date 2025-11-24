@@ -317,7 +317,7 @@ const HMI04Trends = () => {
                 data={chartData}
                 margin={{ top: 20, right: 20, left: 25, bottom: 40 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.3} />
                 <XAxis
                   dataKey="time"
                   type="number"
@@ -325,7 +325,7 @@ const HMI04Trends = () => {
                   ticks={xTicks}
                   interval={0}
                   allowDecimals={false}
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="#64748b"
                   tickMargin={8}
                   tickFormatter={xTickFormatter as any}
                 >
@@ -333,11 +333,11 @@ const HMI04Trends = () => {
                     value={xLabel}
                     position="bottom"
                     offset={20}
-                    style={{ fill: 'hsl(var(--muted-foreground))' }}
+                    style={{ fill: '#64748b' }}
                   />
                 </XAxis>
                 <YAxis
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="#64748b"
                   tickMargin={4}
                   domain={["auto", "auto"]}
                 >
@@ -346,13 +346,13 @@ const HMI04Trends = () => {
                     angle={-90}
                     position="left"
                     offset={0}
-                    style={{ fill: 'hsl(var(--muted-foreground))', textAnchor: 'middle' }}
+                    style={{ fill: '#64748b', textAnchor: 'middle' }}
                   />
                 </YAxis>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--popover))',
-                    border: '1px solid hsl(var(--border))',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
                     borderRadius: '8px'
                   }}
                   labelFormatter={(value) => tooltipFormatter(value as number)}
@@ -360,28 +360,28 @@ const HMI04Trends = () => {
                 <Line
                   type="monotone"
                   dataKey="tank1"
-                  stroke="hsl(var(--primary))"
+                  stroke="#0891b2"
                   strokeWidth={2}
                   name="#1 Tank"
-                  dot={{ fill: 'hsl(var(--primary))', r: 4 }}
+                  dot={{ fill: '#0891b2', r: 4 }}
                   activeDot={{ r: 6 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="tank2"
-                  stroke="hsl(var(--destructive))"
+                  stroke="#ef4444"
                   strokeWidth={2}
                   name="#2 Tank"
-                  dot={{ fill: 'hsl(var(--destructive))', r: 4 }}
+                  dot={{ fill: '#ef4444', r: 4 }}
                   activeDot={{ r: 6 }}
                 />
                 <Line
                   type="monotone"
                   dataKey="tank3"
-                  stroke="hsl(var(--success))"
+                  stroke="#10b981"
                   strokeWidth={2}
                   name="#3 Tank"
-                  dot={{ fill: 'hsl(var(--success))', r: 4 }}
+                  dot={{ fill: '#10b981', r: 4 }}
                   activeDot={{ r: 6 }}
                 />
               </LineChart>
