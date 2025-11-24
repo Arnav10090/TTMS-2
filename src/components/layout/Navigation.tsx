@@ -3,14 +3,13 @@
 import { Link, useLocation } from 'react-router-dom'
 
 const tabs = [
-  { label: 'Main Dashboard', href: '/' },
-  { label: 'Document Verification', href: '/document-verification' },
-  { label: 'Scheduling', href: '/scheduling' },
-  { label: 'Reports', href: '/ttms-reports' },
-  { label: 'Alarms', href: '/ttms-alarms' },
-  { label: 'Historical Data', href: '/history' },
-  { label: 'Spare Tab', href: '/spare' },
-  { label: 'PTMS', href: '/ptms' },
+  { label: 'Main Dashboard', href: '/ttms' },
+  { label: 'Document Verification', href: '/ttms/document-verification' },
+  { label: 'Scheduling', href: '/ttms/scheduling' },
+  { label: 'Reports', href: '/ttms/reports' },
+  { label: 'Alarms', href: '/ttms/alarms' },
+  { label: 'Historical Data', href: '/ttms/history' },
+  { label: 'Spare Tab', href: '/ttms/spare' },
 ]
 
 export default function Navigation() {
