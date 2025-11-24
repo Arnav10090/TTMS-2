@@ -43,6 +43,9 @@ export default function TTMSHistoryPage() {
   const [page, setPage] = useState(1)
   const pageSize = 12
 
+  const DRIVER_ALL = 'all-drivers'
+  const CUSTOMER_ALL = 'all-customers'
+
   useEffect(() => {
     let mounted = true
     setLoading(true)
@@ -54,14 +57,19 @@ export default function TTMSHistoryPage() {
     return () => { mounted = false }
   }, [])
 
+  useEffect(() => {
+    setDriverFilter(DRIVER_ALL)
+    setCustomerFilter(CUSTOMER_ALL)
+  }, [])
+
   const drivers = useMemo(() => Array.from(new Set(rows.map((r) => r.driverName))), [rows])
   const customers = useMemo(() => Array.from(new Set(rows.map((r) => r.customer))), [rows])
 
   const filtered = useMemo(() => {
     return rows.filter((r) => {
       if (query && !(`${r.regNo}`.toLowerCase().includes(query.toLowerCase()) || `${r.driverName}`.toLowerCase().includes(query.toLowerCase()) || `${r.customer}`.toLowerCase().includes(query.toLowerCase()))) return false
-      if (driverFilter && r.driverName !== driverFilter) return false
-      if (customerFilter && r.customer !== customerFilter) return false
+      if (driverFilter && driverFilter !== DRIVER_ALL && r.driverName !== driverFilter) return false
+      if (customerFilter && customerFilter !== CUSTOMER_ALL && r.customer !== customerFilter) return false
       if (start) {
         const s = new Date(start).getTime()
         if (new Date(r.timestamp).getTime() < s) return false
@@ -72,7 +80,7 @@ export default function TTMSHistoryPage() {
       }
       return true
     })
-  }, [rows, query, driverFilter, customerFilter, start, end])
+  }, [rows, query, driverFilter, customerFilter, start, end, DRIVER_ALL, CUSTOMER_ALL])
 
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
@@ -110,22 +118,24 @@ export default function TTMSHistoryPage() {
           </div>
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-2">Driver</label>
-            <Select value={driverFilter || ''} onValueChange={setDriverFilter}>
+            <Select value={driverFilter} onValueChange={setDriverFilter}>
               <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                 <SelectValue placeholder="All Drivers" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                <SelectItem value={DRIVER_ALL} className="hover:bg-primary/10 cursor-pointer">All Drivers</SelectItem>
                 {drivers.map((d)=> <SelectItem key={d} value={d} className="hover:bg-primary/10 cursor-pointer">{d}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
           <div>
             <label className="block text-xs font-medium text-muted-foreground mb-2">Customer</label>
-            <Select value={customerFilter || ''} onValueChange={setCustomerFilter}>
+            <Select value={customerFilter} onValueChange={setCustomerFilter}>
               <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                 <SelectValue placeholder="All Customers" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                <SelectItem value={CUSTOMER_ALL} className="hover:bg-primary/10 cursor-pointer">All Customers</SelectItem>
                 {customers.map((c)=> <SelectItem key={c} value={c} className="hover:bg-primary/10 cursor-pointer">{c}</SelectItem>)}
               </SelectContent>
             </Select>
