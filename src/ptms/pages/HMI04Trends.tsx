@@ -346,29 +346,32 @@ const HMI04Trends = () => {
                   }}
                   labelFormatter={(value) => `Time: ${value}`}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="tank1" 
-                  stroke="hsl(var(--primary))" 
+                <Line
+                  type="monotone"
+                  dataKey="tank1"
+                  stroke="#0891b2"
                   strokeWidth={2}
                   name="#1 Tank"
                   dot={false}
+                  isAnimationActive={true}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="tank2" 
-                  stroke="hsl(var(--destructive))" 
+                <Line
+                  type="monotone"
+                  dataKey="tank2"
+                  stroke="#ef4444"
                   strokeWidth={2}
                   name="#2 Tank"
                   dot={false}
+                  isAnimationActive={true}
                 />
-                <Line 
-                  type="monotone" 
-                  dataKey="tank3" 
-                  stroke="hsl(var(--success))" 
+                <Line
+                  type="monotone"
+                  dataKey="tank3"
+                  stroke="#10b981"
                   strokeWidth={2}
                   name="#3 Tank"
                   dot={false}
+                  isAnimationActive={true}
                 />
               </LineChart>
             </ResponsiveContainer>
