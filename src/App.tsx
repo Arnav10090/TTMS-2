@@ -76,6 +76,7 @@ const App = () => {
                   <Route path="/spare" element={<TTMSSparePage />} />
 
                   {/* PTMS Routes */}
+                  <Route path="/ptms" element={<Navigate to="/hmi-01" replace />} />
                   <Route path="/hmi-01" element={<HMI01Overview />} />
                   <Route path="/hmi-01/*" element={<HMI01Tabs />}>
                     <Route index element={<Navigate to="tank" replace />} />
