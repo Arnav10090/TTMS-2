@@ -106,7 +106,7 @@ export default function SystemAlertsBanner() {
                   )
                 })}
               </div>
-              <div className="px-3 py-1 text-xs text-slate-100/90 border-t bg-gradient-to-r from-orange-500 to-red-600">Latest alarms by severity • Critical (red), Warning (orange), Info (blue)</div>
+              <div className="px-3 py-1 text-xs text-slate-100/90 border-t bg-gradient-to-r from-orange-500 to-red-600">{isPtms ? 'Equipment & Tank Alerts' : 'Vehicle & Logistics Alerts'} by severity • Critical (red), Warning (orange), Info (blue)</div>
             </>
           )}
         </div>
