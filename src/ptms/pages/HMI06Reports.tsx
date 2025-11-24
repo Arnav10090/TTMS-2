@@ -431,13 +431,13 @@ const HMI06Reports = () => {
         <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-muted-foreground">Showing {coilsPage.start + 1}-{coilsPage.end} of {filteredCoils.length} rows</div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled={coilsPage.current === 1} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage(1)}>First</Button>
-            <Button variant="outline" size="sm" disabled={coilsPage.current === 1} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage((p) => Math.max(1, p - 1))}>Prev</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={coilsPage.current === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage(1)}>First</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={coilsPage.current === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage((p) => Math.max(1, p - 1))}>« Prev</Button>
             {Array.from({ length: coilsPage.pageCount }).slice(0, 7).map((_, i) => (
-              <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={coilsPage.current === i + 1 ? 'bg-primary text-primary-foreground' : 'hover:bg-primary/8 hover:shadow-sm transition-all duration-150'} onClick={() => setCoilPage(i + 1)}>{i + 1}</Button>
+              <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={coilsPage.current === i + 1 ? 'bg-primary text-primary-foreground border-primary' : ''} onClick={() => setCoilPage(i + 1)}>{i + 1}</Button>
             ))}
-            <Button variant="outline" size="sm" disabled={coilsPage.current === coilsPage.pageCount} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage((p) => Math.min(coilsPage.pageCount, p + 1))}>Next</Button>
-            <Button variant="outline" size="sm" disabled={coilsPage.current === coilsPage.pageCount} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage(coilsPage.pageCount)}>Last</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={coilsPage.current === coilsPage.pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage((p) => Math.min(coilsPage.pageCount, p + 1))}>Next »</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={coilsPage.current === coilsPage.pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage(coilsPage.pageCount)}>Last</Button>
           </div>
         </div>
       </div>
