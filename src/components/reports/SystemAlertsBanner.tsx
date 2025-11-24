@@ -30,6 +30,10 @@ function rowCls(s: Severity) {
 import { AlertManager } from '@/utils/alerts'
 
 export default function SystemAlertsBanner() {
+  const { pathname } = useLocation()
+  const isPtms = pathname.startsWith('/ptms')
+  const initial = isPtms ? ptmsInitial : ttmsInitial
+
   const [open, setOpen] = useState(false)
   const [rows, setRows] = useState<Row[]>(initial)
   const [tick, setTick] = useState(0)
