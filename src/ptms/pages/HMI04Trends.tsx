@@ -314,7 +314,7 @@ const HMI04Trends = () => {
                   ticks={xTicks}
                   interval={0}
                   allowDecimals={false}
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="#64748b"
                   tickMargin={8}
                   tickFormatter={xTickFormatter as any}
                 >
@@ -322,11 +322,11 @@ const HMI04Trends = () => {
                     value={xLabel}
                     position="bottom"
                     offset={20}
-                    style={{ fill: 'hsl(var(--muted-foreground))' }}
+                    style={{ fill: '#64748b' }}
                   />
                 </XAxis>
                 <YAxis
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="#64748b"
                   tickMargin={4}
                   domain={["auto", "auto"]}
                 >
@@ -335,13 +335,13 @@ const HMI04Trends = () => {
                     angle={-90}
                     position="left"
                     offset={0}
-                    style={{ fill: 'hsl(var(--muted-foreground))', textAnchor: 'middle' }}
+                    style={{ fill: '#64748b', textAnchor: 'middle' }}
                   />
                 </YAxis>
                 <Tooltip
                   contentStyle={{
-                    backgroundColor: 'hsl(var(--popover))',
-                    border: '1px solid hsl(var(--border))',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #e2e8f0',
                     borderRadius: '8px'
                   }}
                   labelFormatter={(value) => `Time: ${value}`}
