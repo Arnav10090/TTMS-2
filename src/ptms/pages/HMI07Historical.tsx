@@ -458,7 +458,7 @@ const HMI07Historical = () => {
                   </button>
                 </span>
               ))}
-              <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="h-7 px-2" onClick={resetFilters}>
+              <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="h-7 px-2 hover:bg-muted/50 hover:text-foreground transition-colors" onClick={resetFilters}>
                 Clear all
               </Button>
             </div>
