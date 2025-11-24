@@ -34,6 +34,31 @@ body { @apply bg-background text-slate-800; }
 }
 .dark .card { @apply bg-slate-800; }
 
+.hmi-card {
+  @apply bg-card border border-border rounded-lg p-6 shadow-sm;
+}
+.dark .hmi-card {
+  @apply bg-slate-800 border-slate-700;
+}
+
+.panel-title {
+  @apply text-lg font-semibold text-foreground mb-4;
+}
+
+.glass-panel {
+  @apply bg-white/50 backdrop-blur-sm border border-white/20 rounded-lg;
+}
+.dark .glass-panel {
+  @apply bg-slate-700/50 border-slate-600/20;
+}
+
+.glass-panel-hover {
+  @apply glass-panel transition-all hover:bg-white/70 hover:border-white/40;
+}
+.dark .glass-panel-hover {
+  @apply hover:bg-slate-700/70 hover:border-slate-600/40;
+}
+
 .badge { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium; }
 .badge-success { @apply bg-green-100 text-green-700; }
 .badge-warning { @apply bg-yellow-100 text-yellow-700; }
