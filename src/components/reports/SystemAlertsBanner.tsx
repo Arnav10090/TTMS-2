@@ -1,17 +1,26 @@
 "use client"
 
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { AlertTriangle, ChevronUp, ChevronDown, RefreshCw } from 'lucide-react'
 
 type Severity = 'warning'|'critical'|'info'
 type Row = { id: string; text: string; severity: Severity; ts: number }
 
 const now = Date.now()
-const initial: Row[] = [
+
+const ptmsInitial: Row[] = [
   { id: '1', text: 'Tank #2 HCl concentration exceeds safe limit (165 g/l)', severity: 'critical', ts: now - 1000 * 60 * 5 },
   { id: '2', text: 'Pickling Line-1 temperature warning: 72°C threshold exceeded', severity: 'warning', ts: now - 1000 * 60 * 3 },
   { id: '3', text: 'Sensor #12 communication loss detected', severity: 'warning', ts: now - 1000 * 60 * 2 },
   { id: '4', text: 'Hot Rinse Tank level trending low at 18%', severity: 'info', ts: now - 1000 * 60 * 1 },
+]
+
+const ttmsInitial: Row[] = [
+  { id: '1', text: 'Vehicle MH12-2145 waiting longer than expected at Loading Bay A (22 min)', severity: 'critical', ts: now - 1000 * 60 * 5 },
+  { id: '2', text: 'Vehicle MH12-2090 experiencing delay at Fuel Station (15 min)', severity: 'warning', ts: now - 1000 * 60 * 3 },
+  { id: '3', text: 'Gate 5 congestion: 3 vehicles in queue', severity: 'warning', ts: now - 1000 * 60 * 2 },
+  { id: '4', text: 'Minor congestion cleared at Gate 5', severity: 'info', ts: now - 1000 * 60 * 1 },
 ]
 
 function rowCls(s: Severity) {
@@ -21,6 +30,10 @@ function rowCls(s: Severity) {
 import { AlertManager } from '@/utils/alerts'
 
 export default function SystemAlertsBanner() {
+  const { pathname } = useLocation()
+  const isPtms = pathname.startsWith('/ptms')
+  const initial = isPtms ? ptmsInitial : ttmsInitial
+
   const [open, setOpen] = useState(false)
   const [rows, setRows] = useState<Row[]>(initial)
   const [tick, setTick] = useState(0)
@@ -65,7 +78,7 @@ export default function SystemAlertsBanner() {
       <div className="max-w-7xl mx-auto px-4">
         <div className="card p-0 overflow-hidden border border-red-200">
           <div className="flex items-center justify-between bg-gradient-to-r from-orange-500 to-red-600 px-3 py-2 text-white">
-            <div className="flex items-center gap-2 text-sm font-semibold"><AlertTriangle size={16}/> System & Solutions related Alarms</div>
+            <div className="flex items-center gap-2 text-sm font-semibold"><AlertTriangle size={16}/> {isPtms ? 'Process & Equipment related Alarms' : 'Vehicle & Logistics related Alarms'}</div>
             <div className="flex items-center gap-2">
               <button className="px-2 py-1 rounded-ui bg-white/20 hover:bg-white/30 active:translate-y-[1px]" aria-label="Refresh">
                 <RefreshCw size={16} className="animate-spin" />
@@ -93,7 +106,7 @@ export default function SystemAlertsBanner() {
                   )
                 })}
               </div>
-              <div className="px-3 py-1 text-xs text-slate-100/90 border-t bg-gradient-to-r from-orange-500 to-red-600">Latest alarms by severity • Critical (red), Warning (orange), Info (blue)</div>
+              <div className="px-3 py-1 text-xs text-slate-100/90 border-t bg-gradient-to-r from-orange-500 to-red-600">{isPtms ? 'Equipment & Tank Alerts' : 'Vehicle & Logistics Alerts'} by severity • Critical (red), Warning (orange), Info (blue)</div>
             </>
           )}
         </div>
