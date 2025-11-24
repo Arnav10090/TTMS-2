@@ -42,11 +42,11 @@ const App = () => {
           <Toaster />
           <Sonner />
           <Routes>
-            {/* Default redirect to TTMS */}
-            <Route path="/" element={<Navigate to="/ttms" replace />} />
+            {/* Default redirect to TTMS Dashboard */}
+            <Route path="/" element={<Navigate to="/ttms/dashboard" replace />} />
 
             {/* TTMS Routes */}
-            <Route path="/ttms" element={<TTMSDashboardPage />} />
+            <Route path="/ttms/dashboard" element={<TTMSDashboardPage />} />
             <Route path="/ttms/document-verification" element={<TTMSDocumentVerificationPage />} />
             <Route path="/ttms/scheduling" element={<TTMSSchedulingPage />} />
             <Route path="/ttms/reports" element={<TTMSReportsPage />} />
