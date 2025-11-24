@@ -624,13 +624,13 @@ const HMI06Reports = () => {
         <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-muted-foreground">Showing {consPageObj.start + 1}-{consPageObj.end} of {filteredCons.length} rows</div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled={consPageObj.current === 1} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage(1)}>First</Button>
-            <Button variant="outline" size="sm" disabled={consPageObj.current === 1} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage((p) => Math.max(1, p - 1))}>Prev</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={consPageObj.current === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage(1)}>First</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={consPageObj.current === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage((p) => Math.max(1, p - 1))}>« Prev</Button>
             {Array.from({ length: consPageObj.pageCount }).slice(0, 7).map((_, i) => (
-              <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={consPageObj.current === i + 1 ? 'bg-primary text-primary-foreground' : 'hover:bg-primary/8 hover:shadow-sm transition-all duration-150'} onClick={() => setConsPage(i + 1)}>{i + 1}</Button>
+              <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={consPageObj.current === i + 1 ? 'bg-primary text-primary-foreground border-primary' : ''} onClick={() => setConsPage(i + 1)}>{i + 1}</Button>
             ))}
-            <Button variant="outline" size="sm" disabled={consPageObj.current === consPageObj.pageCount} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage((p) => Math.min(consPageObj.pageCount, p + 1))}>Next</Button>
-            <Button variant="outline" size="sm" disabled={consPageObj.current === consPageObj.pageCount} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage(consPageObj.pageCount)}>Last</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={consPageObj.current === consPageObj.pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage((p) => Math.min(consPageObj.pageCount, p + 1))}>Next »</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={consPageObj.current === consPageObj.pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage(consPageObj.pageCount)}>Last</Button>
           </div>
         </div>
       </div>
