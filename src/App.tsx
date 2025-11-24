@@ -46,6 +46,7 @@ const App = () => {
             <Route path="/" element={<Navigate to="/ttms/dashboard" replace />} />
 
             {/* TTMS Routes */}
+            <Route path="/ttms" element={<Navigate to="/ttms/dashboard" replace />} />
             <Route path="/ttms/dashboard" element={<TTMSDashboardPage />} />
             <Route path="/ttms/document-verification" element={<TTMSDocumentVerificationPage />} />
             <Route path="/ttms/scheduling" element={<TTMSSchedulingPage />} />
