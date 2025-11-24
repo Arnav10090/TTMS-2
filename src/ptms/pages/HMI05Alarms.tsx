@@ -510,17 +510,17 @@ const HMI05Alarms = () => {
             {filtered.length === 0 ? 'Showing 0 of 0 alarms' : `Showing ${start + 1}-${end} of ${filtered.length} alarms`}
           </div>
           <div className="flex items-center gap-2">
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} onClick={() => setPage(1)}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage(1)}>
               First
             </Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage((p) => Math.max(1, p - 1))}>
               « Prev
             </Button>
             {renderPageButtons()}
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} onClick={() => setPage((p) => Math.min(pageCount, p + 1))}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage((p) => Math.min(pageCount, p + 1))}>
               Next »
             </Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} onClick={() => setPage(pageCount)}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage(pageCount)}>
               Last
             </Button>
           </div>
