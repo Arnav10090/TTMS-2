@@ -306,7 +306,7 @@ const HMI04Trends = () => {
                 data={chartData}
                 margin={{ top: 20, right: 20, left: 25, bottom: 40 }}
               >
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.3} />
                 <XAxis
                   dataKey="time"
                   type="number"
