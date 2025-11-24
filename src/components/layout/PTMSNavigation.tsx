@@ -9,6 +9,7 @@ const ptmsTabs = [
   { label: 'Alarms/Alerts', href: '/ptms/alarms' },
   { label: 'Reports', href: '/ptms/reports' },
   { label: 'Historical Data', href: '/ptms/historical-data' },
+  { label: 'TTMS', href: '/' },
 ]
 
 export default function PTMSNavigation() {
