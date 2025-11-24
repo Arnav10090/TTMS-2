@@ -29,9 +29,9 @@ export default function PTMSNavigation() {
               className={
                 'flex-1 basis-0 text-center px-3 py-1.5 rounded-full transition-colors ' +
                 (isTtmsLink
-                  ? 'bg-blue-500 text-white shadow hover:bg-blue-600'
+                  ? 'bg-success text-white shadow hover:bg-success'
                   : isActive
-                    ? 'bg-yellow-500 text-white shadow'
+                    ? 'bg-cssPrimary text-white shadow'
                     : 'bg-slate-100 text-slate-700 hover:bg-slate-200')
               }
             >
