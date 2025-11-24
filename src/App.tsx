@@ -6,6 +6,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { HMISidebar } from "@/components/HMISidebar";
 import { Navbar } from "@/components/Navbar";
+import PTMSNavigation from "@/components/layout/PTMSNavigation";
 import { useState } from "react";
 import AlarmsFooter from '@/components/AlarmsFooter';
 import NotFound from "./ptms/pages/NotFound";
