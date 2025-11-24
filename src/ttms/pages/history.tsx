@@ -108,16 +108,16 @@ export default function TTMSHistoryPage() {
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-600 mb-1">Driver</label>
-            <select value={driverFilter} onChange={(e)=>setDriverFilter(e.target.value)} className="w-full px-3 py-2 border rounded-md">
+            <select value={driverFilter} onChange={(e)=>setDriverFilter(e.target.value)} className="w-full px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
               <option value="">All Drivers</option>
-              {drivers.map((d)=> <option key={d} value={d}>{d}</option>)}
+              {drivers.map((d)=> <option key={d} value={d} className="hover:bg-blue-100">{d}</option>)}
             </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-slate-600 mb-1">Customer</label>
-            <select value={customerFilter} onChange={(e)=>setCustomerFilter(e.target.value)} className="w-full px-3 py-2 border rounded-md">
+            <select value={customerFilter} onChange={(e)=>setCustomerFilter(e.target.value)} className="w-full px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
               <option value="">All Customers</option>
-              {customers.map((c)=> <option key={c} value={c}>{c}</option>)}
+              {customers.map((c)=> <option key={c} value={c} className="hover:bg-blue-100">{c}</option>)}
             </select>
           </div>
           <div className="flex items-end gap-2">
@@ -194,7 +194,7 @@ export default function TTMSHistoryPage() {
               })()
 
               return (
-              <tr key={r.sn} className="border-b last:border-b-0 hover:bg-slate-50 transition-colors">
+              <tr key={r.sn} className="border-b last:border-b-0 hover:bg-blue-50 hover:shadow-sm transition-all duration-150 cursor-pointer">
                 <td className="px-3 py-2 text-sm text-slate-700 text-center">{r.sn}</td>
                 <td className="px-3 py-2 text-center"><div className="flex items-center justify-center gap-2"><Truck className="w-4 h-4 text-slate-400"/><div className="font-medium">{r.regNo}</div></div></td>
                 <td className="px-3 py-2 text-sm text-center">{r.rfidNo ?? '-'}</td>
@@ -223,9 +223,9 @@ export default function TTMSHistoryPage() {
       <div className="flex items-center justify-between mt-3">
         <div className="text-sm text-slate-600">Showing {Math.min(sorted.length, (page-1)*pageSize+1)} to {Math.min(sorted.length, page*pageSize)} of {sorted.length} entries</div>
         <div className="flex items-center gap-2">
-          <button onClick={()=>setPage((p)=>Math.max(1, p-1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Previous</button>
+          <button onClick={()=>setPage((p)=>Math.max(1, p-1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-blue-100 hover:shadow-sm transition-all duration-150">Previous</button>
           <div className="px-3 py-1 text-sm">Page {page} / {totalPages}</div>
-          <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Next</button>
+          <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-blue-100 hover:shadow-sm transition-all duration-150">Next</button>
         </div>
       </div>
       </div>
