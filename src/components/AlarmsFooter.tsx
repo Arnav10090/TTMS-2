@@ -92,9 +92,6 @@ const AlarmsFooter: React.FC = () => {
     return () => window.removeEventListener('alarms-footer:add', handler as EventListener);
   }, []);
 
-  const { pathname } = useLocation();
-  const isPtms = pathname.startsWith('/hmi-') || pathname.startsWith('/pump-') || pathname.startsWith('/trends') || pathname.startsWith('/alarms') || pathname.startsWith('/reports') || pathname.startsWith('/historical');
-
   // periodically generate a demo alarm and show popup every 1 minute
   useEffect(() => {
     let mounted = true;
