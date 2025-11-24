@@ -18,7 +18,7 @@ export default function Navigation() {
     <nav className="bg-white border-b border-slate-200">
       <div className="w-full px-6 py-2 flex flex-nowrap gap-2">
         {tabs.map((t) => {
-          const active = t.href === '/ttms/dashboard' ? pathname === t.href : pathname === t.href || pathname.startsWith(t.href)
+          const active = pathname === t.href || pathname.startsWith(t.href)
           return (
             <Link
               key={`${t.href}-${t.label}`}
