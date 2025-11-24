@@ -35,15 +35,7 @@ import Index from "./app/ptms/Index";
 
 const queryClient = new QueryClient();
 
-const isPtmsRoute = (pathname: string): boolean => {
-  const ptmsRoutes = ['/ptms', '/hmi-01', '/pump-operation', '/trends', '/alarms', '/reports', '/historical'];
-  return ptmsRoutes.some(route => pathname.startsWith(route));
-};
-
 const App = () => {
-  const location = useLocation();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const showPtmsUI = isPtmsRoute(location.pathname);
 
   return (
     <QueryClientProvider client={queryClient}>
