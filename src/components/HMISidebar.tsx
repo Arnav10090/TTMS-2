@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, Power, TrendingUp, Bell, FileText, Database, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Tank as TankIcon } from '@/components/icons/Tank';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
 
 const navItems = [
