@@ -40,6 +40,12 @@
       ],
       "@/styles/*": [
         "src/styles/*"
+      ],
+      "@/ttms/*": [
+        "src/ttms/*"
+      ],
+      "@/ptms/*": [
+        "src/ptms/*"
       ]
     }
   },
