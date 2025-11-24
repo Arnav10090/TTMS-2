@@ -4,10 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { HMISidebar } from "@/components/HMISidebar";
-import { Navbar } from "@/components/Navbar";
-import { useState } from "react";
-import AlarmsFooter from '@/components/AlarmsFooter';
+import PTMSLayout from "@/components/layout/PTMSLayout";
 import NotFound from "./ptms/pages/NotFound";
 
 // TTMS Routes
@@ -37,7 +34,6 @@ import Index from "./app/ptms/Index";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -45,46 +41,60 @@ const App = () => {
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <div className="flex min-h-screen w-full bg-background">
-              <HMISidebar 
-                isCollapsed={sidebarCollapsed}
-                onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
-              />
-              <div 
-                className={`flex-1 relative transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'}`} 
-                style={{ ['--content-left']: sidebarCollapsed ? '5rem' : '16rem' } as any}
-              >
-                <Navbar isCollapsed={sidebarCollapsed} />
-                <main className="pt-16 pb-20">
-                  <Routes>
-                    {/* TTMS Routes */}
-                    <Route path="/" element={<TTMSDashboardPage />} />
-                    <Route path="/document-verification" element={<TTMSDocumentVerificationPage />} />
-                    <Route path="/scheduling" element={<TTMSSchedulingPage />} />
-                    <Route path="/ttms-reports" element={<TTMSReportsPage />} />
-                    <Route path="/ttms-alarms" element={<TTMSAlarmsPage />} />
-                    <Route path="/history" element={<TTMSHistoryPage />} />
-                    <Route path="/spare" element={<TTMSSparePage />} />
+          <Routes>
+            {/* TTMS Routes */}
+            <Route path="/" element={<TTMSDashboardPage />} />
+            <Route path="/document-verification" element={<TTMSDocumentVerificationPage />} />
+            <Route path="/scheduling" element={<TTMSSchedulingPage />} />
+            <Route path="/ttms-reports" element={<TTMSReportsPage />} />
+            <Route path="/ttms-alarms" element={<TTMSAlarmsPage />} />
+            <Route path="/history" element={<TTMSHistoryPage />} />
+            <Route path="/spare" element={<TTMSSparePage />} />
 
-                    {/* PTMS Routes */}
-                    <Route path="/hmi-01" element={<HMI01Overview />} />
-                    <Route path="/hmi-01/*" element={<HMI01Tabs />}>
-                      <Route index element={<Navigate to="tank" replace />} />
-                      <Route path="tank" element={<HMI01TankSection />} />
-                      <Route path="pickling" element={<HMI02PicklingSection />} />
-                      <Route path="legends" element={<HMI02LegendsSection />} />
-                    </Route>
-                    <Route path="/pump-operation" element={<HMI03PumpOperation />} />
-                    <Route path="/trends" element={<HMI04Trends />} />
-                    <Route path="/alarms" element={<HMI05Alarms />} />
-                    <Route path="/reports" element={<HMI06Reports />} />
-                    <Route path="/historical" element={<HMI07Historical />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <AlarmsFooter />
-              </div>
-            </div>
+            {/* PTMS Routes */}
+            <Route path="/ptms" element={<Navigate to="/hmi-01" replace />} />
+            <Route path="/hmi-01" element={
+              <PTMSLayout>
+                <HMI01Overview />
+              </PTMSLayout>
+            } />
+            <Route path="/hmi-01/*" element={
+              <PTMSLayout>
+                <HMI01Tabs />
+              </PTMSLayout>
+            }>
+              <Route index element={<Navigate to="tank" replace />} />
+              <Route path="tank" element={<HMI01TankSection />} />
+              <Route path="pickling" element={<HMI02PicklingSection />} />
+              <Route path="legends" element={<HMI02LegendsSection />} />
+            </Route>
+            <Route path="/pump-operation" element={
+              <PTMSLayout>
+                <HMI03PumpOperation />
+              </PTMSLayout>
+            } />
+            <Route path="/trends" element={
+              <PTMSLayout>
+                <HMI04Trends />
+              </PTMSLayout>
+            } />
+            <Route path="/alarms" element={
+              <PTMSLayout>
+                <HMI05Alarms />
+              </PTMSLayout>
+            } />
+            <Route path="/reports" element={
+              <PTMSLayout>
+                <HMI06Reports />
+              </PTMSLayout>
+            } />
+            <Route path="/historical" element={
+              <PTMSLayout>
+                <HMI07Historical />
+              </PTMSLayout>
+            } />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

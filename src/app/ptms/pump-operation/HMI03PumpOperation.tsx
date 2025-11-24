@@ -1,7 +1,7 @@
 import { TopInfoPanel } from '@/components/TopInfoPanel';
 import { useState } from 'react';
 import { Settings } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 
 const HMI03PumpOperation = () => {
   const [tankMode, setTankMode] = useState<'FULL' | 'MID_CIRC' | 'STOP'>('FULL');
