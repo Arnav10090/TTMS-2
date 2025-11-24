@@ -541,13 +541,13 @@ const HMI06Reports = () => {
         <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-muted-foreground">Showing {dailyPageObj.start + 1}-{dailyPageObj.end} of {filteredDaily.length} rows</div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === 1} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage(1)}>First</Button>
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === 1} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage((p) => Math.max(1, p - 1))}>Prev</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={dailyPageObj.current === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage(1)}>First</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={dailyPageObj.current === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage((p) => Math.max(1, p - 1))}>« Prev</Button>
             {Array.from({ length: dailyPageObj.pageCount }).slice(0, 7).map((_, i) => (
-              <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={dailyPageObj.current === i + 1 ? 'bg-primary text-primary-foreground' : 'hover:bg-primary/8 hover:shadow-sm transition-all duration-150'} onClick={() => setDailyPage(i + 1)}>{i + 1}</Button>
+              <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={dailyPageObj.current === i + 1 ? 'bg-primary text-primary-foreground border-primary' : ''} onClick={() => setDailyPage(i + 1)}>{i + 1}</Button>
             ))}
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === dailyPageObj.pageCount} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage((p) => Math.min(dailyPageObj.pageCount, p + 1))}>Next</Button>
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === dailyPageObj.pageCount} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage(dailyPageObj.pageCount)}>Last</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={dailyPageObj.current === dailyPageObj.pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage((p) => Math.min(dailyPageObj.pageCount, p + 1))}>Next »</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={dailyPageObj.current === dailyPageObj.pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage(dailyPageObj.pageCount)}>Last</Button>
           </div>
         </div>
       </div>
