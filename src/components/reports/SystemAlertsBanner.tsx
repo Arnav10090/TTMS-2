@@ -8,9 +8,10 @@ type Row = { id: string; text: string; severity: Severity; ts: number }
 
 const now = Date.now()
 const initial: Row[] = [
-  { id: '1', text: 'High waiting time detected at Gate Entry', severity: 'warning', ts: now - 1000 * 60 * 5 },
-  { id: '2', text: 'TTR exceeded threshold for MH12AB1234', severity: 'critical', ts: now - 1000 * 60 * 3 },
-  { id: '3', text: 'Scale 2 calibration due in 2 days', severity: 'info', ts: now - 1000 * 60 * 1 },
+  { id: '1', text: 'Tank #2 HCl concentration exceeds safe limit (165 g/l)', severity: 'critical', ts: now - 1000 * 60 * 5 },
+  { id: '2', text: 'Pickling Line-1 temperature warning: 72°C threshold exceeded', severity: 'warning', ts: now - 1000 * 60 * 3 },
+  { id: '3', text: 'Sensor #12 communication loss detected', severity: 'warning', ts: now - 1000 * 60 * 2 },
+  { id: '4', text: 'Hot Rinse Tank level trending low at 18%', severity: 'info', ts: now - 1000 * 60 * 1 },
 ]
 
 function rowCls(s: Severity) {
@@ -44,7 +45,8 @@ export default function SystemAlertsBanner() {
       const mapped = combined.slice(0, 10).map((a: any) => {
         const rawLevel = a.alertLevel || 'warning'
         const severity: Severity = rawLevel === 'critical' || rawLevel === 'danger' ? 'critical' : rawLevel === 'info' ? 'info' : 'warning'
-        return { id: a.id, text: a.message || `Vehicle ${a.vehicleRegNo} - ${a.stage}`, severity, ts: new Date(a.timestamp).getTime() }
+        const text = a.message || a.description || `${a.equipment || a.equipmentId || 'System'} - ${a.type || 'Alert'}`
+        return { id: a.id, text, severity, ts: new Date(a.timestamp).getTime() }
       }) as Row[]
       setRows(mapped)
     }, 5000)

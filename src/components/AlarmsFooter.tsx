@@ -54,6 +54,17 @@ const AlarmsFooter: React.FC = () => {
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
+  const { pathname } = useLocation();
+  const isPtms = pathname.startsWith('/hmi-') || pathname.startsWith('/pump-') || pathname.startsWith('/trends') || pathname.startsWith('/alarms') || pathname.startsWith('/reports') || pathname.startsWith('/historical');
+
+  // Clear alarms when switching between PTMS and TTMS
+  useEffect(() => {
+    setAlarms([]);
+    try {
+      localStorage.setItem('alarms_footer', JSON.stringify([]));
+    } catch {}
+  }, [isPtms]);
+
   useEffect(() => {
     try {
       localStorage.setItem('alarms_footer', JSON.stringify(alarms.slice(0, FOOTER_LIMIT)));
@@ -80,9 +91,6 @@ const AlarmsFooter: React.FC = () => {
     window.addEventListener('alarms-footer:add', handler as EventListener);
     return () => window.removeEventListener('alarms-footer:add', handler as EventListener);
   }, []);
-
-  const { pathname } = useLocation();
-  const isPtms = pathname.startsWith('/hmi-') || pathname.startsWith('/pump-') || pathname.startsWith('/trends') || pathname.startsWith('/alarms') || pathname.startsWith('/reports') || pathname.startsWith('/historical');
 
   // periodically generate a demo alarm and show popup every 1 minute
   useEffect(() => {
@@ -165,7 +173,7 @@ const AlarmsFooter: React.FC = () => {
       mounted = false;
       if (intervalId) clearInterval(intervalId);
     };
-  }, []);
+  }, [isPtms]);
 
   // left offset var used by App
   return (

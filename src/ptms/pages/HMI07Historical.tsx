@@ -311,7 +311,7 @@ const HMI07Historical = () => {
             </span>
           )
         : (
-            <Button key={n} {...({ variant: 'outline', size: 'sm' } as any)} className={`transition-colors ${currentPage === n ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90' : 'hover:bg-primary/10 hover:text-primary hover:border-primary/50'}`} onClick={() => setPage(n as number)}>
+            <Button key={n} {...({ variant: 'outline', size: 'sm' } as any)} className={currentPage === n ? 'bg-primary text-primary-foreground border-primary' : ''} onClick={() => setPage(n as number)}>
               {n}
             </Button>
           ),
@@ -551,13 +551,13 @@ const HMI07Historical = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(1)}>First</Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.max(1,p-1))}>Previous</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(1)}>First</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.max(1,p-1))}>« Prev</Button>
             <div className="flex items-center gap-1">
               {renderPageButtons()}
             </div>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.min(pageCount,p+1))}>Next</Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(pageCount)}>Last</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.min(pageCount,p+1))}>Next »</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(pageCount)}>Last</Button>
           </div>
         </div>
 
