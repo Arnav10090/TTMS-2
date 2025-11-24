@@ -118,11 +118,11 @@ export default function TTMSAlarmsPage() {
           <h2 className="text-lg font-semibold">Alarms</h2>
           <div className="flex items-center gap-2">
             <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
-            <select value={severity} onChange={(e)=>setSeverity(e.target.value as 'all'|'critical'|'warning'|'info')} className="px-3 py-2 border rounded-md">
-              <option value="all">All Severities</option>
-              <option value="critical">Critical</option>
-              <option value="warning">Warning</option>
-              <option value="info">Info</option>
+            <select value={severity} onChange={(e)=>setSeverity(e.target.value as 'all'|'critical'|'warning'|'info')} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
+              <option value="all" className="hover:bg-blue-100">All Severities</option>
+              <option value="critical" className="hover:bg-blue-100">Critical</option>
+              <option value="warning" className="hover:bg-blue-100">Warning</option>
+              <option value="info" className="hover:bg-blue-100">Info</option>
             </select>
             <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
             <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
@@ -153,7 +153,7 @@ export default function TTMSAlarmsPage() {
                 const message = r.message || `${r.vehicleRegNo} - ${r.stage}`
                 const label = level === 'critical' ? 'Critical' : level === 'info' ? 'Info' : 'Warning'
                 return (
-                  <tr key={r.id} className="border-b last:border-b-0 hover:bg-slate-50">
+                  <tr key={r.id} className="border-b last:border-b-0 hover:bg-blue-50 hover:shadow-sm transition-all duration-150 cursor-pointer">
                     <td className="py-2 px-2 text-xs text-slate-600">{new Date(r.timestamp).toLocaleString('en-GB')}</td>
                     <td className="py-2 px-2 font-medium">{r.vehicleRegNo}</td>
                     <td className="py-2 px-2 text-slate-600">{r.stage || r.rfidNo || '-'}</td>

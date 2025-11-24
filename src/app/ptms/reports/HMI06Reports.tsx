@@ -328,21 +328,21 @@ const HMI06Reports = () => {
             <Input placeholder="Search coils..." value={coilQuery} onChange={(e) => setCoilQuery(e.target.value)} className="w-64" />
 
             <Select value={String(coilPageSize)} onValueChange={(v) => setCoilPageSize(Number(v))}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                 <SelectValue placeholder={`Rows: ${coilPageSize}`} />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="50">50</SelectItem>
+              <SelectContent className="shadow-lg">
+                <SelectItem value="5" className="hover:bg-primary/10 cursor-pointer">5</SelectItem>
+                <SelectItem value="10" className="hover:bg-primary/10 cursor-pointer">10</SelectItem>
+                <SelectItem value="20" className="hover:bg-primary/10 cursor-pointer">20</SelectItem>
+                <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50</SelectItem>
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" onClick={exportCoils} className="gap-2">
+            <Button variant="outline" size="sm" onClick={exportCoils} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Download className="w-4 h-4" /> Export CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={printCoils} className="gap-2">
+            <Button variant="outline" size="sm" onClick={printCoils} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Printer className="w-4 h-4" /> Print
             </Button>
           </div>
@@ -398,7 +398,7 @@ const HMI06Reports = () => {
             </thead>
             <tbody>
               {coilsPage.rows.map((row: CoilRow) => (
-                <tr key={row.sn} className="hover:bg-muted/10">
+                <tr key={row.sn} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 cursor-pointer">
                   <td className="py-2 px-2 border border-border/30 text-center font-mono">{row.sn}</td>
                   <td className="py-2 px-2 border border-border/30 text-center font-mono">{row.coilId}</td>
                   <td className="py-2 px-2 border border-border/30 text-center">{row.grade}</td>
@@ -441,13 +441,13 @@ const HMI06Reports = () => {
         <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-muted-foreground">Showing {coilsPage.start + 1}-{coilsPage.end} of {filteredCoils.length} rows</div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled={coilsPage.current === 1} onClick={() => setCoilPage(1)}>First</Button>
-            <Button variant="outline" size="sm" disabled={coilsPage.current === 1} onClick={() => setCoilPage((p) => Math.max(1, p - 1))}>Prev</Button>
+            <Button variant="outline" size="sm" disabled={coilsPage.current === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage(1)}>First</Button>
+            <Button variant="outline" size="sm" disabled={coilsPage.current === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage((p) => Math.max(1, p - 1))}>Prev</Button>
             {Array.from({ length: coilsPage.pageCount }).slice(0, 7).map((_, i) => (
-              <Button key={i} variant={coilsPage.current === i + 1 ? 'primary' : 'outline'} size="sm" onClick={() => setCoilPage(i + 1)}>{i + 1}</Button>
+              <Button key={i} variant={coilsPage.current === i + 1 ? 'primary' : 'outline'} size="sm" className={coilsPage.current === i + 1 ? '' : 'hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors'} onClick={() => setCoilPage(i + 1)}>{i + 1}</Button>
             ))}
-            <Button variant="outline" size="sm" disabled={coilsPage.current === coilsPage.pageCount} onClick={() => setCoilPage((p) => Math.min(coilsPage.pageCount, p + 1))}>Next</Button>
-            <Button variant="outline" size="sm" disabled={coilsPage.current === coilsPage.pageCount} onClick={() => setCoilPage(coilsPage.pageCount)}>Last</Button>
+            <Button variant="outline" size="sm" disabled={coilsPage.current === coilsPage.pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage((p) => Math.min(coilsPage.pageCount, p + 1))}>Next</Button>
+            <Button variant="outline" size="sm" disabled={coilsPage.current === coilsPage.pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setCoilPage(coilsPage.pageCount)}>Last</Button>
           </div>
         </div>
       </div>
@@ -461,21 +461,21 @@ const HMI06Reports = () => {
             <Input placeholder="Search daily..." value={dailyQuery} onChange={(e) => setDailyQuery(e.target.value)} className="w-64" />
 
             <Select value={String(dailyPageSize)} onValueChange={(v) => setDailyPageSize(Number(v))}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                 <SelectValue placeholder={`Rows: ${dailyPageSize}`} />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
-                <SelectItem value="50">50</SelectItem>
+              <SelectContent className="shadow-lg">
+                <SelectItem value="5" className="hover:bg-primary/10 cursor-pointer">5</SelectItem>
+                <SelectItem value="10" className="hover:bg-primary/10 cursor-pointer">10</SelectItem>
+                <SelectItem value="20" className="hover:bg-primary/10 cursor-pointer">20</SelectItem>
+                <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50</SelectItem>
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" onClick={exportDaily} className="gap-2">
+            <Button variant="outline" size="sm" onClick={exportDaily} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Download className="w-4 h-4" /> Export CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={printDaily} className="gap-2">
+            <Button variant="outline" size="sm" onClick={printDaily} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Printer className="w-4 h-4" /> Print
             </Button>
           </div>
@@ -519,7 +519,7 @@ const HMI06Reports = () => {
             </thead>
             <tbody>
               {dailyPageObj.rows.map((row: DailyRow) => (
-                <tr key={row.sn} className="hover:bg-muted/10">
+                <tr key={row.sn} className="hover:bg-primary/8 hover:shadow-sm transition-all duration-150 cursor-pointer">
                   <td className="py-2 px-2 border border-border/30 text-center font-mono">{row.sn}</td>
                   <td className="py-2 px-2 border border-border/30 text-center font-mono">{row.date}</td>
                   <td className="py-2 px-2 border border-border/30 text-center font-mono">{row.coils}</td>
@@ -551,13 +551,13 @@ const HMI06Reports = () => {
         <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-muted-foreground">Showing {dailyPageObj.start + 1}-{dailyPageObj.end} of {filteredDaily.length} rows</div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === 1} onClick={() => setDailyPage(1)}>First</Button>
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === 1} onClick={() => setDailyPage((p) => Math.max(1, p - 1))}>Prev</Button>
+            <Button variant="outline" size="sm" disabled={dailyPageObj.current === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage(1)}>First</Button>
+            <Button variant="outline" size="sm" disabled={dailyPageObj.current === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage((p) => Math.max(1, p - 1))}>Prev</Button>
             {Array.from({ length: dailyPageObj.pageCount }).slice(0, 7).map((_, i) => (
-              <Button key={i} variant={dailyPageObj.current === i + 1 ? 'primary' : 'outline'} size="sm" onClick={() => setDailyPage(i + 1)}>{i + 1}</Button>
+              <Button key={i} variant={dailyPageObj.current === i + 1 ? 'primary' : 'outline'} size="sm" className={dailyPageObj.current === i + 1 ? '' : 'hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors'} onClick={() => setDailyPage(i + 1)}>{i + 1}</Button>
             ))}
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === dailyPageObj.pageCount} onClick={() => setDailyPage((p) => Math.min(dailyPageObj.pageCount, p + 1))}>Next</Button>
-            <Button variant="outline" size="sm" disabled={dailyPageObj.current === dailyPageObj.pageCount} onClick={() => setDailyPage(dailyPageObj.pageCount)}>Last</Button>
+            <Button variant="outline" size="sm" disabled={dailyPageObj.current === dailyPageObj.pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage((p) => Math.min(dailyPageObj.pageCount, p + 1))}>Next</Button>
+            <Button variant="outline" size="sm" disabled={dailyPageObj.current === dailyPageObj.pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setDailyPage(dailyPageObj.pageCount)}>Last</Button>
           </div>
         </div>
       </div>
@@ -571,15 +571,15 @@ const HMI06Reports = () => {
             <div className="glass-panel p-2 rounded inline-flex items-center gap-2">
               <label className="text-sm font-semibold text-muted-foreground">Time Period:</label>
               <Select value={timePeriod} onValueChange={(v) => setTimePeriod(v)}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-48 hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                   <SelectValue placeholder={timePeriod} />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Last 7 Days">Last 7 Days</SelectItem>
-                  <SelectItem value="Last 30 Days">Last 30 Days</SelectItem>
-                  <SelectItem value="This Month">This Month</SelectItem>
-                  <SelectItem value="Last Month">Last Month</SelectItem>
-                  <SelectItem value="Custom Range">Custom Range</SelectItem>
+                <SelectContent className="shadow-lg">
+                  <SelectItem value="Last 7 Days" className="hover:bg-primary/10 cursor-pointer">Last 7 Days</SelectItem>
+                  <SelectItem value="Last 30 Days" className="hover:bg-primary/10 cursor-pointer">Last 30 Days</SelectItem>
+                  <SelectItem value="This Month" className="hover:bg-primary/10 cursor-pointer">This Month</SelectItem>
+                  <SelectItem value="Last Month" className="hover:bg-primary/10 cursor-pointer">Last Month</SelectItem>
+                  <SelectItem value="Custom Range" className="hover:bg-primary/10 cursor-pointer">Custom Range</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -587,20 +587,20 @@ const HMI06Reports = () => {
             <Input placeholder="Search consumption..." value={consQuery} onChange={(e) => setConsQuery(e.target.value)} className="w-64" />
 
             <Select value={String(consPageSize)} onValueChange={(v) => setConsPageSize(Number(v))}>
-              <SelectTrigger className="w-36">
+              <SelectTrigger className="w-36 hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                 <SelectValue placeholder={`Rows: ${consPageSize}`} />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="5">5</SelectItem>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="20">20</SelectItem>
+              <SelectContent className="shadow-lg">
+                <SelectItem value="5" className="hover:bg-primary/10 cursor-pointer">5</SelectItem>
+                <SelectItem value="10" className="hover:bg-primary/10 cursor-pointer">10</SelectItem>
+                <SelectItem value="20" className="hover:bg-primary/10 cursor-pointer">20</SelectItem>
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" onClick={exportCons} className="gap-2">
+            <Button variant="outline" size="sm" onClick={exportCons} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Download className="w-4 h-4" /> Export CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={printCons} className="gap-2">
+            <Button variant="outline" size="sm" onClick={printCons} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Printer className="w-4 h-4" /> Print
             </Button>
           </div>
@@ -619,7 +619,7 @@ const HMI06Reports = () => {
             </thead>
             <tbody>
               {consPageObj.rows.map((row: ConsumptionRow) => (
-                <tr key={row.sn} className="border-b border-border/30 hover:bg-muted/10">
+                <tr key={row.sn} className="border-b border-border/30 hover:bg-primary/8 hover:shadow-sm transition-all duration-150 cursor-pointer">
                   <td className="py-3 px-4 font-mono text-center border border-border/30">{row.sn}</td>
                   <td className="py-3 px-4 font-medium text-center border border-border/30">{row.param}</td>
                   <td className="py-3 px-4 font-mono text-center border border-border/30">{row.uom}</td>
@@ -634,13 +634,13 @@ const HMI06Reports = () => {
         <div className="flex items-center justify-between mt-4">
           <div className="text-sm text-muted-foreground">Showing {consPageObj.start + 1}-{consPageObj.end} of {filteredCons.length} rows</div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" disabled={consPageObj.current === 1} onClick={() => setConsPage(1)}>First</Button>
-            <Button variant="outline" size="sm" disabled={consPageObj.current === 1} onClick={() => setConsPage((p) => Math.max(1, p - 1))}>Prev</Button>
+            <Button variant="outline" size="sm" disabled={consPageObj.current === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage(1)}>First</Button>
+            <Button variant="outline" size="sm" disabled={consPageObj.current === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage((p) => Math.max(1, p - 1))}>Prev</Button>
             {Array.from({ length: consPageObj.pageCount }).slice(0, 7).map((_, i) => (
-              <Button key={i} variant={consPageObj.current === i + 1 ? 'primary' : 'outline'} size="sm" onClick={() => setConsPage(i + 1)}>{i + 1}</Button>
+              <Button key={i} variant={consPageObj.current === i + 1 ? 'primary' : 'outline'} size="sm" className={consPageObj.current === i + 1 ? '' : 'hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors'} onClick={() => setConsPage(i + 1)}>{i + 1}</Button>
             ))}
-            <Button variant="outline" size="sm" disabled={consPageObj.current === consPageObj.pageCount} onClick={() => setConsPage((p) => Math.min(consPageObj.pageCount, p + 1))}>Next</Button>
-            <Button variant="outline" size="sm" disabled={consPageObj.current === consPageObj.pageCount} onClick={() => setConsPage(consPageObj.pageCount)}>Last</Button>
+            <Button variant="outline" size="sm" disabled={consPageObj.current === consPageObj.pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage((p) => Math.min(consPageObj.pageCount, p + 1))}>Next</Button>
+            <Button variant="outline" size="sm" disabled={consPageObj.current === consPageObj.pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setConsPage(consPageObj.pageCount)}>Last</Button>
           </div>
         </div>
       </div>

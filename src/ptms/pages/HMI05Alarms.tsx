@@ -357,52 +357,50 @@ const HMI05Alarms = () => {
 
   return (
     <div className="p-6 space-y-6 animate-fade-in">
-      <div className="flex items-center justify-end">
-        <div className="flex items-center gap-2">
-          <div className="px-4 py-2 rounded-lg bg-destructive/20 border border-destructive/30">
-            <span className="text-sm font-semibold text-destructive">{activeCount} Active Alarms</span>
-          </div>
+      <TopInfoPanel />
+
+      <div className="flex items-center justify-center">
+        <div className="px-4 py-2 rounded-lg bg-destructive/20 border border-destructive/30">
+          <span className="text-sm font-semibold text-destructive">{activeCount} Active Alarms</span>
         </div>
       </div>
-
-      <TopInfoPanel />
 
       <div className="hmi-card">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
           <Select value={severity} onValueChange={(v: string) => { setSeverity(v as any); resetToFirstPage(); }}>
-            <SelectTrigger className="bg-card border-border">
+            <SelectTrigger className="bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
               <SelectValue placeholder="Severity" />
             </SelectTrigger>
-            <SelectContent className="bg-popover border-border z-50">
-              <SelectItem value="all-severity">All Severity</SelectItem>
-              <SelectItem value="critical">Critical</SelectItem>
-              <SelectItem value="high">High</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="low">Low</SelectItem>
+            <SelectContent className="bg-popover border-border z-50 shadow-lg">
+              <SelectItem value="all-severity" className="hover:bg-primary/10 cursor-pointer">All Severity</SelectItem>
+              <SelectItem value="critical" className="hover:bg-primary/10 cursor-pointer">Critical</SelectItem>
+              <SelectItem value="high" className="hover:bg-primary/10 cursor-pointer">High</SelectItem>
+              <SelectItem value="medium" className="hover:bg-primary/10 cursor-pointer">Medium</SelectItem>
+              <SelectItem value="low" className="hover:bg-primary/10 cursor-pointer">Low</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={status} onValueChange={(v: string) => { setStatus(v as any); resetToFirstPage(); }}>
-            <SelectTrigger className="bg-card border-border">
+            <SelectTrigger className="bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent className="bg-popover border-border z-50">
-              <SelectItem value="all-status">All Status</SelectItem>
-              <SelectItem value="active">Active</SelectItem>
-              <SelectItem value="acknowledged">Acknowledged</SelectItem>
-              <SelectItem value="cleared">Cleared</SelectItem>
+            <SelectContent className="bg-popover border-border z-50 shadow-lg">
+              <SelectItem value="all-status" className="hover:bg-primary/10 cursor-pointer">All Status</SelectItem>
+              <SelectItem value="active" className="hover:bg-primary/10 cursor-pointer">Active</SelectItem>
+              <SelectItem value="acknowledged" className="hover:bg-primary/10 cursor-pointer">Acknowledged</SelectItem>
+              <SelectItem value="cleared" className="hover:bg-primary/10 cursor-pointer">Cleared</SelectItem>
             </SelectContent>
           </Select>
 
           <Select value={timeRange} onValueChange={(v: string) => { setTimeRange(v as any); resetToFirstPage(); }}>
-            <SelectTrigger className="bg-card border-border">
+            <SelectTrigger className="bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
               <SelectValue placeholder="Time Range" />
             </SelectTrigger>
-            <SelectContent className="bg-popover border-border z-50">
-              <SelectItem value="1h">Last Hour</SelectItem>
-              <SelectItem value="24h">Last 24 Hours</SelectItem>
-              <SelectItem value="7d">Last 7 Days</SelectItem>
-              <SelectItem value="custom">All Time</SelectItem>
+            <SelectContent className="bg-popover border-border z-50 shadow-lg">
+              <SelectItem value="1h" className="hover:bg-primary/10 cursor-pointer">Last Hour</SelectItem>
+              <SelectItem value="24h" className="hover:bg-primary/10 cursor-pointer">Last 24 Hours</SelectItem>
+              <SelectItem value="7d" className="hover:bg-primary/10 cursor-pointer">Last 7 Days</SelectItem>
+              <SelectItem value="custom" className="hover:bg-primary/10 cursor-pointer">All Time</SelectItem>
             </SelectContent>
           </Select>
 
@@ -463,7 +461,7 @@ const HMI05Alarms = () => {
                 return (
                   <tr
                     key={alarm.id}
-                    className={`border-b border-border/30 hover:bg-muted/20 transition-colors ${alarm.status === 'active' ? 'border-l-4 border-l-destructive' : ''}`}
+                    className={`border-b border-border/30 hover:bg-primary/8 hover:shadow-sm transition-all duration-150 cursor-pointer ${alarm.status === 'active' ? 'border-l-4 border-l-destructive' : ''}`}
                   >
                     <td className="py-3 px-4 text-sm font-mono">{formatDateTimeDisplay(alarm.timestamp)}</td>
                     <td className="py-3 px-4">
@@ -512,17 +510,17 @@ const HMI05Alarms = () => {
             {filtered.length === 0 ? 'Showing 0 of 0 alarms' : `Showing ${start + 1}-${end} of ${filtered.length} alarms`}
           </div>
           <div className="flex items-center gap-2">
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} onClick={() => setPage(1)}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage(1)}>
               First
             </Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} onClick={() => setPage((p) => Math.max(1, p - 1))}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage((p) => Math.max(1, p - 1))}>
               « Prev
             </Button>
             {renderPageButtons()}
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} onClick={() => setPage((p) => Math.min(pageCount, p + 1))}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage((p) => Math.min(pageCount, p + 1))}>
               Next »
             </Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} onClick={() => setPage(pageCount)}>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={() => setPage(pageCount)}>
               Last
             </Button>
           </div>

@@ -350,16 +350,16 @@ const HMI07Historical = () => {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Equipment</label>
               <Select value={equipment} onValueChange={(v: string)=>setEquipment(v)}>
-                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
+                <SelectTrigger className="bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border z-50">
-                  <SelectItem value="all-equipment">All Equipment</SelectItem>
-                  <SelectItem value="tank-1">Tank #1</SelectItem>
-                  <SelectItem value="tank-2">Tank #2</SelectItem>
-                  <SelectItem value="tank-3">Tank #3</SelectItem>
-                  <SelectItem value="pumps">Pumps</SelectItem>
-                  <SelectItem value="sensors">Sensors</SelectItem>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="all-equipment" className="hover:bg-primary/10 cursor-pointer">All Equipment</SelectItem>
+                  <SelectItem value="tank-1" className="hover:bg-primary/10 cursor-pointer">Tank #1</SelectItem>
+                  <SelectItem value="tank-2" className="hover:bg-primary/10 cursor-pointer">Tank #2</SelectItem>
+                  <SelectItem value="tank-3" className="hover:bg-primary/10 cursor-pointer">Tank #3</SelectItem>
+                  <SelectItem value="pumps" className="hover:bg-primary/10 cursor-pointer">Pumps</SelectItem>
+                  <SelectItem value="sensors" className="hover:bg-primary/10 cursor-pointer">Sensors</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -367,15 +367,15 @@ const HMI07Historical = () => {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Parameter</label>
               <Select value={parameter} onValueChange={(v: string)=>setParameter(v)}>
-                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
+                <SelectTrigger className="bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border z-50">
-                  <SelectItem value="all-params">All Parameters</SelectItem>
-                  <SelectItem value="temp">Temperature</SelectItem>
-                  <SelectItem value="density">Density</SelectItem>
-                  <SelectItem value="hcl">HCl Level</SelectItem>
-                  <SelectItem value="flow">Flow Rate</SelectItem>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="all-params" className="hover:bg-primary/10 cursor-pointer">All Parameters</SelectItem>
+                  <SelectItem value="temp" className="hover:bg-primary/10 cursor-pointer">Temperature</SelectItem>
+                  <SelectItem value="density" className="hover:bg-primary/10 cursor-pointer">Density</SelectItem>
+                  <SelectItem value="hcl" className="hover:bg-primary/10 cursor-pointer">HCl Level</SelectItem>
+                  <SelectItem value="flow" className="hover:bg-primary/10 cursor-pointer">Flow Rate</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -383,14 +383,14 @@ const HMI07Historical = () => {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Shift Filter</label>
               <Select value={shift} onValueChange={(v: string)=>setShift(v)}>
-                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
+                <SelectTrigger className="bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border z-50">
-                  <SelectItem value="all-shifts">All Shifts</SelectItem>
-                  <SelectItem value="shift-a">Shift A</SelectItem>
-                  <SelectItem value="shift-b">Shift B</SelectItem>
-                  <SelectItem value="shift-c">Shift C</SelectItem>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="all-shifts" className="hover:bg-primary/10 cursor-pointer">All Shifts</SelectItem>
+                  <SelectItem value="shift-a" className="hover:bg-primary/10 cursor-pointer">Shift A</SelectItem>
+                  <SelectItem value="shift-b" className="hover:bg-primary/10 cursor-pointer">Shift B</SelectItem>
+                  <SelectItem value="shift-c" className="hover:bg-primary/10 cursor-pointer">Shift C</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -398,13 +398,13 @@ const HMI07Historical = () => {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Data Quality</label>
               <Select value={dataQuality} onValueChange={(v: string)=>setDataQuality(v)}>
-                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
+                <SelectTrigger className="bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border z-50">
-                  <SelectItem value="all-quality">All Data</SelectItem>
-                  <SelectItem value="valid">Valid Only</SelectItem>
-                  <SelectItem value="flagged">Flagged</SelectItem>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="all-quality" className="hover:bg-primary/10 cursor-pointer">All Data</SelectItem>
+                  <SelectItem value="valid" className="hover:bg-primary/10 cursor-pointer">Valid Only</SelectItem>
+                  <SelectItem value="flagged" className="hover:bg-primary/10 cursor-pointer">Flagged</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -492,7 +492,7 @@ const HMI07Historical = () => {
               {pageRows.map((record:any) => (
                 <tr
                   key={record.id}
-                  className="border-b border-border/30 hover:bg-muted/10 transition-colors"
+                  className="border-b border-border/30 hover:bg-primary/8 hover:shadow-sm transition-all duration-150 cursor-pointer"
                 >
                   <td className="py-2 px-4 text-xs font-mono border border-border/30">{formatDateTimeDisplay(record.timestamp)}</td>
                   <td className="py-2 px-4 text-xs font-medium border border-border/30">{record.equipmentId}</td>
@@ -535,16 +535,16 @@ const HMI07Historical = () => {
             <div className="flex items-center gap-2">
               <label className="text-sm text-muted-foreground">Rows per page:</label>
               <Select value={String(rowsPerPage)} onValueChange={(v: string)=>setRowsPerPage(Number(v))}>
-                <SelectTrigger className="w-20 h-8 bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
+                <SelectTrigger className="w-20 h-8 bg-card border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-popover border-border z-50">
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                  <SelectItem value="250">250</SelectItem>
-                  <SelectItem value="500">500</SelectItem>
-                  <SelectItem value="1000">1000</SelectItem>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="25" className="hover:bg-primary/10 cursor-pointer">25</SelectItem>
+                  <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50</SelectItem>
+                  <SelectItem value="100" className="hover:bg-primary/10 cursor-pointer">100</SelectItem>
+                  <SelectItem value="250" className="hover:bg-primary/10 cursor-pointer">250</SelectItem>
+                  <SelectItem value="500" className="hover:bg-primary/10 cursor-pointer">500</SelectItem>
+                  <SelectItem value="1000" className="hover:bg-primary/10 cursor-pointer">1000</SelectItem>
                 </SelectContent>
               </Select>
             </div>
