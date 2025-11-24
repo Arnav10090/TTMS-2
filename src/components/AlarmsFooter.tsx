@@ -81,23 +81,58 @@ const AlarmsFooter: React.FC = () => {
     return () => window.removeEventListener('alarms-footer:add', handler as EventListener);
   }, []);
 
+  const { pathname } = useLocation();
+  const isPtms = pathname.startsWith('/hmi-') || pathname.startsWith('/pump-') || pathname.startsWith('/trends') || pathname.startsWith('/alarms') || pathname.startsWith('/reports') || pathname.startsWith('/historical');
+
   // periodically generate a demo alarm and show popup every 1 minute
   useEffect(() => {
     let mounted = true;
 
     const generateAlarm = (): Alarm => {
       const now = new Date();
-      return {
-        id: Number(now.getTime()),
-        timestamp: toStorageTimestamp(now),
-        severity: Math.random() > 0.7 ? 'High' : 'Medium',
-        equipment: `Pump-${Math.ceil(Math.random() * 5)}`,
-        type: Math.random() > 0.5 ? 'OverTemp' : 'PressureDrop',
-        description: Math.random() > 0.5 ? 'Temperature exceeded threshold' : 'Pressure dropped below threshold',
-        value: (Math.random() * 100).toFixed(1),
-        threshold: `${(Math.random() * 50 + 50).toFixed(1)}`,
-        status: 'New',
-      };
+
+      if (isPtms) {
+        // PTMS-specific alarms
+        const ptmsEquipment = [`Tank-A`, `Tank-B`, `Tank-C`, `Heating-System`, `Agitator-01`, `Sensor-01`, `Valve-Main`];
+        const ptmsTypes = ['Temperature High', 'Level Low', 'Pressure High', 'Motor Fault', 'Sensor Error', 'Flow Anomaly'];
+        const ptmsDescriptions = [
+          'Temperature exceeded critical threshold',
+          'Tank level dropped below minimum',
+          'System pressure above safe limit',
+          'Motor operation abnormal',
+          'Sensor reading inconsistent',
+          'Flow rate deviation detected'
+        ];
+
+        const equipment = ptmsEquipment[Math.floor(Math.random() * ptmsEquipment.length)];
+        const type = ptmsTypes[Math.floor(Math.random() * ptmsTypes.length)];
+        const description = ptmsDescriptions[Math.floor(Math.random() * ptmsDescriptions.length)];
+
+        return {
+          id: Number(now.getTime()),
+          timestamp: toStorageTimestamp(now),
+          severity: Math.random() > 0.7 ? 'High' : 'Medium',
+          equipment,
+          type,
+          description,
+          value: (Math.random() * 100).toFixed(1),
+          threshold: `${(Math.random() * 50 + 50).toFixed(1)}`,
+          status: 'New',
+        };
+      } else {
+        // TTMS-specific alarms
+        return {
+          id: Number(now.getTime()),
+          timestamp: toStorageTimestamp(now),
+          severity: Math.random() > 0.7 ? 'High' : 'Medium',
+          equipment: `Pump-${Math.ceil(Math.random() * 5)}`,
+          type: Math.random() > 0.5 ? 'OverTemp' : 'PressureDrop',
+          description: Math.random() > 0.5 ? 'Temperature exceeded threshold' : 'Pressure dropped below threshold',
+          value: (Math.random() * 100).toFixed(1),
+          threshold: `${(Math.random() * 50 + 50).toFixed(1)}`,
+          status: 'New',
+        };
+      }
     };
 
     // lazy import toast to avoid circular deps and only if environment supports it
