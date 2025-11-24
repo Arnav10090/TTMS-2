@@ -8,9 +8,10 @@ type Row = { id: string; text: string; severity: Severity; ts: number }
 
 const now = Date.now()
 const initial: Row[] = [
-  { id: '1', text: 'High waiting time detected at Gate Entry', severity: 'warning', ts: now - 1000 * 60 * 5 },
-  { id: '2', text: 'TTR exceeded threshold for MH12AB1234', severity: 'critical', ts: now - 1000 * 60 * 3 },
-  { id: '3', text: 'Scale 2 calibration due in 2 days', severity: 'info', ts: now - 1000 * 60 * 1 },
+  { id: '1', text: 'Tank #2 HCl concentration exceeds safe limit (165 g/l)', severity: 'critical', ts: now - 1000 * 60 * 5 },
+  { id: '2', text: 'Pickling Line-1 temperature warning: 72°C threshold exceeded', severity: 'warning', ts: now - 1000 * 60 * 3 },
+  { id: '3', text: 'Sensor #12 communication loss detected', severity: 'warning', ts: now - 1000 * 60 * 2 },
+  { id: '4', text: 'Hot Rinse Tank level trending low at 18%', severity: 'info', ts: now - 1000 * 60 * 1 },
 ]
 
 function rowCls(s: Severity) {
