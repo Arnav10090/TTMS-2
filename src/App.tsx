@@ -53,45 +53,47 @@ const App = () => {
           <Toaster />
           <Sonner />
           <div className="flex min-h-screen w-full bg-background">
-              <HMISidebar 
+            {showPtmsUI && (
+              <HMISidebar
                 isCollapsed={sidebarCollapsed}
                 onToggle={() => setSidebarCollapsed(!sidebarCollapsed)}
               />
-              <div 
-                className={`flex-1 relative transition-all duration-300 ${sidebarCollapsed ? 'ml-20' : 'ml-64'}`} 
-                style={{ ['--content-left']: sidebarCollapsed ? '5rem' : '16rem' } as any}
-              >
-                <Navbar isCollapsed={sidebarCollapsed} />
-                <main className="pt-16 pb-20">
-                  <Routes>
-                    {/* TTMS Routes */}
-                    <Route path="/" element={<TTMSDashboardPage />} />
-                    <Route path="/document-verification" element={<TTMSDocumentVerificationPage />} />
-                    <Route path="/scheduling" element={<TTMSSchedulingPage />} />
-                    <Route path="/ttms-reports" element={<TTMSReportsPage />} />
-                    <Route path="/ttms-alarms" element={<TTMSAlarmsPage />} />
-                    <Route path="/history" element={<TTMSHistoryPage />} />
-                    <Route path="/spare" element={<TTMSSparePage />} />
+            )}
+            <div
+              className={`flex-1 relative transition-all duration-300 ${showPtmsUI ? (sidebarCollapsed ? 'ml-20' : 'ml-64') : ''}`}
+              style={{ ['--content-left']: showPtmsUI ? (sidebarCollapsed ? '5rem' : '16rem') : '0rem' } as any}
+            >
+              {showPtmsUI && <Navbar isCollapsed={sidebarCollapsed} />}
+              <main className={showPtmsUI ? "pt-16 pb-20" : ""}>
+                <Routes>
+                  {/* TTMS Routes */}
+                  <Route path="/" element={<TTMSDashboardPage />} />
+                  <Route path="/document-verification" element={<TTMSDocumentVerificationPage />} />
+                  <Route path="/scheduling" element={<TTMSSchedulingPage />} />
+                  <Route path="/ttms-reports" element={<TTMSReportsPage />} />
+                  <Route path="/ttms-alarms" element={<TTMSAlarmsPage />} />
+                  <Route path="/history" element={<TTMSHistoryPage />} />
+                  <Route path="/spare" element={<TTMSSparePage />} />
 
-                    {/* PTMS Routes */}
-                    <Route path="/hmi-01" element={<HMI01Overview />} />
-                    <Route path="/hmi-01/*" element={<HMI01Tabs />}>
-                      <Route index element={<Navigate to="tank" replace />} />
-                      <Route path="tank" element={<HMI01TankSection />} />
-                      <Route path="pickling" element={<HMI02PicklingSection />} />
-                      <Route path="legends" element={<HMI02LegendsSection />} />
-                    </Route>
-                    <Route path="/pump-operation" element={<HMI03PumpOperation />} />
-                    <Route path="/trends" element={<HMI04Trends />} />
-                    <Route path="/alarms" element={<HMI05Alarms />} />
-                    <Route path="/reports" element={<HMI06Reports />} />
-                    <Route path="/historical" element={<HMI07Historical />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <AlarmsFooter />
-              </div>
+                  {/* PTMS Routes */}
+                  <Route path="/hmi-01" element={<HMI01Overview />} />
+                  <Route path="/hmi-01/*" element={<HMI01Tabs />}>
+                    <Route index element={<Navigate to="tank" replace />} />
+                    <Route path="tank" element={<HMI01TankSection />} />
+                    <Route path="pickling" element={<HMI02PicklingSection />} />
+                    <Route path="legends" element={<HMI02LegendsSection />} />
+                  </Route>
+                  <Route path="/pump-operation" element={<HMI03PumpOperation />} />
+                  <Route path="/trends" element={<HMI04Trends />} />
+                  <Route path="/alarms" element={<HMI05Alarms />} />
+                  <Route path="/reports" element={<HMI06Reports />} />
+                  <Route path="/historical" element={<HMI07Historical />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              {showPtmsUI && <AlarmsFooter />}
             </div>
+          </div>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
