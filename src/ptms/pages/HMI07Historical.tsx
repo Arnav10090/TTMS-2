@@ -311,7 +311,7 @@ const HMI07Historical = () => {
             </span>
           )
         : (
-            <Button key={n} {...({ variant: 'outline', size: 'sm' } as any)} className={currentPage === n ? 'bg-primary text-primary-foreground' : ''} onClick={() => setPage(n as number)}>
+            <Button key={n} {...({ variant: 'outline', size: 'sm' } as any)} className={`transition-colors ${currentPage === n ? 'bg-primary text-primary-foreground border-primary hover:bg-primary/90' : 'hover:bg-primary/10 hover:text-primary hover:border-primary/50'}`} onClick={() => setPage(n as number)}>
               {n}
             </Button>
           ),
@@ -333,24 +333,24 @@ const HMI07Historical = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Start Date</label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input type="date" className="pl-10 bg-card border-border" value={startDate} onChange={(e)=>setStartDate(e.target.value)} />
+              <div className="relative group">
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <Input type="date" className="pl-10 bg-card border-border hover:border-primary/50 focus:border-primary transition-colors" value={startDate} onChange={(e)=>setStartDate(e.target.value)} />
               </div>
             </div>
 
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">End Date</label>
-              <div className="relative">
-                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input type="date" className="pl-10 bg-card border-border" value={endDate} onChange={(e)=>setEndDate(e.target.value)} />
+              <div className="relative group">
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <Input type="date" className="pl-10 bg-card border-border hover:border-primary/50 focus:border-primary transition-colors" value={endDate} onChange={(e)=>setEndDate(e.target.value)} />
               </div>
             </div>
 
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Equipment</label>
               <Select value={equipment} onValueChange={(v: string)=>setEquipment(v)}>
-                <SelectTrigger className="bg-card border-border">
+                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border z-50">
@@ -367,7 +367,7 @@ const HMI07Historical = () => {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Parameter</label>
               <Select value={parameter} onValueChange={(v: string)=>setParameter(v)}>
-                <SelectTrigger className="bg-card border-border">
+                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border z-50">
@@ -383,7 +383,7 @@ const HMI07Historical = () => {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Shift Filter</label>
               <Select value={shift} onValueChange={(v: string)=>setShift(v)}>
-                <SelectTrigger className="bg-card border-border">
+                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border z-50">
@@ -398,7 +398,7 @@ const HMI07Historical = () => {
             <div>
               <label className="text-xs text-muted-foreground mb-1 block">Data Quality</label>
               <Select value={dataQuality} onValueChange={(v: string)=>setDataQuality(v)}>
-                <SelectTrigger className="bg-card border-border">
+                <SelectTrigger className="bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border z-50">
@@ -411,19 +411,19 @@ const HMI07Historical = () => {
 
             <div className="flex flex-wrap items-center gap-2 md:col-span-2 lg:col-span-4">
               <span className="inline-flex h-8 items-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Export Options:</span>
-              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2" onClick={exportVisible}>
+              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2 hover:bg-primary/10 hover:text-primary transition-colors" onClick={exportVisible}>
                 <Download className="w-3 h-3" />
                 Visible Data (CSV)
               </Button>
-              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2" onClick={exportFiltered}>
+              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2 hover:bg-primary/10 hover:text-primary transition-colors" onClick={exportFiltered}>
                 <Download className="w-3 h-3" />
                 All Filtered (CSV)
               </Button>
-              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2" onClick={exportExcel}>
+              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2 hover:bg-primary/10 hover:text-primary transition-colors" onClick={exportExcel}>
                 <Download className="w-3 h-3" />
                 Excel (XLSX)
               </Button>
-              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2" onClick={exportPDF}>
+              <Button {...({ variant: 'outline', size: 'sm' } as any)} className="gap-2 hover:bg-primary/10 hover:text-primary transition-colors" onClick={exportPDF}>
                 <Download className="w-3 h-3" />
                 PDF Report
               </Button>
@@ -431,12 +431,12 @@ const HMI07Historical = () => {
           </div>
 
           <div className="flex gap-2 mt-4">
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} onClick={()=>{setStartDate('2025-10-13');setEndDate('2025-10-13');}}>Today</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} onClick={()=>{ /* implement as needed */ }}>Yesterday</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} onClick={()=>{setStartDate('2025-10-07');setEndDate('2025-10-13');}}>Last 7 Days</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} onClick={()=>{setStartDate('2025-09-14');setEndDate('2025-10-13');}}>Last 30 Days</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)}>This Month</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)}>Last Month</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{setStartDate('2025-10-13');setEndDate('2025-10-13');}}>Today</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{ /* implement as needed */ }}>Yesterday</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{setStartDate('2025-10-07');setEndDate('2025-10-13');}}>Last 7 Days</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{setStartDate('2025-09-14');setEndDate('2025-10-13');}}>Last 30 Days</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors">This Month</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors">Last Month</Button>
           </div>
 
           {appliedFilters.length > 0 && (
@@ -445,7 +445,7 @@ const HMI07Historical = () => {
               {appliedFilters.map((filter) => (
                 <span
                   key={filter.key}
-                  className="inline-flex items-center gap-2 rounded-full bg-muted/20 px-3 py-1 text-muted-foreground"
+                  className="inline-flex items-center gap-2 rounded-full bg-muted/20 px-3 py-1 text-muted-foreground hover:bg-muted/40 transition-colors"
                 >
                   <span className="text-xs font-medium text-foreground">{filter.label}</span>
                   <button
@@ -458,7 +458,7 @@ const HMI07Historical = () => {
                   </button>
                 </span>
               ))}
-              <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="h-7 px-2" onClick={resetFilters}>
+              <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="h-7 px-2 hover:bg-muted/50 hover:text-foreground transition-colors" onClick={resetFilters}>
                 Clear all
               </Button>
             </div>
@@ -469,7 +469,7 @@ const HMI07Historical = () => {
         <div className="overflow-x-auto">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <Input placeholder="Search historical..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="w-64" />
+              <Input placeholder="Search historical..." value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="w-64 hover:border-primary/50 focus:border-primary transition-colors" />
             </div>
             <div className="text-sm text-muted-foreground">Showing {start + 1}-{end} of {filtered.length} records</div>
           </div>
@@ -535,7 +535,7 @@ const HMI07Historical = () => {
             <div className="flex items-center gap-2">
               <label className="text-sm text-muted-foreground">Rows per page:</label>
               <Select value={String(rowsPerPage)} onValueChange={(v: string)=>setRowsPerPage(Number(v))}>
-                <SelectTrigger className="w-20 h-8 bg-card border-border">
+                <SelectTrigger className="w-20 h-8 bg-card border-border hover:border-primary/50 focus:border-primary transition-colors">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border z-50">
@@ -551,13 +551,13 @@ const HMI07Historical = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} onClick={()=>setPage(1)}>First</Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} onClick={()=>setPage((p)=>Math.max(1,p-1))}>Previous</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(1)}>First</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === 1} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.max(1,p-1))}>Previous</Button>
             <div className="flex items-center gap-1">
               {renderPageButtons()}
             </div>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} onClick={()=>setPage((p)=>Math.min(pageCount,p+1))}>Next</Button>
-            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} onClick={()=>setPage(pageCount)}>Last</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.min(pageCount,p+1))}>Next</Button>
+            <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={currentPage === pageCount} className="hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(pageCount)}>Last</Button>
           </div>
         </div>
 
