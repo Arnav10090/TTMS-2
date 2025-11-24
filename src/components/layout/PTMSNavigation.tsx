@@ -3,12 +3,12 @@
 import { Link, useLocation } from 'react-router-dom'
 
 const ptmsNavItems = [
-  { label: 'Overview', href: '/hmi-01' },
-  { label: 'Pump Operation', href: '/pump-operation' },
-  { label: 'Trends/Graphs', href: '/trends' },
-  { label: 'Alarms/Alerts', href: '/alarms' },
-  { label: 'Reports', href: '/reports' },
-  { label: 'Historical Data', href: '/historical' },
+  { label: 'Overview', href: '/ptms/hmi-01' },
+  { label: 'Pump Operation', href: '/ptms/pump-operation' },
+  { label: 'Trends/Graphs', href: '/ptms/trends' },
+  { label: 'Alarms/Alerts', href: '/ptms/alarms' },
+  { label: 'Reports', href: '/ptms/reports' },
+  { label: 'Historical Data', href: '/ptms/historical' },
 ]
 
 export default function PTMSNavigation() {
