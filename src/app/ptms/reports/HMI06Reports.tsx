@@ -339,10 +339,10 @@ const HMI06Reports = () => {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" onClick={exportCoils} className="gap-2">
+            <Button variant="outline" size="sm" onClick={exportCoils} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Download className="w-4 h-4" /> Export CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={printCoils} className="gap-2">
+            <Button variant="outline" size="sm" onClick={printCoils} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Printer className="w-4 h-4" /> Print
             </Button>
           </div>
@@ -472,10 +472,10 @@ const HMI06Reports = () => {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" onClick={exportDaily} className="gap-2">
+            <Button variant="outline" size="sm" onClick={exportDaily} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Download className="w-4 h-4" /> Export CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={printDaily} className="gap-2">
+            <Button variant="outline" size="sm" onClick={printDaily} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Printer className="w-4 h-4" /> Print
             </Button>
           </div>
@@ -597,10 +597,10 @@ const HMI06Reports = () => {
               </SelectContent>
             </Select>
 
-            <Button variant="outline" size="sm" onClick={exportCons} className="gap-2">
+            <Button variant="outline" size="sm" onClick={exportCons} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Download className="w-4 h-4" /> Export CSV
             </Button>
-            <Button variant="outline" size="sm" onClick={printCons} className="gap-2">
+            <Button variant="outline" size="sm" onClick={printCons} className="gap-2 hover:bg-primary/10 hover:text-primary hover:border-primary/50 transition-colors">
               <Printer className="w-4 h-4" /> Print
             </Button>
           </div>
