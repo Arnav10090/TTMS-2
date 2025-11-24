@@ -26,11 +26,11 @@ export default function PTMSNavigation() {
               to={t.href}
               className={
                 'flex-1 basis-0 text-center px-3 py-1.5 rounded-full transition-colors ' +
-                (active
-                  ? isTtmsLink
-                    ? 'bg-success text-white shadow'
-                    : 'bg-cssPrimary text-white shadow'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200')
+                (isTtmsLink
+                  ? 'bg-success text-white shadow hover:bg-success'
+                  : active
+                    ? 'bg-cssPrimary text-white shadow'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200')
               }
             >
               {t.label}
