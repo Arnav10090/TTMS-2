@@ -173,7 +173,7 @@ const AlarmsFooter: React.FC = () => {
       mounted = false;
       if (intervalId) clearInterval(intervalId);
     };
-  }, []);
+  }, [isPtms]);
 
   // left offset var used by App
   return (
