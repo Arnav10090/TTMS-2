@@ -10,6 +10,8 @@ export default function TTMSAlarmsPage() {
   const [severity, setSeverity] = useState<'all'|'critical'|'warning'|'info'>('all')
   const [start, setStart] = useState<string>('')
   const [end, setEnd] = useState<string>('')
+  const [rowsPerPage, setRowsPerPage] = useState<number>(50)
+  const [page, setPage] = useState<number>(1)
 
   useEffect(() => {
     const refresh = () => {
@@ -111,12 +113,17 @@ export default function TTMSAlarmsPage() {
     })
   }, [rows, query, severity, start, end])
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage))
+  const pageData = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage)
+
+  useEffect(() => { setPage(1) }, [query, severity, start, end])
+
   return (
     <DashboardLayout>
       <div className="card p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Alarms</h2>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
             <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
             <select value={severity} onChange={(e)=>setSeverity(e.target.value as 'all'|'critical'|'warning'|'info')} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
               <option value="all" className="hover:bg-blue-100">All Severities</option>
@@ -126,6 +133,12 @@ export default function TTMSAlarmsPage() {
             </select>
             <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
             <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
+            <select value={rowsPerPage} onChange={(e)=>setRowsPerPage(parseInt(e.target.value))} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
+              <option value="10">10 per page</option>
+              <option value="25">25 per page</option>
+              <option value="50">50 per page</option>
+              <option value="100">100 per page</option>
+            </select>
           </div>
         </div>
 
@@ -142,7 +155,7 @@ export default function TTMSAlarmsPage() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r) => {
+              {pageData.map((r) => {
                 const rawLevel = r.alertLevel ?? 'warning'
                 const level = rawLevel === 'danger' ? 'critical' : rawLevel
                 const badgeClass = level === 'critical'
@@ -172,6 +185,14 @@ export default function TTMSAlarmsPage() {
           </table>
         </div>
 
+        <div className="flex items-center justify-between mt-3">
+          <div className="text-sm text-slate-600">Showing {Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
+          <div className="flex items-center gap-2">
+            <button onClick={()=>setPage((p)=>Math.max(1, p-1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Previous</button>
+            <div className="px-3 py-1 text-sm">Page {page} / {totalPages}</div>
+            <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Next</button>
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   )
