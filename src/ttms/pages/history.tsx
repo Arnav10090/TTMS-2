@@ -41,7 +41,7 @@ export default function TTMSHistoryPage() {
   const [sortKey, setSortKey] = useState<string>('timestamp')
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc')
   const [page, setPage] = useState(1)
-  const pageSize = 12
+  const [pageSize, setPageSize] = useState(10)
 
   const DRIVER_ALL = 'all-drivers'
   const CUSTOMER_ALL = 'all-customers'
@@ -98,7 +98,7 @@ export default function TTMSHistoryPage() {
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize))
   const pageData = sorted.slice((page - 1) * pageSize, page * pageSize)
 
-  useEffect(() => { setPage(1) }, [query, driverFilter, customerFilter, start, end, sortKey, sortDir])
+  useEffect(() => { setPage(1) }, [query, driverFilter, customerFilter, start, end, sortKey, sortDir, pageSize])
 
   const changeSort = (key: string) => {
     if (key === sortKey) setSortDir(sortDir === 'asc' ? 'desc' : 'asc')
@@ -241,15 +241,31 @@ export default function TTMSHistoryPage() {
       </div>
 
       <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/30">
-        <div className="text-sm text-muted-foreground">Showing {Math.min(sorted.length, (page-1)*pageSize+1)} to {Math.min(sorted.length, page*pageSize)} of {sorted.length} entries</div>
-        <div className="flex items-center gap-2">
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(1)}>First</Button>
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.max(1, p-1))}>« Prev</Button>
+        <div className="flex items-center gap-4">
+          <div className="text-xs text-muted-foreground">Showing {sorted.length === 0 ? 0 : Math.min(sorted.length, (page-1)*pageSize+1)} to {Math.min(sorted.length, page*pageSize)} of {sorted.length} entries</div>
+          <div>
+            <label className="block text-xs font-medium text-muted-foreground mb-1">Rows per page</label>
+            <Select value={String(pageSize)} onValueChange={(val)=>setPageSize(parseInt(val))}>
+              <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200 w-[140px]">
+                <SelectValue placeholder="Rows" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                <SelectItem value="10" className="hover:bg-primary/10 cursor-pointer">10</SelectItem>
+                <SelectItem value="25" className="hover:bg-primary/10 cursor-pointer">25</SelectItem>
+                <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50</SelectItem>
+                <SelectItem value="100" className="hover:bg-primary/10 cursor-pointer">100</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <button onClick={()=>setPage(1)} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">First</button>
+          <button onClick={()=>setPage((p)=>Math.max(1, p-1))} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">« Prev</button>
           {Array.from({ length: totalPages }).slice(0, 7).map((_, i) => (
-            <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={page === i + 1 ? 'bg-primary text-primary-foreground border-primary' : ''} onClick={() => setPage(i + 1)}>{i + 1}</Button>
+            <button key={i} onClick={() => setPage(i + 1)} className={`px-3 py-1 rounded text-sm ${page === i + 1 ? 'bg-cyan-500 text-white border border-cyan-500' : 'border border-slate-300 hover:bg-slate-50'}`}>{i + 1}</button>
           ))}
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === totalPages} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.min(totalPages, p+1))}>Next »</Button>
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === totalPages} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(totalPages)}>Last</Button>
+          <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Next »</button>
+          <button onClick={()=>setPage(totalPages)} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Last</button>
         </div>
       </div>
       </div>

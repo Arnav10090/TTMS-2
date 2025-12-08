@@ -116,6 +116,11 @@ export default function Page() {
     })
   }, [rows, query, severity, start, end])
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage))
+  const pageData = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage)
+
+  useEffect(() => { setPage(1) }, [query, severity, start, end])
+
   return (
     <DashboardLayout>
       <div className="card p-4">
@@ -147,7 +152,7 @@ export default function Page() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r) => {
+              {pageData.map((r) => {
                 const rawLevel = r.alertLevel ?? 'warning'
                 const level = rawLevel === 'danger' ? 'critical' : rawLevel
                 const badgeClass = level === 'critical'
@@ -177,6 +182,14 @@ export default function Page() {
           </table>
         </div>
 
+        <div className="flex items-center justify-between mt-3">
+          <div className="text-sm text-slate-600">Showing {Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
+          <div className="flex items-center gap-2">
+            <button onClick={()=>setPage((p)=>Math.max(1, p-1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Previous</button>
+            <div className="px-3 py-1 text-sm">Page {page} / {totalPages}</div>
+            <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Next</button>
+          </div>
+        </div>
       </div>
     </DashboardLayout>
   )
