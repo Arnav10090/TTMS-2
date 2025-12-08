@@ -152,7 +152,7 @@ export default function Page() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((r) => {
+              {pageData.map((r) => {
                 const rawLevel = r.alertLevel ?? 'warning'
                 const level = rawLevel === 'danger' ? 'critical' : rawLevel
                 const badgeClass = level === 'critical'
