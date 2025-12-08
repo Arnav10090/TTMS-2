@@ -10,7 +10,7 @@ export default function TTMSAlarmsPage() {
   const [severity, setSeverity] = useState<'all'|'critical'|'warning'|'info'>('all')
   const [start, setStart] = useState<string>('')
   const [end, setEnd] = useState<string>('')
-  const [rowsPerPage, setRowsPerPage] = useState<number>(50)
+  const [rowsPerPage, setRowsPerPage] = useState<number>(10)
   const [page, setPage] = useState<number>(1)
 
   useEffect(() => {
