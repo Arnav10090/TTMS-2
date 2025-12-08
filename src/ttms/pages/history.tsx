@@ -255,15 +255,15 @@ export default function TTMSHistoryPage() {
       </div>
 
       <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/30">
-        <div className="text-sm text-muted-foreground">Showing {Math.min(sorted.length, (page-1)*pageSize+1)} to {Math.min(sorted.length, page*pageSize)} of {sorted.length} entries</div>
-        <div className="flex items-center gap-2">
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(1)}>First</Button>
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === 1} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.max(1, p-1))}>« Prev</Button>
+        <div className="text-xs text-muted-foreground">Showing {sorted.length === 0 ? 0 : Math.min(sorted.length, (page-1)*pageSize+1)} to {Math.min(sorted.length, page*pageSize)} of {sorted.length} entries</div>
+        <div className="flex items-center gap-1">
+          <button onClick={()=>setPage(1)} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">First</button>
+          <button onClick={()=>setPage((p)=>Math.max(1, p-1))} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">« Prev</button>
           {Array.from({ length: totalPages }).slice(0, 7).map((_, i) => (
-            <Button key={i} {...({ variant: 'outline', size: 'sm' } as any)} className={page === i + 1 ? 'bg-primary text-primary-foreground border-primary' : ''} onClick={() => setPage(i + 1)}>{i + 1}</Button>
+            <button key={i} onClick={() => setPage(i + 1)} className={`px-3 py-1 rounded text-sm ${page === i + 1 ? 'bg-cyan-500 text-white border border-cyan-500' : 'border border-slate-300 hover:bg-slate-50'}`}>{i + 1}</button>
           ))}
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === totalPages} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage((p)=>Math.min(totalPages, p+1))}>Next »</Button>
-          <Button {...({ variant: 'outline', size: 'sm' } as any)} disabled={page === totalPages} className="disabled:opacity-50 disabled:cursor-not-allowed" onClick={()=>setPage(totalPages)}>Last</Button>
+          <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Next »</button>
+          <button onClick={()=>setPage(totalPages)} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Last</button>
         </div>
       </div>
       </div>
