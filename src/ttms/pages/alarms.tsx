@@ -133,7 +133,7 @@ export default function TTMSAlarmsPage() {
             </select>
             <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
             <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
-            <select value={rowsPerPage} onChange={(e)=>setRowsPerPage(parseInt(e.target.value))} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
+            <select value={rowsPerPage} onChange={(e)=>setRowsPerPage(parseInt(e.target.value))} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200 text-sm">
               <option value="10">10 per page</option>
               <option value="25">25 per page</option>
               <option value="50">50 per page</option>
