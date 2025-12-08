@@ -141,13 +141,27 @@ export default function TTMSHistoryPage() {
             </Select>
           </div>
           <div className="flex items-end gap-2">
-            <div className="w-1/2">
+            <div className="w-1/3">
               <label className="block text-xs font-medium text-muted-foreground mb-2">From</label>
               <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="w-full px-3 py-2 border border-border rounded-md hover:border-primary/50 focus:border-primary transition-colors" />
             </div>
-            <div className="w-1/2">
+            <div className="w-1/3">
               <label className="block text-xs font-medium text-muted-foreground mb-2">To</label>
               <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="w-full px-3 py-2 border border-border rounded-md hover:border-primary/50 focus:border-primary transition-colors" />
+            </div>
+            <div className="w-1/3">
+              <label className="block text-xs font-medium text-muted-foreground mb-2">Rows per page</label>
+              <Select value={String(pageSize)} onValueChange={(val)=>setPageSize(parseInt(val))}>
+                <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200">
+                  <SelectValue placeholder="Rows per page" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="12" className="hover:bg-primary/10 cursor-pointer">12 per page</SelectItem>
+                  <SelectItem value="25" className="hover:bg-primary/10 cursor-pointer">25 per page</SelectItem>
+                  <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50 per page</SelectItem>
+                  <SelectItem value="100" className="hover:bg-primary/10 cursor-pointer">100 per page</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </div>
