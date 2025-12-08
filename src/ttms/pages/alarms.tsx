@@ -185,12 +185,16 @@ export default function TTMSAlarmsPage() {
           </table>
         </div>
 
-        <div className="flex items-center justify-between mt-3">
-          <div className="text-sm text-slate-600">Showing {Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
-          <div className="flex items-center gap-2">
-            <button onClick={()=>setPage((p)=>Math.max(1, p-1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Previous</button>
-            <div className="px-3 py-1 text-sm">Page {page} / {totalPages}</div>
-            <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Next</button>
+        <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-200">
+          <div className="text-xs text-slate-600">Showing {filtered.length === 0 ? 0 : Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
+          <div className="flex items-center gap-1">
+            <button onClick={()=>setPage(1)} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">First</button>
+            <button onClick={()=>setPage((p)=>Math.max(1, p-1))} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">« Prev</button>
+            {Array.from({ length: totalPages }).slice(0, 7).map((_, i) => (
+              <button key={i} onClick={() => setPage(i + 1)} className={`px-3 py-1 rounded text-sm ${page === i + 1 ? 'bg-cyan-500 text-white border border-cyan-500' : 'border border-slate-300 hover:bg-slate-50'}`}>{i + 1}</button>
+            ))}
+            <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Next »</button>
+            <button onClick={()=>setPage(totalPages)} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Last</button>
           </div>
         </div>
       </div>
