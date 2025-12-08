@@ -41,7 +41,7 @@ export default function TTMSHistoryPage() {
   const [sortKey, setSortKey] = useState<string>('timestamp')
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc')
   const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(12)
+  const [pageSize, setPageSize] = useState(10)
 
   const DRIVER_ALL = 'all-drivers'
   const CUSTOMER_ALL = 'all-customers'
