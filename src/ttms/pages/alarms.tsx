@@ -133,12 +133,6 @@ export default function TTMSAlarmsPage() {
             </select>
             <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
             <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
-            <select value={rowsPerPage} onChange={(e)=>setRowsPerPage(parseInt(e.target.value))} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200 text-sm">
-              <option value="10">10 per page</option>
-              <option value="25">25 per page</option>
-              <option value="50">50 per page</option>
-              <option value="100">100 per page</option>
-            </select>
           </div>
         </div>
 
@@ -186,7 +180,18 @@ export default function TTMSAlarmsPage() {
         </div>
 
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-200">
-          <div className="text-xs text-slate-600">Showing {filtered.length === 0 ? 0 : Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
+          <div className="flex items-center gap-4">
+            <div className="text-xs text-slate-600">Showing {filtered.length === 0 ? 0 : Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600 mb-1">Rows per page</label>
+              <select value={rowsPerPage} onChange={(e)=>setRowsPerPage(parseInt(e.target.value))} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200 text-sm">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </div>
+          </div>
           <div className="flex items-center gap-1">
             <button onClick={()=>setPage(1)} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">First</button>
             <button onClick={()=>setPage((p)=>Math.max(1, p-1))} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">« Prev</button>
