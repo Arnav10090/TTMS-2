@@ -98,7 +98,7 @@ export default function TTMSHistoryPage() {
   const totalPages = Math.max(1, Math.ceil(sorted.length / pageSize))
   const pageData = sorted.slice((page - 1) * pageSize, page * pageSize)
 
-  useEffect(() => { setPage(1) }, [query, driverFilter, customerFilter, start, end, sortKey, sortDir])
+  useEffect(() => { setPage(1) }, [query, driverFilter, customerFilter, start, end, sortKey, sortDir, pageSize])
 
   const changeSort = (key: string) => {
     if (key === sortKey) setSortDir(sortDir === 'asc' ? 'desc' : 'asc')
