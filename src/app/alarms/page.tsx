@@ -3,6 +3,8 @@
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { useEffect, useMemo, useState } from 'react'
 import { AlertManager } from '@/utils/alerts'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Button } from '@/components/ui/Button'
 
 export default function Page() {
   const [rows, setRows] = useState<any[]>([])
@@ -10,6 +12,8 @@ export default function Page() {
   const [severity, setSeverity] = useState<'all'|'critical'|'warning'|'info'>('all')
   const [start, setStart] = useState<string>('')
   const [end, setEnd] = useState<string>('')
+  const [rowsPerPage, setRowsPerPage] = useState<number>(50)
+  const [page, setPage] = useState<number>(1)
 
   useEffect(() => {
     const refresh = () => {
