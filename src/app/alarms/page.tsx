@@ -116,6 +116,11 @@ export default function Page() {
     })
   }, [rows, query, severity, start, end])
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / rowsPerPage))
+  const pageData = filtered.slice((page - 1) * rowsPerPage, page * rowsPerPage)
+
+  useEffect(() => { setPage(1) }, [query, severity, start, end])
+
   return (
     <DashboardLayout>
       <div className="card p-4">
