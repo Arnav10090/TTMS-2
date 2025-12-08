@@ -156,7 +156,7 @@ export default function TTMSHistoryPage() {
                   <SelectValue placeholder="Rows per page" />
                 </SelectTrigger>
                 <SelectContent className="bg-popover border-border z-50 shadow-lg">
-                  <SelectItem value="12" className="hover:bg-primary/10 cursor-pointer">12 per page</SelectItem>
+                  <SelectItem value="10" className="hover:bg-primary/10 cursor-pointer">10 per page</SelectItem>
                   <SelectItem value="25" className="hover:bg-primary/10 cursor-pointer">25 per page</SelectItem>
                   <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50 per page</SelectItem>
                   <SelectItem value="100" className="hover:bg-primary/10 cursor-pointer">100 per page</SelectItem>
