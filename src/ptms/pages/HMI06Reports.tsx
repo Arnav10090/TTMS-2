@@ -312,17 +312,20 @@ const HMI06Reports = () => {
     <div className="p-6 space-y-6 animate-fade-in">
       <TopInfoPanel />
 
-      {/* Report Type Selector */}
-      <div className="glass-panel p-4 rounded">
-        <label className="text-sm font-semibold text-muted-foreground mr-4">Select Report Type:</label>
+      {/* Report Type Selector Navbar */}
+      <div className="hmi-card flex items-center justify-between w-full">
+        <div>
+          <h1 className="text-2xl font-bold">Reports</h1>
+          <p className="text-sm text-muted-foreground">Select a report table to display.</p>
+        </div>
         <Select value={selectedReport} onValueChange={(v) => setSelectedReport(v as 'COIL' | 'DAILY' | 'CONSUMPTION')}>
-          <SelectTrigger className="w-48 hover:border-primary hover:bg-primary/8 hover:shadow-sm focus:border-primary focus:shadow-lg transition-all duration-200">
-            <SelectValue placeholder={selectedReport} />
+          <SelectTrigger className="w-56 hover:border-primary hover:bg-primary/8 hover:shadow-sm focus:border-primary focus:shadow-lg transition-all duration-200">
+            <SelectValue placeholder={`${selectedReport} Report`} />
           </SelectTrigger>
           <SelectContent className="shadow-lg">
-            <SelectItem value="COIL" className="hover:bg-primary/10 cursor-pointer">COIL</SelectItem>
-            <SelectItem value="DAILY" className="hover:bg-primary/10 cursor-pointer">DAILY</SelectItem>
-            <SelectItem value="CONSUMPTION" className="hover:bg-primary/10 cursor-pointer">CONSUMPTION</SelectItem>
+            <SelectItem value="COIL" className="hover:bg-primary/10 cursor-pointer">Coil Report</SelectItem>
+            <SelectItem value="DAILY" className="hover:bg-primary/10 cursor-pointer">Daily Report</SelectItem>
+            <SelectItem value="CONSUMPTION" className="hover:bg-primary/10 cursor-pointer">Consumption Report</SelectItem>
           </SelectContent>
         </Select>
       </div>
