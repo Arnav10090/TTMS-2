@@ -13,7 +13,7 @@ const HMI01Tabs = () => {
           to="tank"
           end
           className={({ isActive }) =>
-            `${linkBase} ${isActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}`
+            `${linkBase} ${isActive ? 'bg-primary text-white border-primary' : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}`
           }
         >
           Tank Section
@@ -21,7 +21,7 @@ const HMI01Tabs = () => {
         <NavLink
           to="pickling"
           className={({ isActive }) =>
-            `${linkBase} ${isActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}`
+            `${linkBase} ${isActive ? 'bg-primary text-white border-primary' : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}`
           }
         >
           Pickling Section
@@ -29,7 +29,7 @@ const HMI01Tabs = () => {
         <NavLink
           to="legends"
           className={({ isActive }) =>
-            `${linkBase} ${isActive ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}`
+            `${linkBase} ${isActive ? 'bg-primary text-white border-primary' : 'bg-card text-muted-foreground border-border hover:bg-muted hover:text-foreground'}`
           }
         >
           Legends
