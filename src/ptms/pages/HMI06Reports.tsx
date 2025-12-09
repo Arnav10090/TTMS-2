@@ -180,6 +180,9 @@ const HMI06Reports = () => {
   const [dailyRows] = useState<DailyRow[]>(makeDailyRows(40));
   const [consumptionRows] = useState<ConsumptionRow[]>(makeConsumptionRows(30));
 
+  // Report type selector
+  const [selectedReport, setSelectedReport] = useState<'COIL' | 'DAILY' | 'CONSUMPTION'>('COIL');
+
   // Controls per table
   const [coilQuery, setCoilQuery] = useState('');
   const [coilPage, setCoilPage] = useState(1);
