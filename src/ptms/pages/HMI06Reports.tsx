@@ -180,6 +180,9 @@ const HMI06Reports = () => {
   const [dailyRows] = useState<DailyRow[]>(makeDailyRows(40));
   const [consumptionRows] = useState<ConsumptionRow[]>(makeConsumptionRows(30));
 
+  // Report type selector
+  const [selectedReport, setSelectedReport] = useState<'COIL' | 'DAILY' | 'CONSUMPTION'>('COIL');
+
   // Controls per table
   const [coilQuery, setCoilQuery] = useState('');
   const [coilPage, setCoilPage] = useState(1);
@@ -306,10 +309,29 @@ const HMI06Reports = () => {
   }, [consQuery, consPageSize]);
 
   return (
-    <div className="p-6 space-y-6 animate-fade-in"> 
+    <div className="p-6 space-y-6 animate-fade-in">
       <TopInfoPanel />
 
+      {/* Report Type Selector Navbar */}
+      <div className="hmi-card flex items-center justify-between w-full">
+        <div>
+          <h1 className="text-2xl font-bold">Reports</h1>
+          <p className="text-sm text-muted-foreground">Select a report table to display.</p>
+        </div>
+        <Select value={selectedReport} onValueChange={(v) => setSelectedReport(v as 'COIL' | 'DAILY' | 'CONSUMPTION')}>
+          <SelectTrigger className="w-56 hover:border-primary hover:bg-primary/8 hover:shadow-sm focus:border-primary focus:shadow-lg transition-all duration-200">
+            <SelectValue placeholder={`${selectedReport} Report`} />
+          </SelectTrigger>
+          <SelectContent className="shadow-lg">
+            <SelectItem value="COIL" className="hover:bg-primary/10 cursor-pointer">Coil Report</SelectItem>
+            <SelectItem value="DAILY" className="hover:bg-primary/10 cursor-pointer">Daily Report</SelectItem>
+            <SelectItem value="CONSUMPTION" className="hover:bg-primary/10 cursor-pointer">Consumption Report</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Coil Report */}
+      {selectedReport === 'COIL' && (
       <div id="coil-report" className="hmi-card">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">COIL REPORT</h2>
@@ -441,8 +463,10 @@ const HMI06Reports = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Daily Report */}
+      {selectedReport === 'DAILY' && (
       <div id="daily-report" className="hmi-card">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">DAILY REPORT</h2>
@@ -551,8 +575,10 @@ const HMI06Reports = () => {
           </div>
         </div>
       </div>
+      )}
 
       {/* Consumption Report */}
+      {selectedReport === 'CONSUMPTION' && (
       <div id="cons-report" className="hmi-card">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold">CONSUMPTION REPORT</h2>
@@ -634,6 +660,7 @@ const HMI06Reports = () => {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };

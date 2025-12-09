@@ -30,8 +30,8 @@ const generateHistoricalData = () => {
 const historicalData = generateHistoricalData();
 
 const DEFAULT_FILTERS = {
-  startDate: '2025-10-01',
-  endDate: '2025-10-31',
+  startDate: '2025-10-13',
+  endDate: '2025-10-13',
   equipment: 'all-equipment',
   parameter: 'all-params',
   shift: 'all-shifts',
@@ -431,12 +431,12 @@ const HMI07Historical = () => {
           </div>
 
           <div className="flex gap-2 mt-4">
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{setStartDate('2025-10-13');setEndDate('2025-10-13');}}>Today</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{ /* implement as needed */ }}>Yesterday</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{setStartDate('2025-10-07');setEndDate('2025-10-13');}}>Last 7 Days</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors" onClick={()=>{setStartDate('2025-09-14');setEndDate('2025-10-13');}}>Last 30 Days</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors">This Month</Button>
-            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className="hover:bg-muted/50 hover:text-foreground transition-colors">Last Month</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className={`transition-all duration-200 ${startDate === '2025-10-13' && endDate === '2025-10-13' ? 'bg-red-600 text-black hover:bg-red-700' : 'hover:bg-muted/50 hover:text-foreground'}`} onClick={()=>{setStartDate('2025-10-13');setEndDate('2025-10-13');}}>Today</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className={`transition-all duration-200 ${startDate === '2025-10-12' && endDate === '2025-10-12' ? 'bg-red-600 text-black hover:bg-red-700' : 'hover:bg-muted/50 hover:text-foreground'}`} onClick={()=>{setStartDate('2025-10-12');setEndDate('2025-10-12');}}>Yesterday</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className={`transition-all duration-200 ${startDate === '2025-10-07' && endDate === '2025-10-13' ? 'bg-red-600 text-black hover:bg-red-700' : 'hover:bg-muted/50 hover:text-foreground'}`} onClick={()=>{setStartDate('2025-10-07');setEndDate('2025-10-13');}}>Last 7 Days</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className={`transition-all duration-200 ${startDate === '2025-09-14' && endDate === '2025-10-13' ? 'bg-red-600 text-black hover:bg-red-700' : 'hover:bg-muted/50 hover:text-foreground'}`} onClick={()=>{setStartDate('2025-09-14');setEndDate('2025-10-13');}}>Last 30 Days</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className={`transition-all duration-200 ${startDate === '2025-10-01' && endDate === '2025-10-31' ? 'bg-red-600 text-black hover:bg-red-700' : 'hover:bg-muted/50 hover:text-foreground'}`} onClick={()=>{setStartDate('2025-10-01');setEndDate('2025-10-31');}}>This Month</Button>
+            <Button {...({ variant: 'ghost', size: 'sm' } as any)} className={`transition-all duration-200 ${startDate === '2025-09-01' && endDate === '2025-09-30' ? 'bg-red-600 text-black hover:bg-red-700' : 'hover:bg-muted/50 hover:text-foreground'}`} onClick={()=>{setStartDate('2025-09-01');setEndDate('2025-09-30');}}>Last Month</Button>
           </div>
 
           {appliedFilters.length > 0 && (
