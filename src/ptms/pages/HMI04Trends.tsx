@@ -207,7 +207,7 @@ const HMI04Trends = () => {
                     pressed={selectedParam.group === 'picklingTank' && selectedParam.label === param}
                     onPressedChange={() => setSelectedParam({ group: 'picklingTank', label: param })}
                     variant="outline"
-                    className="w-full justify-start text-sm"
+                    className={`w-full justify-start text-sm ${selectedParam.group === 'picklingTank' && selectedParam.label === param ? 'text-black' : ''}`}
                   >
                     {param}
                   </Toggle>
@@ -225,7 +225,7 @@ const HMI04Trends = () => {
                     pressed={selectedParam.group === 'rinseTank' && selectedParam.label === param}
                     onPressedChange={() => setSelectedParam({ group: 'rinseTank', label: param })}
                     variant="outline"
-                    className="w-full justify-start text-sm"
+                    className={`w-full justify-start text-sm ${selectedParam.group === 'rinseTank' && selectedParam.label === param ? 'text-black' : ''}`}
                   >
                     {param}
                   </Toggle>
@@ -243,7 +243,7 @@ const HMI04Trends = () => {
                     pressed={selectedParam.group === 'hotRinseTank' && selectedParam.label === param}
                     onPressedChange={() => setSelectedParam({ group: 'hotRinseTank', label: param })}
                     variant="outline"
-                    className="w-full justify-start text-sm"
+                    className={`w-full justify-start text-sm ${selectedParam.group === 'hotRinseTank' && selectedParam.label === param ? 'text-black' : ''}`}
                   >
                     {param}
                   </Toggle>
@@ -261,7 +261,7 @@ const HMI04Trends = () => {
                     pressed={selectedParam.group === 'rinseWaterStorage' && selectedParam.label === param}
                     onPressedChange={() => setSelectedParam({ group: 'rinseWaterStorage', label: param })}
                     variant="outline"
-                    className="w-full justify-start text-sm"
+                    className={`w-full justify-start text-sm ${selectedParam.group === 'rinseWaterStorage' && selectedParam.label === param ? 'text-black' : ''}`}
                   >
                     {param}
                   </Toggle>
@@ -279,7 +279,7 @@ const HMI04Trends = () => {
                     pressed={selectedParam.group === 'hotAirDrier' && selectedParam.label === param}
                     onPressedChange={() => setSelectedParam({ group: 'hotAirDrier', label: param })}
                     variant="outline"
-                    className="w-full justify-start text-sm"
+                    className={`w-full justify-start text-sm ${selectedParam.group === 'hotAirDrier' && selectedParam.label === param ? 'text-black' : ''}`}
                   >
                     {param}
                   </Toggle>
@@ -297,7 +297,7 @@ const HMI04Trends = () => {
                     pressed={selectedParam.group === 'storageTank' && selectedParam.label === param}
                     onPressedChange={() => setSelectedParam({ group: 'storageTank', label: param })}
                     variant="outline"
-                    className="w-full justify-start text-sm"
+                    className={`w-full justify-start text-sm ${selectedParam.group === 'storageTank' && selectedParam.label === param ? 'text-black' : ''}`}
                   >
                     {param}
                   </Toggle>
