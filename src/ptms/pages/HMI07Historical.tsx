@@ -30,8 +30,8 @@ const generateHistoricalData = () => {
 const historicalData = generateHistoricalData();
 
 const DEFAULT_FILTERS = {
-  startDate: '2025-10-01',
-  endDate: '2025-10-31',
+  startDate: '2025-10-13',
+  endDate: '2025-10-13',
   equipment: 'all-equipment',
   parameter: 'all-params',
   shift: 'all-shifts',
