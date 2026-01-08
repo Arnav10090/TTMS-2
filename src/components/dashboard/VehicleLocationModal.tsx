@@ -34,7 +34,7 @@ const StageToMapArea: Record<StageKey, { xRange: [number, number]; yRange: [numb
   gateExit: { xRange: [760, 860], yRange: [610, 680] },      // Exit gate area
 };
 
-function MapViewport({ vehicleX, vehicleY }: { vehicleX: number; vehicleY: number }) {
+function MapViewport({ vehicleX, vehicleY, initialZoomMultiplier = 1 }: { vehicleX: number; vehicleY: number; initialZoomMultiplier?: number }) {
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [panning, setPanning] = useState(false);
@@ -50,7 +50,7 @@ function MapViewport({ vehicleX, vehicleY }: { vehicleX: number; vehicleY: numbe
     const cw = el.clientWidth || 0;
     const ch = el.clientHeight || 0;
     if (!cw || !ch) return;
-    const s = Math.min(cw / CONTENT_W, ch / CONTENT_H);
+    const s = Math.min(cw / CONTENT_W, ch / CONTENT_H) * initialZoomMultiplier;
     const tx = (cw - CONTENT_W * s) / 2;
     const ty = (ch - CONTENT_H * s) / 2;
     setScale(+Math.min(3, Math.max(0.3, s)).toFixed(3));
