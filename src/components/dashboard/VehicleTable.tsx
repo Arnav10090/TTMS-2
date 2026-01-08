@@ -219,7 +219,16 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   const [day, setDay] = useState<Date | null>(null);
   const [start, setStart] = useState<Date | null>(null);
   const [end, setEnd] = useState<Date | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleRow | null>(null);
+  const [selectedStage, setSelectedStage] = useState<StageKey | null>(null);
   const pageSize = 7;
+
+  const handleStageClick = (vehicle: VehicleRow, stage: StageKey) => {
+    setSelectedVehicle(vehicle);
+    setSelectedStage(stage);
+    setModalOpen(true);
+  };
 
   const filtered = useMemo(() => {
     return data.filter((row) => {
