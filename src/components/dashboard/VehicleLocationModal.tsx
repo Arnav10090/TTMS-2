@@ -353,6 +353,33 @@ export default function VehicleLocationModal({
           </button>
         </div>
       </div>
+
+      {/* Expanded Map Modal */}
+      {expandedOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+          <div className="bg-white rounded-lg shadow-xl w-[95vw] max-w-[1400px] h-[90vh] p-4 relative flex flex-col">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-gray-800">Facility Layout - Expanded</h3>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setExpandedOpen(false)}
+                  aria-label="Close expanded view"
+                  className="px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 transition"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+            <div className="flex-1">
+              <MapViewport
+                vehicleX={vehiclePosition.x}
+                vehicleY={vehiclePosition.y}
+                initialZoomMultiplier={1.3}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
