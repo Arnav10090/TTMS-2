@@ -210,8 +210,49 @@ function MapViewport({ vehicleX, vehicleY }: { vehicleX: number; vehicleY: numbe
             <path d="M 680 600 L 720 600" />
             <path d="M 810 600 L 810 590" />
           </g>
+
+          {/* Vehicle indicator */}
+          <g>
+            {/* Blinking outer circle */}
+            <circle
+              cx={vehicleX}
+              cy={vehicleY}
+              r="18"
+              fill="none"
+              stroke="#f59e0b"
+              strokeWidth="2"
+              opacity="0.6"
+              className="animate-pulse"
+              style={{
+                animation: 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              }}
+            />
+            {/* Vehicle box */}
+            <rect
+              x={vehicleX - 10}
+              y={vehicleY - 10}
+              width="20"
+              height="20"
+              fill="#f59e0b"
+              stroke="#d97706"
+              strokeWidth="2"
+              rx="2"
+            />
+            {/* Inner indicator */}
+            <circle cx={vehicleX} cy={vehicleY} r="4" fill="#d97706" />
+          </g>
         </g>
       </svg>
+      <style>{`
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 0.6;
+          }
+          50% {
+            opacity: 0.2;
+          }
+        }
+      `}</style>
     </div>
   );
 }
