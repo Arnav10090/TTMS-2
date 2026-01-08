@@ -300,7 +300,7 @@ export default function VehicleLocationModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[85vh] flex flex-col">
+      <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full flex flex-col max-h-[85vh]">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div>
@@ -319,9 +319,9 @@ export default function VehicleLocationModal({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-auto p-6 flex flex-col gap-6">
+        <div className="overflow-auto p-6 flex flex-col gap-4">
           {/* Facility Layout Map */}
-          <div className="flex-1 flex flex-col">
+          <div>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-gray-700">Facility Layout - Vehicle Position</h3>
               <button
@@ -331,11 +331,11 @@ export default function VehicleLocationModal({
                 Extend
               </button>
             </div>
-            <div className="flex-1 flex flex-col min-h-[450px]">
+            <div className="h-[320px] flex flex-col">
               <div className="flex-1">
                 <MapViewport vehicleX={vehiclePosition.x} vehicleY={vehiclePosition.y} />
               </div>
-              <div className="mt-2 flex items-center justify-center gap-2 pb-2">
+              <div className="mt-1 flex items-center justify-center gap-2 py-1">
                 <div className="w-4 h-4 rounded bg-amber-400 border-2 border-amber-600" style={{animation: 'legendBlink 1s cubic-bezier(0.4, 0, 0.6, 1) infinite'}}></div>
                 <span className="text-xs text-gray-600">Vehicle Location</span>
               </div>
@@ -343,7 +343,7 @@ export default function VehicleLocationModal({
           </div>
 
           {/* Delay Reason */}
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
             <h3 className="text-sm font-semibold text-amber-900 mb-2">Reason for Delay</h3>
             <p className="text-sm text-amber-800">{delayReason}</p>
             <div className="mt-3 text-xs text-amber-700">
