@@ -264,6 +264,7 @@ export default function VehicleLocationModal({
   stage,
 }: VehicleLocationModalProps) {
   const [vehiclePosition, setVehiclePosition] = useState({ x: 250, y: 250 });
+  const [expandedOpen, setExpandedOpen] = useState(false);
 
   // Generate random position within the relevant stage area
   useEffect(() => {
@@ -276,6 +277,14 @@ export default function VehicleLocationModal({
       }
     }
   }, [isOpen, vehicle, stage]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setExpandedOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   if (!isOpen || !vehicle || !stage) return null;
 
