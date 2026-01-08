@@ -509,6 +509,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.gateEntry}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -518,6 +519,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.tareWeighing}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -527,6 +529,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.loading}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -536,6 +539,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.postLoadingWeighing}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -545,6 +549,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.gateExit}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap min-w-[110px]">
