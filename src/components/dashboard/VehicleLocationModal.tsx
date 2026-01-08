@@ -315,8 +315,16 @@ export default function VehicleLocationModal({
         <div className="flex-1 overflow-auto p-6 flex flex-col gap-6">
           {/* Facility Layout Map */}
           <div className="flex-1 flex flex-col">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Facility Layout - Vehicle Position</h3>
-            <div className="flex-1 min-h-[300px]">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-700">Facility Layout - Vehicle Position</h3>
+              <button
+                onClick={() => setExpandedOpen(true)}
+                className="px-3 py-1.5 rounded bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium transition"
+              >
+                Extend
+              </button>
+            </div>
+            <div className="flex-1 min-h-[450px]">
               <MapViewport vehicleX={vehiclePosition.x} vehicleY={vehiclePosition.y} />
             </div>
             <div className="mt-3 flex items-center justify-center gap-2">
