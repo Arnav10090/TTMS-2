@@ -308,7 +308,7 @@ export default function VehicleLocationModal({
           <div className="flex-1 flex flex-col">
             <h3 className="text-sm font-semibold text-gray-700 mb-3">Facility Layout - Vehicle Position</h3>
             <div className="flex-1 min-h-[300px]">
-              <MapViewport />
+              <MapViewport vehicleX={vehiclePosition.x} vehicleY={vehiclePosition.y} />
             </div>
             <div className="mt-3 flex items-center justify-center gap-2">
               <div className="w-4 h-4 rounded bg-amber-400 border-2 border-amber-600"></div>
