@@ -34,7 +34,7 @@ const StageToMapArea: Record<StageKey, { xRange: [number, number]; yRange: [numb
   gateExit: { xRange: [760, 860], yRange: [610, 680] },      // Exit gate area
 };
 
-function MapViewport() {
+function MapViewport({ vehicleX, vehicleY }: { vehicleX: number; vehicleY: number }) {
   const [scale, setScale] = useState(1);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const [panning, setPanning] = useState(false);
