@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { VehicleRow, StageKey } from '@/types/vehicle';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface VehicleLocationModalProps {
   isOpen: boolean;
@@ -25,20 +25,13 @@ function getDelayReason(stage: StageKey | null, waitTime: number, stdTime: numbe
   return stage ? reasons[stage] : 'Vehicle is experiencing delays.';
 }
 
-// Facility layout zones
-const FacilityZones = [
-  { id: 'entry', label: 'Gate Entry', x: 15, y: 20, width: 80, height: 30, color: '#3b82f6' },
-  { id: 'weighing', label: 'Tare Weighing', x: 15, y: 60, width: 35, height: 25, color: '#8b5cf6' },
-  { id: 'loading', label: 'Loading Zone', x: 55, y: 45, width: 35, height: 40, color: '#eab308' },
-  { id: 'exit', label: 'Gate Exit', x: 15, y: 90, width: 80, height: 8, color: '#10b981' },
-];
-
-const StageToZone: Record<StageKey, string> = {
-  gateEntry: 'entry',
-  tareWeighing: 'weighing',
-  loading: 'loading',
-  postLoadingWeighing: 'loading',
-  gateExit: 'exit',
+// Map zone areas (BAY-3, BAY-4, BAY-5 are loading zones)
+const StageToMapArea: Record<StageKey, { xRange: [number, number]; yRange: [number, number] }> = {
+  gateEntry: { xRange: [40, 320], yRange: [40, 120] },      // BAY-1 area
+  tareWeighing: { xRange: [400, 600], yRange: [530, 580] },  // Weighing Rooms
+  loading: { xRange: [40, 740], yRange: [160, 520] },        // BAY-2, BAY-3, BAY-4, BAY-5
+  postLoadingWeighing: { xRange: [400, 600], yRange: [530, 580] }, // Weighing Rooms again
+  gateExit: { xRange: [760, 860], yRange: [610, 680] },      // Exit gate area
 };
 
 export default function VehicleLocationModal({
