@@ -152,12 +152,14 @@ function TimeCell({
   data,
   display,
   onAlert,
+  onStageClick,
 }: {
   label: string;
   stage: StageKey;
   data: VehicleRow;
   display: string;
   onAlert: (stage: StageKey) => void;
+  onStageClick?: (vehicle: VehicleRow, stage: StageKey) => void;
 }) {
   const st = data.stages[stage];
   const { status, className, shouldAlert, shouldBlink } = getStageStatus(
@@ -186,9 +188,17 @@ function TimeCell({
 
   const blinkClass = shouldBlink ? "hard-blink" : "";
 
+  const handleClick = () => {
+    if (shouldBlink && onStageClick) {
+      onStageClick(data, stage);
+    }
+  };
+
   return (
-    <span
-      className={`${className} ${blinkClass}`}
+    <button
+      onClick={handleClick}
+      disabled={!shouldBlink}
+      className={`${className} ${blinkClass} ${shouldBlink ? 'cursor-pointer hover:opacity-90' : ''} border-none bg-transparent p-0`}
       title={`${label} • ${st.state} (${st.waitTime}/${st.stdTime}m)`}
     >
       {status === "completed" && <Check size={14} className="text-white" />}
@@ -197,7 +207,7 @@ function TimeCell({
         <span className="w-2 h-2 rounded-full bg-white/90" />
       )}
       <span className="ml-1 font-semibold">{display}</span>
-    </span>
+    </button>
   );
 }
 
