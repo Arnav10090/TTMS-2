@@ -696,6 +696,13 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   }
 }
       `}</style>
+
+      <VehicleLocationModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        vehicle={selectedVehicle}
+        stage={selectedStage}
+      />
     </div>
   );
 }
