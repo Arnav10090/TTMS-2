@@ -9,7 +9,7 @@ export default function ProgressBar({ value, color = 'blue', showLabel = false }
   const labelColor = clamped >= 60 ? 'text-white' : 'text-slate-700'
   return (
     <div className="progress-track relative" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={clamped} aria-label="progress">
-      <div className={`progress-fill ${colorCls}`} style={{ width: `${clamped}%` }} />
+      <div className={`progress-fill ${colorCls}`} style={{ width: `${clamped}%`, minWidth: '2px' }} />
       {showLabel && (
         <div className={`absolute inset-0 flex items-center justify-center ${labelColor} text-[10px] font-medium select-none`}>{clamped}%</div>
       )}
