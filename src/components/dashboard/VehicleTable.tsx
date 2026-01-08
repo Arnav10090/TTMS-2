@@ -8,6 +8,7 @@ import DayWiseFilter from "@/components/filters/DayWiseFilter";
 import PeriodFilter from "@/components/filters/PeriodFilter";
 import { Check, AlertTriangle, Siren, Truck } from "lucide-react";
 import { AlertManager } from "@/utils/alerts";
+import VehicleLocationModal from "@/components/dashboard/VehicleLocationModal";
 
 function sortData(
   rows: VehicleRow[],
