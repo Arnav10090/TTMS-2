@@ -8,6 +8,7 @@ import DayWiseFilter from "@/components/filters/DayWiseFilter";
 import PeriodFilter from "@/components/filters/PeriodFilter";
 import { Check, AlertTriangle, Siren, Truck } from "lucide-react";
 import { AlertManager } from "@/utils/alerts";
+import VehicleLocationModal from "@/components/dashboard/VehicleLocationModal";
 
 function sortData(
   rows: VehicleRow[],
@@ -151,12 +152,14 @@ function TimeCell({
   data,
   display,
   onAlert,
+  onStageClick,
 }: {
   label: string;
   stage: StageKey;
   data: VehicleRow;
   display: string;
   onAlert: (stage: StageKey) => void;
+  onStageClick?: (vehicle: VehicleRow, stage: StageKey) => void;
 }) {
   const st = data.stages[stage];
   const { status, className, shouldAlert, shouldBlink } = getStageStatus(
@@ -185,9 +188,17 @@ function TimeCell({
 
   const blinkClass = shouldBlink ? "hard-blink" : "";
 
+  const handleClick = () => {
+    if (shouldBlink && onStageClick) {
+      onStageClick(data, stage);
+    }
+  };
+
   return (
-    <span
-      className={`${className} ${blinkClass}`}
+    <button
+      onClick={handleClick}
+      disabled={!shouldBlink}
+      className={`${className} ${blinkClass} ${shouldBlink ? 'cursor-pointer hover:opacity-90' : ''} border-none bg-transparent p-0`}
       title={`${label} • ${st.state} (${st.waitTime}/${st.stdTime}m)`}
     >
       {status === "completed" && <Check size={14} className="text-white" />}
@@ -196,7 +207,7 @@ function TimeCell({
         <span className="w-2 h-2 rounded-full bg-white/90" />
       )}
       <span className="ml-1 font-semibold">{display}</span>
-    </span>
+    </button>
   );
 }
 
@@ -208,7 +219,16 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   const [day, setDay] = useState<Date | null>(null);
   const [start, setStart] = useState<Date | null>(null);
   const [end, setEnd] = useState<Date | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState<VehicleRow | null>(null);
+  const [selectedStage, setSelectedStage] = useState<StageKey | null>(null);
   const pageSize = 7;
+
+  const handleStageClick = (vehicle: VehicleRow, stage: StageKey) => {
+    setSelectedVehicle(vehicle);
+    setSelectedStage(stage);
+    setModalOpen(true);
+  };
 
   const filtered = useMemo(() => {
     return data.filter((row) => {
@@ -489,6 +509,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.gateEntry}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -498,6 +519,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.tareWeighing}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -507,6 +529,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.loading}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -516,6 +539,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.postLoadingWeighing}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
@@ -525,6 +549,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       data={row}
                       display={times.gateExit}
                       onAlert={() => {}}
+                      onStageClick={handleStageClick}
                     />
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap min-w-[110px]">
@@ -671,6 +696,13 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   }
 }
       `}</style>
+
+      <VehicleLocationModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        vehicle={selectedVehicle}
+        stage={selectedStage}
+      />
     </div>
   );
 }
