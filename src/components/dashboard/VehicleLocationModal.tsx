@@ -246,13 +246,9 @@ function MapViewport({ vehicleX, vehicleY, initialZoomMultiplier = 1 }: { vehicl
         @keyframes vehicleBlink {
           0%, 100% {
             opacity: 1;
-            stroke-width: 3;
-            r: 16;
           }
           50% {
-            opacity: 0.3;
-            stroke-width: 2;
-            r: 20;
+            opacity: 0.25;
           }
         }
         @keyframes legendBlink {
