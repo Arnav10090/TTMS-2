@@ -213,18 +213,17 @@ function MapViewport({ vehicleX, vehicleY, initialZoomMultiplier = 1 }: { vehicl
 
           {/* Vehicle indicator */}
           <g>
-            {/* Blinking outer circle */}
+            {/* Blinking outer circle - larger and more visible */}
             <circle
               cx={vehicleX}
               cy={vehicleY}
-              r="18"
+              r="16"
               fill="none"
               stroke="#f59e0b"
-              strokeWidth="2"
-              opacity="0.6"
-              className="animate-pulse"
+              strokeWidth="3"
+              opacity="1"
               style={{
-                animation: 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                animation: 'vehicleBlink 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
               }}
             />
             {/* Vehicle box */}
@@ -244,12 +243,24 @@ function MapViewport({ vehicleX, vehicleY, initialZoomMultiplier = 1 }: { vehicl
         </g>
       </svg>
       <style>{`
-        @keyframes pulse {
+        @keyframes vehicleBlink {
           0%, 100% {
-            opacity: 0.6;
+            opacity: 1;
+            stroke-width: 3;
+            r: 16;
           }
           50% {
-            opacity: 0.2;
+            opacity: 0.3;
+            stroke-width: 2;
+            r: 20;
+          }
+        }
+        @keyframes legendBlink {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.4;
           }
         }
       `}</style>
@@ -324,17 +335,19 @@ export default function VehicleLocationModal({
                 Extend
               </button>
             </div>
-            <div className="flex-1 min-h-[450px]">
-              <MapViewport vehicleX={vehiclePosition.x} vehicleY={vehiclePosition.y} />
-            </div>
-            <div className="mt-3 flex items-center justify-center gap-2">
-              <div className="w-4 h-4 rounded bg-amber-400 border-2 border-amber-600"></div>
-              <span className="text-xs text-gray-600">Vehicle Location</span>
+            <div className="flex-1 flex flex-col min-h-[450px]">
+              <div className="flex-1">
+                <MapViewport vehicleX={vehiclePosition.x} vehicleY={vehiclePosition.y} />
+              </div>
+              <div className="mt-2 flex items-center justify-center gap-2 pb-2">
+                <div className="w-4 h-4 rounded bg-amber-400 border-2 border-amber-600" style={{animation: 'legendBlink 1s cubic-bezier(0.4, 0, 0.6, 1) infinite'}}></div>
+                <span className="text-xs text-gray-600">Vehicle Location</span>
+              </div>
             </div>
           </div>
 
           {/* Delay Reason */}
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-4">
             <h3 className="text-sm font-semibold text-amber-900 mb-2">Reason for Delay</h3>
             <p className="text-sm text-amber-800">{delayReason}</p>
             <div className="mt-3 text-xs text-amber-700">
