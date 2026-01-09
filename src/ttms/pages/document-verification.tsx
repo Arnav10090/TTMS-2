@@ -5,7 +5,9 @@ import DocumentUploadZone from '@/components/document/DocumentUploadZone'
 import SearchableOrderList from '@/components/document/SearchableOrderList'
 import RFIDModule from '@/components/document/RFIDModule'
 import DriverHelperDetails from '@/components/document/DriverHelperDetails'
-import { useState } from 'react'
+import VehicleQueueTable from '@/components/document/VehicleQueueTable'
+import { useState, useRef } from 'react'
+import { useRealTimeData } from '@/hooks/useRealTimeData'
 
 export default function TTMSDocumentVerificationPage() {
   const [modalSrc, setModalSrc] = useState<string | null>(null)
