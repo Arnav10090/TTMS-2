@@ -26,14 +26,30 @@ export default function TTMSDashboardPage() {
       <div className="flex items-center justify-between mb-4">
         <div />
         <div className="flex flex-col items-end">
-          <TimeRangeToggle mode={range} setMode={setRange} onCompare={() => setCompareOpen(true)} />
-          <RangeHint mode={range} />
+          <TimeRangeToggle
+            mode={range}
+            setMode={setRange}
+            onCompare={() => setCompareOpen(true)}
+            customFrom={customFrom}
+            customTo={customTo}
+            onCustomFromChange={setCustomFrom}
+            onCustomToChange={setCustomTo}
+          />
+          <RangeHint mode={range} customFrom={customFrom} customTo={customTo} />
         </div>
       </div>
 
       <Modal open={compareOpen} onClose={() => setCompareOpen(false)}>
         <div className="mb-3 flex justify-end">
-          <TimeRangeToggle mode={range} setMode={setRange} hideCompare />
+          <TimeRangeToggle
+            mode={range}
+            setMode={setRange}
+            hideCompare
+            customFrom={customFrom}
+            customTo={customTo}
+            onCustomFromChange={setCustomFrom}
+            onCustomToChange={setCustomTo}
+          />
         </div>
         <TrendsChart data={kpiData} range={range} height="h-[70vh]" />
       </Modal>
