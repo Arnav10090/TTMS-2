@@ -3,7 +3,7 @@
 import { RangeMode } from '@/components/ui/TimeRangeToggle'
 import { scaleNumberByRange } from '@/utils/range'
 
-export default function SummaryCards({ horizontal = false, range = 'today' }: { horizontal?: boolean; range?: RangeMode } = {}) {
+export default function SummaryCards({ horizontal = false, range = 'today', customFrom, customTo }: { horizontal?: boolean; range?: RangeMode; customFrom?: string; customTo?: string } = {}) {
   const grad = 'linear-gradient(135deg, #E91E63 0%, #AD1457 100%)'
 
   const baseCards = [
@@ -16,8 +16,8 @@ export default function SummaryCards({ horizontal = false, range = 'today' }: { 
 
   const cards = baseCards.map((c) => ({
     ...c,
-    primary: { ...c.primary, value: Math.round(scaleNumberByRange(c.primary.value, range)) },
-    metric: { ...c.metric, total: Math.round(scaleNumberByRange(c.metric.total, range)), avg: Math.round(scaleNumberByRange(c.metric.avg, range) * 10) / 10 },
+    primary: { ...c.primary, value: Math.round(scaleNumberByRange(c.primary.value, range, undefined, customFrom, customTo)) },
+    metric: { ...c.metric, total: Math.round(scaleNumberByRange(c.metric.total, range, undefined, customFrom, customTo)), avg: Math.round(scaleNumberByRange(c.metric.avg, range, undefined, customFrom, customTo) * 10) / 10 },
   }))
 
   if (horizontal) {
