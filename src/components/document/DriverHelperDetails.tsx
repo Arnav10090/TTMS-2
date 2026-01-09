@@ -160,6 +160,25 @@ function Section({
   return (
     <div className="rounded-ui border border-slate-200 p-3">
       <h4 className="font-medium text-slate-700 mb-3">{title}</h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+        <div>
+          <label
+            htmlFor={`${prefix}-name`}
+            className="block text-sm text-slate-600 mb-1"
+          >
+            Name: <span className="text-red-600">*</span>
+          </label>
+          <input
+            id={`${prefix}-name`}
+            type="text"
+            value={person.name}
+            onChange={(e) => onChange({ ...person, name: e.target.value })}
+            placeholder={`Enter ${prefix} name`}
+            className="w-full border border-slate-300 rounded-ui px-3 py-2"
+            aria-required
+          />
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <label
