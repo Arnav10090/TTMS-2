@@ -27,10 +27,10 @@ export default function VehicleQueueTable({
         <table className="min-w-full text-[12px]">
           <thead className="bg-[#f3f4f6] text-[13px] font-semibold text-slate-700">
             <tr>
-              <th className="px-3 py-2 text-left w-[80px]">SNo.</th>
-              <th className="px-3 py-2 text-left w-[160px]">Vehicle Reg No.</th>
-              <th className="px-3 py-2 text-left w-[140px]">Reporting Time</th>
-              <th className="px-3 py-2 text-left flex-1">Remarks</th>
+              <th className="px-3 py-2 text-center w-[80px]">SNo.</th>
+              <th className="px-3 py-2 text-center w-[160px]">Vehicle Reg No.</th>
+              <th className="px-3 py-2 text-center w-[140px]">Reporting Time</th>
+              <th className="px-3 py-2 text-center flex-1">Remarks</th>
               <th className="px-3 py-2 text-center w-[140px]">Actions</th>
             </tr>
           </thead>
