@@ -46,6 +46,7 @@ export default function TTMSReportsPage() {
   const [active, setActive] = useState<ReportStepKey>('loading')
   const [steps, setSteps] = useState<ReportStep[]>(baseSteps)
   const [loading, setLoading] = useState(true)
+  const [range, setRange] = useState<RangeMode>('today')
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 600)
