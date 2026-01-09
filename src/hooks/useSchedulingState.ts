@@ -11,7 +11,9 @@ export type VehicleEntry = {
   regNo: string
   area: string
   position: string
+  tareWeight: string
   loadingGate: string
+  wtPostLoading: string
   selected: boolean
 }
 export type AlertItem = { id: string; level: 'critical'|'warning'|'info'|'success'; message: string; ts: number }
