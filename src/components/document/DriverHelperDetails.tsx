@@ -68,8 +68,8 @@ export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }
   }, [vehicleRegNo])
 
   useEffect(() => {
-    const dValid = driver.language.trim().length > 0 && driver.phone.length === 10 && driver.locationOn && driver.locationShared
-    const hValid = helper.language.trim().length > 0 && helper.phone.length === 10 && helper.locationOn && helper.locationShared
+    const dValid = driver.name.trim().length > 0 && driver.language.trim().length > 0 && driver.phone.length === 10 && driver.locationOn && driver.locationShared
+    const hValid = helper.name.trim().length > 0 && helper.language.trim().length > 0 && helper.phone.length === 10 && helper.locationOn && helper.locationShared
     onValidationChange?.({ driver: dValid, helper: hValid })
   }, [driver, helper, onValidationChange])
 
