@@ -6,6 +6,8 @@ import SearchHeader from '@/components/reports/SearchHeader'
 import ProcessTimeline from '@/components/reports/ProcessTimeline'
 import SummaryCards from '@/components/reports/SummaryCards'
 import TotalTimeStackedBar from '@/components/reports/TotalTimeStackedBar'
+import TimeRangeToggle, { RangeMode } from '@/components/ui/TimeRangeToggle'
+import RangeHint from '@/components/ui/TimeRangeHint'
 import { ReportStep, ReportStepKey } from '@/types/reports'
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 import { VehicleRow } from '@/types/vehicle'
@@ -44,6 +46,9 @@ export default function TTMSReportsPage() {
   const [active, setActive] = useState<ReportStepKey>('loading')
   const [steps, setSteps] = useState<ReportStep[]>(baseSteps)
   const [loading, setLoading] = useState(true)
+  const [range, setRange] = useState<RangeMode>('today')
+  const [customFrom, setCustomFrom] = useState<string>('')
+  const [customTo, setCustomTo] = useState<string>('')
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 600)
@@ -75,8 +80,24 @@ export default function TTMSReportsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4">
+        <div className="flex items-center justify-between mb-4">
+          <div />
+          <div className="flex flex-col items-end">
+            <TimeRangeToggle
+              mode={range}
+              setMode={setRange}
+              hideCompare
+              customFrom={customFrom}
+              customTo={customTo}
+              onCustomFromChange={setCustomFrom}
+              onCustomToChange={setCustomTo}
+            />
+            <RangeHint mode={range} customFrom={customFrom} customTo={customTo} />
+          </div>
+        </div>
+
         <div className="w-full">
-          <SummaryCards horizontal />
+          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} />
         </div>
 
         <div>

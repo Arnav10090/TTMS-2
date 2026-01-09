@@ -1,18 +1,24 @@
 import { RangeMode } from '@/components/ui/TimeRangeToggle'
-import { format, startOfMonth, startOfYear } from 'date-fns'
+import { format, startOfMonth, startOfYear, differenceInDays } from 'date-fns'
 
 export function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate()
 }
 
-export function rangeFactor(range: RangeMode, refDate: Date = new Date()): number {
+export function rangeFactor(range: RangeMode, refDate: Date = new Date(), customFrom?: string, customTo?: string): number {
   if (range === 'today') return 1
   if (range === 'monthly') return daysInMonth(refDate.getFullYear(), refDate.getMonth())
+  if (range === 'custom' && customFrom && customTo) {
+    const fromDate = new Date(customFrom)
+    const toDate = new Date(customTo)
+    const days = differenceInDays(toDate, fromDate)
+    return Math.max(1, days)
+  }
   return 360
 }
 
-export function scaleNumberByRange(value: number, range: RangeMode, refDate?: Date): number {
-  const factor = rangeFactor(range, refDate)
+export function scaleNumberByRange(value: number, range: RangeMode, refDate?: Date, customFrom?: string, customTo?: string): number {
+  const factor = rangeFactor(range, refDate, customFrom, customTo)
   return value * factor
 }
 
