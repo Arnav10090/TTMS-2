@@ -1,6 +1,9 @@
 "use client"
 
-export default function SummaryCards({ horizontal = false }: { horizontal?: boolean } = {}) {
+import { RangeMode } from '@/components/ui/TimeRangeToggle'
+import { scaleNumberByRange } from '@/utils/range'
+
+export default function SummaryCards({ horizontal = false, range = 'today' }: { horizontal?: boolean; range?: RangeMode } = {}) {
   const grad = 'linear-gradient(135deg, #E91E63 0%, #AD1457 100%)'
 
   const cards = [
