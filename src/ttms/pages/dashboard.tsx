@@ -17,6 +17,8 @@ import RangeHint from '@/components/ui/TimeRangeHint'
 export default function TTMSDashboardPage() {
   const { kpiData, vehicleData, parkingData, loading } = useRealTimeData()
   const [range, setRange] = useState<RangeMode>('today')
+  const [customFrom, setCustomFrom] = useState<string>('')
+  const [customTo, setCustomTo] = useState<string>('')
   const [compareOpen, setCompareOpen] = useState(false)
 
   return (
