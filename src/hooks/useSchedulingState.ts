@@ -111,9 +111,9 @@ export function useSchedulingState() {
   }, [])
 
   const generateReport = useCallback(() => {
-    const header = ['SN','Gate Entry Time','Vehicle Reg No','Area','Position','Loading Gate']
+    const header = ['SN','Gate Entry Time','Vehicle Reg No','Area','Position','Tare Weight','Loading Gate','Wt Post Loading']
     const csv = [header.join(',')].concat(
-      vehicleEntries.map((r) => [r.sn, r.gateEntryTime, r.regNo, r.area, r.position, r.loadingGate].join(','))
+      vehicleEntries.map((r) => [r.sn, r.gateEntryTime, r.regNo, r.area, r.position, r.tareWeight, r.loadingGate, r.wtPostLoading].join(','))
     ).join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
