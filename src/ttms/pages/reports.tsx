@@ -83,13 +83,21 @@ export default function TTMSReportsPage() {
         <div className="flex items-center justify-between mb-4">
           <div />
           <div className="flex flex-col items-end">
-            <TimeRangeToggle mode={range} setMode={setRange} hideCompare />
-            <RangeHint mode={range} />
+            <TimeRangeToggle
+              mode={range}
+              setMode={setRange}
+              hideCompare
+              customFrom={customFrom}
+              customTo={customTo}
+              onCustomFromChange={setCustomFrom}
+              onCustomToChange={setCustomTo}
+            />
+            <RangeHint mode={range} customFrom={customFrom} customTo={customTo} />
           </div>
         </div>
 
         <div className="w-full">
-          <SummaryCards horizontal range={range} />
+          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} />
         </div>
 
         <div>
