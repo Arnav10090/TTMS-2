@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 type Person = {
+  name: string;
   language: string;
   phone: string;
   locationOn: boolean;
