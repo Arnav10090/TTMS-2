@@ -44,10 +44,10 @@ export default function VehicleQueueTable({
                   key={vehicle.sn}
                   className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f9fafb]'} border-t border-[#e5e7eb] hover:bg-blue-50`}
                 >
-                  <td className="px-3 py-2 font-medium text-gray-900">{index + 1}</td>
-                  <td className="px-3 py-2 font-medium text-gray-900">{vehicle.regNo}</td>
-                  <td className="px-3 py-2 text-gray-700">{reportingTime}</td>
-                  <td className="px-3 py-2 text-gray-700">
+                  <td className="px-3 py-2 font-medium text-gray-900 text-center">{index + 1}</td>
+                  <td className="px-3 py-2 font-medium text-gray-900 text-center">{vehicle.regNo}</td>
+                  <td className="px-3 py-2 text-gray-700 text-center">{reportingTime}</td>
+                  <td className="px-3 py-2 text-gray-700 text-center">
                     {vehicle.progress < 30 ? 'Pending' : vehicle.progress < 70 ? 'In Progress' : 'Ready for Verification'}
                   </td>
                   <td className="px-3 py-2 text-center">
