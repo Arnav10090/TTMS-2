@@ -44,7 +44,9 @@ export function useSchedulingState() {
       regNo: `MH12-${1000 + i}`,
       area: 'AREA-1',
       position: '',
+      tareWeight: '',
       loadingGate: '',
+      wtPostLoading: '',
       selected: false,
     })))
 
