@@ -56,15 +56,15 @@ export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }
   // Prefill demo driver/helper details when vehicleRegNo is provided
   useEffect(() => {
     if (!vehicleRegNo) {
-      setDriver({ language: '', phone: '', locationOn: false, locationShared: false })
-      setHelper({ language: '', phone: '', locationOn: false, locationShared: false })
+      setDriver({ name: '', language: '', phone: '', locationOn: false, locationShared: false })
+      setHelper({ name: '', language: '', phone: '', locationOn: false, locationShared: false })
       return
     }
     const digits = vehicleRegNo.replace(/\D/g, '')
     const last4 = (digits ? digits.slice(-4) : '0001')
     const makePhone = (prefix: string) => (prefix + last4).padEnd(10, '0').slice(0, 10)
-    setDriver({ language: 'English', phone: makePhone('90000'), locationOn: false, locationShared: false, phoneVerified: false })
-    setHelper({ language: 'Hindi', phone: makePhone('90001'), locationOn: false, locationShared: false, phoneVerified: false })
+    setDriver({ name: 'John Doe', language: 'English', phone: makePhone('90000'), locationOn: false, locationShared: false, phoneVerified: false })
+    setHelper({ name: 'Jane Smith', language: 'Hindi', phone: makePhone('90001'), locationOn: false, locationShared: false, phoneVerified: false })
   }, [vehicleRegNo])
 
   useEffect(() => {
