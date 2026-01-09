@@ -39,12 +39,14 @@ const LANGUAGES = [
 
 export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }: { vehicleRegNo?: string; onValidationChange?: (valid: { driver: boolean; helper: boolean }) => void }) {
   const [driver, setDriver] = useState<Person>({
+    name: "",
     language: "",
     phone: "",
     locationOn: false,
     locationShared: false,
   });
   const [helper, setHelper] = useState<Person>({
+    name: "",
     language: "",
     phone: "",
     locationOn: false,
