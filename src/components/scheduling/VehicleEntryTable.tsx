@@ -207,6 +207,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                   })()}
                 </td>
                 <td className="px-3 py-2">
+                  <select value={r.tareWeight} onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
+                    <option value="">Select Area</option>
+                    <option value="Area 1">Area 1</option>
+                    <option value="Area 2">Area 2</option>
+                  </select>
+                </td>
+                <td className="px-3 py-2">
                   {(() => {
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
@@ -223,6 +230,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                       </select>
                     )
                   })()}
+                </td>
+                <td className="px-3 py-2">
+                  <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
+                    <option value="">Select Area</option>
+                    <option value="Area 1">Area 1</option>
+                    <option value="Area 2">Area 2</option>
+                  </select>
                 </td>
                 <td className="px-3 py-2 text-center">
                   <div className="flex gap-2 justify-center">
