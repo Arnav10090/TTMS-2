@@ -133,7 +133,9 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 { key: 'regNo', label: 'Vehicle Reg No', w: 'w-[160px]' },
                 { key: 'area', label: 'Area', w: 'w-[100px]' },
                 { key: 'position', label: 'Position', w: 'w-[120px]' },
+                { key: 'tareWeight', label: 'Tare Weight', w: 'w-[140px]' },
                 { key: 'loadingGate', label: 'Loading Gate', w: 'w-[140px]' },
+                { key: 'wtPostLoading', label: 'Wt Post Loading', w: 'w-[140px]' },
                 { key: 'actions', label: 'Actions', w: 'w-[120px]', align: 'text-center' },
               ].map((c) => (
                 <th
