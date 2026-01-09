@@ -10,6 +10,9 @@ import { useState, useRef } from 'react'
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 
 export default function TTMSDocumentVerificationPage() {
+  const { vehicleData } = useRealTimeData()
+  const formRef = useRef<HTMLDivElement>(null)
+
   const [modalSrc, setModalSrc] = useState<string | null>(null)
   const [vehicleRegNo, setVehicleRegNo] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
@@ -31,6 +34,16 @@ export default function TTMSDocumentVerificationPage() {
   const handleValidity = (v: { driver: boolean; helper: boolean }) => {
     if (typeof v.driver === 'boolean') setDriverValid(v.driver)
     if (typeof v.helper === 'boolean') setHelperValid(v.helper)
+  }
+
+  const handleVerifyDocs = (regNo: string) => {
+    setInputValue(regNo)
+    setVehicleRegNo(regNo)
+    setError(null)
+    // Scroll to form section
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
