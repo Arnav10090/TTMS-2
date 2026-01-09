@@ -48,7 +48,11 @@ export default function TTMSDocumentVerificationPage() {
 
   return (
     <DashboardLayout>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch">
+      <div className="mb-6">
+        <VehicleQueueTable vehicles={vehicleData} onVerifyDocs={handleVerifyDocs} />
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch" ref={formRef}>
         <div className="xl:col-span-1 space-y-4">
           <div className="card p-4">
             <label className="block text-sm font-medium text-slate-600 mb-2"><p>Vehicle Reg No. (Eg. MH12-1001)</p></label>
