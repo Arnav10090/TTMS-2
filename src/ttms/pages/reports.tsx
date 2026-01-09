@@ -78,8 +78,16 @@ export default function TTMSReportsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4">
+        <div className="flex items-center justify-between mb-4">
+          <div />
+          <div className="flex flex-col items-end">
+            <TimeRangeToggle mode={range} setMode={setRange} hideCompare />
+            <RangeHint mode={range} />
+          </div>
+        </div>
+
         <div className="w-full">
-          <SummaryCards horizontal />
+          <SummaryCards horizontal range={range} />
         </div>
 
         <div>
