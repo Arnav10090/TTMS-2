@@ -101,7 +101,9 @@ export function useSchedulingState() {
         regNo: entry.regNo || '',
         area: entry.area || 'AREA-1',
         position: entry.position || '',
+        tareWeight: entry.tareWeight || '',
         loadingGate: entry.loadingGate || '',
+        wtPostLoading: entry.wtPostLoading || '',
         selected: false,
       }
       return [row, ...rows]
