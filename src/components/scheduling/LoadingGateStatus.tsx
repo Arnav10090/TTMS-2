@@ -214,12 +214,14 @@ export default function LoadingGateStatus() {
           <div className="grid grid-cols-2 gap-2">
             {wtPostLoadings.map((item) => {
               const statusLabel = item.status === 'reserved' ? 'allocated' : item.status
+              const vehicleNo = getVehicleForItem(item.id, 'wtpost')
+              const tooltipText = vehicleNo ? `${item.id} - ${statusLabel} (${vehicleNo})` : `${item.id} - ${statusLabel}`
               return (
                 <button
                   key={item.id}
                   className={`relative rounded-ui ${statusColor(item.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
-                  title={`${item.id} - ${statusLabel}`}
-                  aria-label={`${item.id} - ${statusLabel}`}
+                  title={tooltipText}
+                  aria-label={tooltipText}
                 >
                   <span className="text-xs font-semibold">{item.id}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
