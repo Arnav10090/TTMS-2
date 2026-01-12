@@ -71,7 +71,7 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
         <button
           className={`px-4 py-2 rounded-ui ${canProceed ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
           disabled={!canProceed}
-          title={!canProceed ? 'Complete all required fields (language, phones, location, RFID)' : undefined}
+          title={!canProceed ? 'Enter an RFID tracking number to proceed' : undefined}
         >
           Proceed
         </button>
