@@ -87,15 +87,15 @@ function calculateDwellRatio(row: VehicleRow): number {
   return ttr > 0 ? Number((totalDwell / ttr).toFixed(2)) : 0;
 }
 
-// Check if current stage should blink (waiting time exceeds 1.5x standard time -> >45m when std=30)
+// Check if current stage should blink (waiting time exceeds 1.5x standard time)
 function shouldStageBlink(row: VehicleRow, stage: StageKey): boolean {
   const stageState = row.stages[stage];
   if (stageState.state !== "active") return false;
   // Gate Entry should never blink
   if (stage === 'gateEntry') return false;
-  const std = stageState.stdTime || 30;
-  const ratio = std ? stageState.waitTime / std : 0;
-  return ratio > 1.5;
+  const stdTime = STAGE_STANDARDS[stage];
+  const threshold = stdTime * 1.5;
+  return stageState.waitTime > threshold;
 }
 
 function getStageStatus(
