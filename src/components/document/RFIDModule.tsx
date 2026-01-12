@@ -17,7 +17,7 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
     setRfid('')
   }
 
-  const canProceed = Boolean(tracking) && extraReady
+  const canProceed = Boolean(tracking)
 
   return (
     <div className="space-y-3">
