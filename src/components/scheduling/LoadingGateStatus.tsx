@@ -92,23 +92,51 @@ export default function LoadingGateStatus() {
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-slate-800 font-semibold">Loading Gate Status</h3>
       </div>
-      <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-        {gates.map((g) => {
-          const isAvailable = g.status === 'available'
-          const statusLabel = g.status === 'reserved' ? 'allocated' : g.status
-          return (
-            <button
-              key={g.id}
-              onClick={() => { /* allocation disabled from grid */ }}
-              className={`relative rounded-ui ${statusColor(g.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
-              title={`${g.id} - ${statusLabel}`}
-              aria-label={`${g.id} - ${statusLabel}`}
-            >
-              <span className="text-xs font-semibold">{g.id}</span>
-              <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
-            </button>
-          )
-        })}
+      <div className="grid grid-cols-4 gap-2">
+        {/* Column 1: Tare Weight Section */}
+        <div className="flex flex-col gap-2">
+          <div className="bg-slate-100 rounded-ui p-2 text-center">
+            <h4 className="text-xs font-semibold text-slate-700">Tare Weight</h4>
+          </div>
+          <div className="flex-1 bg-slate-50 rounded-ui border-2 border-dashed border-slate-300 flex items-center justify-center">
+            <span className="text-xs text-slate-500">--</span>
+          </div>
+        </div>
+
+        {/* Columns 2-3: Loading Gate Section */}
+        <div className="col-span-2 flex flex-col gap-2">
+          <div className="bg-blue-100 rounded-ui p-2 text-center">
+            <h4 className="text-xs font-semibold text-blue-700">Loading Gate</h4>
+          </div>
+          <div className="grid grid-cols-2 gap-2">
+            {gates.map((g) => {
+              const isAvailable = g.status === 'available'
+              const statusLabel = g.status === 'reserved' ? 'allocated' : g.status
+              return (
+                <button
+                  key={g.id}
+                  onClick={() => { /* allocation disabled from grid */ }}
+                  className={`relative rounded-ui ${statusColor(g.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
+                  title={`${g.id} - ${statusLabel}`}
+                  aria-label={`${g.id} - ${statusLabel}`}
+                >
+                  <span className="text-xs font-semibold">{g.id}</span>
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Column 4: Wt Post Loading Section */}
+        <div className="flex flex-col gap-2">
+          <div className="bg-slate-100 rounded-ui p-2 text-center">
+            <h4 className="text-xs font-semibold text-slate-700">Wt Post Loading</h4>
+          </div>
+          <div className="flex-1 bg-slate-50 rounded-ui border-2 border-dashed border-slate-300 flex items-center justify-center">
+            <span className="text-xs text-slate-500">--</span>
+          </div>
+        </div>
       </div>
       <div className="mt-3 flex items-center gap-3 text-xs text-slate-600">
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-500 inline-block" /> Available</div>
