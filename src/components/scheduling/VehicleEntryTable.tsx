@@ -225,7 +225,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2">
+                <td className="px-3 py-2 w-[120px]">
                   {(() => {
                     const areaKey = (r.area || 'AREA-1') as 'AREA-1'|'AREA-2'
                     const options = availableByArea[areaKey] || []
