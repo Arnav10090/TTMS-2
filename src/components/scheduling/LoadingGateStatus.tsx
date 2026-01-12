@@ -266,12 +266,12 @@ export default function LoadingGateStatus() {
             return (
               <button
                 key={item.id}
-                className={`relative rounded-ui ${statusColor(item.status)} text-white h-16 md:h-20 flex items-center justify-center transition cursor-default`}
+                className={`relative rounded-ui ${statusColor(item.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
                 title={tooltipText}
                 aria-label={tooltipText}
               >
-                <span className="text-sm md:text-base font-semibold">{item.id}</span>
-                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-white/80" />
+                <span className="text-xs font-semibold">{item.id}</span>
+                <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
               </button>
             )
           })}
