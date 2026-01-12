@@ -98,8 +98,23 @@ export default function LoadingGateStatus() {
           <div className="bg-slate-100 rounded-ui p-2 text-center">
             <h4 className="text-xs font-semibold text-slate-700">Tare Weight</h4>
           </div>
-          <div className="flex-1 bg-slate-50 rounded-ui border-2 border-dashed border-slate-300 flex items-center justify-center">
-            <span className="text-xs text-slate-500">--</span>
+          <div className="grid grid-cols-2 gap-2">
+            {Array.from({ length: 4 }, (_, i) => {
+              const baseStatuses: Array<'available' | 'occupied' | 'reserved'> = ['available', 'occupied', 'reserved', 'available']
+              const status = baseStatuses[i % baseStatuses.length]
+              const statusLabel = status === 'reserved' ? 'allocated' : status
+              return (
+                <button
+                  key={`tw-${i}`}
+                  className={`relative rounded-ui ${statusColor(status)} text-white h-12 flex items-center justify-center transition cursor-default`}
+                  title={`TW-${i + 1} - ${statusLabel}`}
+                  aria-label={`TW-${i + 1} - ${statusLabel}`}
+                >
+                  <span className="text-xs font-semibold">TW-{i + 1}</span>
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -108,8 +123,8 @@ export default function LoadingGateStatus() {
           <div className="bg-blue-100 rounded-ui p-2 text-center">
             <h4 className="text-xs font-semibold text-blue-700">Loading Gate</h4>
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            {gates.map((g) => {
+          <div className="grid grid-cols-4 gap-2">
+            {gates.slice(0, 8).map((g) => {
               const isAvailable = g.status === 'available'
               const statusLabel = g.status === 'reserved' ? 'allocated' : g.status
               return (
@@ -133,8 +148,23 @@ export default function LoadingGateStatus() {
           <div className="bg-slate-100 rounded-ui p-2 text-center">
             <h4 className="text-xs font-semibold text-slate-700">Wt Post Loading</h4>
           </div>
-          <div className="flex-1 bg-slate-50 rounded-ui border-2 border-dashed border-slate-300 flex items-center justify-center">
-            <span className="text-xs text-slate-500">--</span>
+          <div className="grid grid-cols-2 gap-2">
+            {Array.from({ length: 4 }, (_, i) => {
+              const baseStatuses: Array<'available' | 'occupied' | 'reserved'> = ['available', 'occupied', 'reserved', 'available']
+              const status = baseStatuses[i % baseStatuses.length]
+              const statusLabel = status === 'reserved' ? 'allocated' : status
+              return (
+                <button
+                  key={`wpl-${i}`}
+                  className={`relative rounded-ui ${statusColor(status)} text-white h-12 flex items-center justify-center transition cursor-default`}
+                  title={`WPL-${i + 1} - ${statusLabel}`}
+                  aria-label={`WPL-${i + 1} - ${statusLabel}`}
+                >
+                  <span className="text-xs font-semibold">WPL-{i + 1}</span>
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
+                </button>
+              )
+            })}
           </div>
         </div>
       </div>
