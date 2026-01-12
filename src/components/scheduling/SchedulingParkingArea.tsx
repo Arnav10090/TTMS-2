@@ -76,17 +76,24 @@ export default function SchedulingParkingArea({
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
   const [toast, setToast] = useState<{message: string} | null>(null)
 
-  // Sync color map from localStorage when updated elsewhere
+  // Sync color map and vehicle assignments from localStorage when updated elsewhere
   useEffect(() => {
     const sync = () => {
       try {
         const saved = localStorage.getItem('parkingColorMap')
         if (saved) setColorMap(JSON.parse(saved))
       } catch {}
+      // Force a re-render to update tooltips with new vehicle assignments
+      setColorMap(prev => ({ ...prev }))
     }
     window.addEventListener('storage', sync)
     window.addEventListener('parkingColorMap-updated', sync as any)
-    return () => { window.removeEventListener('storage', sync); window.removeEventListener('parkingColorMap-updated', sync as any) }
+    window.addEventListener('vehicleParkingAssignments-updated', sync as any)
+    return () => {
+      window.removeEventListener('storage', sync)
+      window.removeEventListener('parkingColorMap-updated', sync as any)
+      window.removeEventListener('vehicleParkingAssignments-updated', sync as any)
+    }
   }, [])
 
   const openConfirm = (label: string) => {
