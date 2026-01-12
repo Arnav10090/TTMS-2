@@ -117,6 +117,22 @@ export default function TTMSSchedulingPage() {
               }
             } catch {}
             try {
+              const mapKey = 'vehicleTareWeightAssignments'
+              const raw = localStorage.getItem(mapKey)
+              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+              const tweightId = map[row.regNo]
+              if (tweightId) {
+                delete map[row.regNo]
+                localStorage.setItem(mapKey, JSON.stringify(map))
+                const key = 'tareWeightStatuses'
+                const tRaw = localStorage.getItem(key)
+                const items = tRaw ? JSON.parse(tRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
+                const next = items.map(item=> item.id===tweightId ? {...item, status:'available' as const} : item)
+                localStorage.setItem(key, JSON.stringify(next))
+                window.dispatchEvent(new Event('tareWeightStatuses-updated'))
+              }
+            } catch {}
+            try {
               const mapKey = 'vehicleLoadingGateAssignments'
               const raw = localStorage.getItem(mapKey)
               const map = raw ? JSON.parse(raw) as Record<string, string> : {}
@@ -130,6 +146,22 @@ export default function TTMSSchedulingPage() {
                 const next = gates.map(g=> g.id===gateId ? {...g, status:'available' as const} : g)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('loadingGateStatuses-updated'))
+              }
+            } catch {}
+            try {
+              const mapKey = 'vehicleWtPostLoadingAssignments'
+              const raw = localStorage.getItem(mapKey)
+              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+              const wpostId = map[row.regNo]
+              if (wpostId) {
+                delete map[row.regNo]
+                localStorage.setItem(mapKey, JSON.stringify(map))
+                const key = 'wtPostLoadingStatuses'
+                const wRaw = localStorage.getItem(key)
+                const items = wRaw ? JSON.parse(wRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
+                const next = items.map(item=> item.id===wpostId ? {...item, status:'available' as const} : item)
+                localStorage.setItem(key, JSON.stringify(next))
+                window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
               }
             } catch {}
             s.setVehicleEntries((rows)=>rows.map(r=> r.id===row.id ? { ...r, position: '' } : r))
