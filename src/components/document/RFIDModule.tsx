@@ -12,27 +12,12 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
     if (value) setTracking(value)
   }
 
-  const clearSign = () => {
-    sigRef.current?.clear()
-  }
-
-  const uploadSign = () => {
-    uploadInputRef.current?.click()
-  }
-
-  const onUploadChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    await sigRef.current?.setImageFromFile(file)
-    e.currentTarget.value = ''
-  }
-
   const clearTracking = () => {
     setTracking('')
     setRfid('')
   }
 
-  const canProceed = Boolean(tracking) && hasSign && extraReady
+  const canProceed = Boolean(tracking) && extraReady
 
   return (
     <div className="space-y-3">
