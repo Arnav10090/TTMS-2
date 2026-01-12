@@ -1,14 +1,10 @@
 "use client"
 
 import { useRef, useState } from 'react'
-import SignaturePad, { SignaturePadHandle } from './SignaturePad'
 
 export default function RFIDModule({ extraReady = true }: { extraReady?: boolean }) {
   const [rfid, setRfid] = useState('')
   const [tracking, setTracking] = useState('')
-  const [hasSign, setHasSign] = useState(false)
-  const sigRef = useRef<SignaturePadHandle | null>(null)
-  const uploadInputRef = useRef<HTMLInputElement | null>(null)
 
 
   const applyTracking = () => {
@@ -16,27 +12,12 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
     if (value) setTracking(value)
   }
 
-  const clearSign = () => {
-    sigRef.current?.clear()
-  }
-
-  const uploadSign = () => {
-    uploadInputRef.current?.click()
-  }
-
-  const onUploadChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    await sigRef.current?.setImageFromFile(file)
-    e.currentTarget.value = ''
-  }
-
   const clearTracking = () => {
     setTracking('')
     setRfid('')
   }
 
-  const canProceed = Boolean(tracking) && hasSign && extraReady
+  const canProceed = Boolean(tracking)
 
   return (
     <div className="space-y-3">
@@ -85,33 +66,15 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
           Clear
         </button>
       </div>
-      <div>
-        <label className="block text-sm text-slate-600 mb-1">Digital Signature <span className="text-red-600">*</span></label>
-        <SignaturePad ref={sigRef} onChangeHasSignature={setHasSign} />
-        <div className="flex items-center gap-2 mt-2">
-          <button
-            onClick={clearSign}
-            className="px-3 py-1.5 rounded-ui border border-slate-300 text-slate-700 hover:bg-slate-50 disabled:opacity-60"
-            disabled={!hasSign}
-          >
-            Clear
-          </button>
-          <input ref={uploadInputRef} type="file" accept="image/*" className="hidden" onChange={onUploadChange} />
-          <button
-            onClick={uploadSign}
-            className="px-3 py-1.5 rounded-ui border border-blue-300 text-blue-700 hover:bg-blue-50"
-          >
-            Upload Sign
-          </button>
-          <div className="ml-auto" />
-          <button
-            className={`px-4 py-2 rounded-ui ${canProceed ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
-            disabled={!canProceed}
-            title={!canProceed ? 'Complete all required fields (language, phones, location, RFID, signature)' : undefined}
-          >
-            Proceed
-          </button>
-        </div>
+      <div className="flex items-center gap-2 mt-4">
+        <div className="ml-auto" />
+        <button
+          className={`px-4 py-2 rounded-ui ${canProceed ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
+          disabled={!canProceed}
+          title={!canProceed ? 'Enter an RFID tracking number to proceed' : undefined}
+        >
+          Proceed
+        </button>
       </div>
     </div>
   )

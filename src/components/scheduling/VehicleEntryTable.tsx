@@ -185,7 +185,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2">
+                <td className="px-3 py-2 w-[120px]">
                   {(() => {
                     const areaKey = (r.area || 'AREA-1') as 'AREA-1'|'AREA-2'
                     const options = availableByArea[areaKey] || []
@@ -208,9 +208,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 </td>
                 <td className="px-3 py-2">
                   <select value={r.tareWeight} onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                    <option value="">Select Area</option>
-                    <option value="Area 1">Area 1</option>
-                    <option value="Area 2">Area 2</option>
+                    <option value="">Select</option>
+                    {Array.from({length:4},(_,i)=>`TW-${i+1}`).map((tw)=> <option key={tw} value={tw}>{tw}</option>)}
                   </select>
                 </td>
                 <td className="px-3 py-2">
@@ -225,17 +224,16 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     } catch {}
                     return (
                       <select value={r.loadingGate} onChange={(e)=>setCell(r.id,'loadingGate',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                        <option value="">No Gate</option>
-                        {Array.from({length:12},(_,i)=>`G-${i+1}`).map((g)=> <option key={g} value={g}>{g}</option>)}
+                        <option value="">Select</option>
+                        {Array.from({length:8},(_,i)=>`G-${i+1}`).map((g)=> <option key={g} value={g}>{g}</option>)}
                       </select>
                     )
                   })()}
                 </td>
                 <td className="px-3 py-2">
                   <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                    <option value="">Select Area</option>
-                    <option value="Area 1">Area 1</option>
-                    <option value="Area 2">Area 2</option>
+                    <option value="">Select</option>
+                    {Array.from({length:4},(_,i)=>`WPL-${i+1}`).map((wpl)=> <option key={wpl} value={wpl}>{wpl}</option>)}
                   </select>
                 </td>
                 <td className="px-3 py-2 text-center">

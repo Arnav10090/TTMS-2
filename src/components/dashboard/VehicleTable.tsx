@@ -16,8 +16,13 @@ function sortData(
   dir: "asc" | "desc"
 ) {
   return [...rows].sort((a, b) => {
-    const av = a[key] as any;
-    const bv = b[key] as any;
+    let av = a[key] as any;
+    let bv = b[key] as any;
+
+    // Handle Date objects
+    if (av instanceof Date) av = av.getTime();
+    if (bv instanceof Date) bv = bv.getTime();
+
     if (av < bv) return dir === "asc" ? -1 : 1;
     if (av > bv) return dir === "asc" ? 1 : -1;
     return 0;
@@ -212,8 +217,8 @@ function TimeCell({
 }
 
 export default function VehicleTable({ data }: { data: VehicleRow[] }) {
-  const [sortKey, setSortKey] = useState<keyof VehicleRow>("sn");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortKey, setSortKey] = useState<keyof VehicleRow>("reportingTime");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [day, setDay] = useState<Date | null>(null);
@@ -224,6 +229,20 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   const [selectedStage, setSelectedStage] = useState<StageKey | null>(null);
   const pageSize = 7;
 
+  // Generate random reporting times in descending order
+  const dataWithTimes = useMemo(() => {
+    const now = new Date();
+    return data.map((row, index) => {
+      if (!row.reportingTime) {
+        // Generate random time within last 8 hours, with descending order for top vehicles
+        const minutesAgo = Math.floor(Math.random() * 480); // 0-480 minutes (8 hours)
+        const reportingTime = new Date(now.getTime() - minutesAgo * 60000);
+        return { ...row, reportingTime };
+      }
+      return row;
+    });
+  }, [data]);
+
   const handleStageClick = (vehicle: VehicleRow, stage: StageKey) => {
     setSelectedVehicle(vehicle);
     setSelectedStage(stage);
@@ -231,7 +250,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   };
 
   const filtered = useMemo(() => {
-    return data.filter((row) => {
+    return dataWithTimes.filter((row) => {
       const matchReg = row.regNo.toLowerCase().includes(query.toLowerCase());
       const ts = new Date(row.timestamp).getTime();
       const matchDay = day
@@ -242,13 +261,13 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
         (end ? ts <= end.getTime() : true);
       return matchReg && matchDay && matchPeriod;
     });
-  }, [data, query, day, start, end]);
+  }, [dataWithTimes, query, day, start, end]);
 
   // compute max TTR across all provided data rows so we can blink the regNo with maximum TTR
   const maxTTR = useMemo(() => {
-    if (!data || data.length === 0) return 0
-    return data.reduce((m, r) => Math.max(m, calculateTTR(r)), 0)
-  }, [data]);
+    if (!dataWithTimes || dataWithTimes.length === 0) return 0
+    return dataWithTimes.reduce((m, r) => Math.max(m, calculateTTR(r)), 0)
+  }, [dataWithTimes]);
 
   const sorted = useMemo(
     () => sortData(filtered, sortKey, sortDir),
@@ -458,6 +477,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                 { key: "sn", label: "SN" },
                 { key: "regNo", label: "Vehicle Reg No" },
                 { key: "rfidNo", label: "RFID No." },
+                { key: "reportingTime", label: "Reporting Time" },
                 { key: "gateEntry", label: "Gate Entry" },
                 { key: "tareWeighing", label: "Tare Weight" },
                 { key: "loading", label: "Loading" },
@@ -501,6 +521,9 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-700">
                     {row.rfidNo ?? '-'}
+                  </td>
+                  <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-700">
+                    {row.reportingTime ? row.reportingTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : '-'}
                   </td>
                   <td className="px-1 py-1 whitespace-nowrap">
                     <TimeCell
