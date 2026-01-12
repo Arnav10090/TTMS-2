@@ -133,10 +133,6 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 { key: 'regNo', label: 'Vehicle Reg No', w: 'w-[160px]' },
                 { key: 'area', label: 'Area', w: 'w-[100px]' },
                 { key: 'position', label: 'Position', w: 'w-[120px]' },
-                { key: 'tareWeight', label: 'Tare Weight', w: 'w-[140px]' },
-                { key: 'loadingGate', label: 'Loading Gate', w: 'w-[140px]' },
-                { key: 'wtPostLoading', label: 'Wt Post Loading', w: 'w-[140px]' },
-                { key: 'actions', label: 'Actions', w: 'w-[120px]', align: 'text-center' },
               ].map((c) => (
                 <th
                   key={c.key}
@@ -157,6 +153,50 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                   </div>
                 </th>
               ))}
+              {/* Grouping header for Tare Weight, Loading Gate, Wt Post Loading */}
+              <th colSpan={3} className="px-3 py-2 text-center bg-blue-50 border-l-2 border-blue-300">
+                <span>Processing Stages</span>
+              </th>
+              {[
+                { key: 'actions', label: 'Actions', w: 'w-[120px]', align: 'text-center' },
+              ].map((c) => (
+                <th
+                  key={c.key}
+                  className={`px-3 py-2 ${c.align ?? 'text-left'} ${c.w}`}
+                >
+                  <span>{c.label}</span>
+                </th>
+              ))}
+            </tr>
+            <tr>
+              {Array.from({length: 5}).map((_, i) => (
+                <th key={`spacer-${i}`} className="px-3 py-0"></th>
+              ))}
+              {[
+                { key: 'tareWeight', label: 'Tare Weight', w: 'w-[140px]' },
+                { key: 'loadingGate', label: 'Loading Gate', w: 'w-[140px]' },
+                { key: 'wtPostLoading', label: 'Wt Post Loading', w: 'w-[140px]' },
+              ].map((c) => (
+                <th
+                  key={c.key}
+                  className={`px-3 py-2 ${c.w} cursor-pointer bg-blue-50 border-b-2 border-blue-300`}
+                  onClick={() => {
+                    if (sortKey === (c.key as keyof VehicleEntry)) {
+                      setSortDir(sortDir === 'asc' ? 'desc' : 'asc')
+                    } else {
+                      setSortKey(c.key as keyof VehicleEntry)
+                      setSortDir('asc')
+                    }
+                    setPage(1)
+                  }}
+                >
+                  <div className="flex items-center gap-1">
+                    <span>{c.label}</span>
+                    <span className="text-slate-400">{sortKey === c.key ? (sortDir === 'asc' ? '▲' : '▼') : ''}</span>
+                  </div>
+                </th>
+              ))}
+              <th className="px-3 py-0"></th>
             </tr>
           </thead>
           <tbody>
