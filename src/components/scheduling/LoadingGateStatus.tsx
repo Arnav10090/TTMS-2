@@ -11,17 +11,37 @@ function statusColor(s: ItemStatus) {
 }
 
 export default function LoadingGateStatus() {
-  const [gates, setGates] = useState<Gate[]>(() => {
+  const [tareWeights, setTareWeights] = useState<Item[]>(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) return JSON.parse(raw) as Gate[]
+      const raw = localStorage.getItem('tareWeightStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch {}
+    const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i+1}`, status: 'available' as const }))
+    try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch {}
+    return init
+  })
+
+  const [gates, setGates] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('loadingGateStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
     } catch {}
     const init = Array.from({ length: 12 }, (_, i) => {
       const r = Math.random()
-      const status: GateStatus = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
+      const status: ItemStatus = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
       return { id: `G-${i+1}`, status }
     })
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(init)) } catch {}
+    try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch {}
+    return init
+  })
+
+  const [wtPostLoadings, setWtPostLoadings] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('wtPostLoadingStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch {}
+    const init = Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i+1}`, status: 'available' as const }))
+    try { localStorage.setItem('wtPostLoadingStatuses', JSON.stringify(init)) } catch {}
     return init
   })
 
