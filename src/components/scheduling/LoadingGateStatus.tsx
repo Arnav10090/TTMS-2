@@ -194,18 +194,16 @@ export default function LoadingGateStatus() {
             <h4 className="text-xs font-semibold text-slate-700">Wt Post Loading</h4>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            {Array.from({ length: 4 }, (_, i) => {
-              const baseStatuses: Array<'available' | 'occupied' | 'reserved'> = ['available', 'occupied', 'reserved', 'available']
-              const status = baseStatuses[i % baseStatuses.length]
-              const statusLabel = status === 'reserved' ? 'allocated' : status
+            {wtPostLoadings.map((item) => {
+              const statusLabel = item.status === 'reserved' ? 'allocated' : item.status
               return (
                 <button
-                  key={`wpl-${i}`}
-                  className={`relative rounded-ui ${statusColor(status)} text-white h-12 flex items-center justify-center transition cursor-default`}
-                  title={`WPL-${i + 1} - ${statusLabel}`}
-                  aria-label={`WPL-${i + 1} - ${statusLabel}`}
+                  key={item.id}
+                  className={`relative rounded-ui ${statusColor(item.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
+                  title={`${item.id} - ${statusLabel}`}
+                  aria-label={`${item.id} - ${statusLabel}`}
                 >
-                  <span className="text-xs font-semibold">WPL-{i + 1}</span>
+                  <span className="text-xs font-semibold">{item.id}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
                 </button>
               )
