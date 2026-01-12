@@ -252,6 +252,32 @@ export default function LoadingGateStatus() {
           </div>
         </div>
       </div>
+
+      {/* Gate Exit Section - Full Width */}
+      <div className="mt-4 flex flex-col gap-2">
+        <div className="bg-orange-100 rounded-ui p-2 text-center">
+          <h4 className="text-xs font-semibold text-orange-700">Gate Exit</h4>
+        </div>
+        <div className="grid grid-cols-1 gap-2">
+          {gateExits.map((item) => {
+            const statusLabel = item.status === 'reserved' ? 'allocated' : item.status
+            const vehicleNo = getVehicleForItem(item.id, 'exit')
+            const tooltipText = vehicleNo ? `${item.id} - ${statusLabel} (${vehicleNo})` : `${item.id} - ${statusLabel}`
+            return (
+              <button
+                key={item.id}
+                className={`relative rounded-ui ${statusColor(item.status)} text-white h-16 md:h-20 flex items-center justify-center transition cursor-default`}
+                title={tooltipText}
+                aria-label={tooltipText}
+              >
+                <span className="text-sm md:text-base font-semibold">{item.id}</span>
+                <span className="absolute top-2 right-2 w-2 h-2 rounded-full bg-white/80" />
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       <div className="mt-3 flex items-center gap-3 text-xs text-slate-600">
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-500 inline-block" /> Available</div>
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-500 inline-block" /> Occupied</div>
