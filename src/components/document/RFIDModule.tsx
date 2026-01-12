@@ -1,14 +1,10 @@
 "use client"
 
 import { useRef, useState } from 'react'
-import SignaturePad, { SignaturePadHandle } from './SignaturePad'
 
 export default function RFIDModule({ extraReady = true }: { extraReady?: boolean }) {
   const [rfid, setRfid] = useState('')
   const [tracking, setTracking] = useState('')
-  const [hasSign, setHasSign] = useState(false)
-  const sigRef = useRef<SignaturePadHandle | null>(null)
-  const uploadInputRef = useRef<HTMLInputElement | null>(null)
 
 
   const applyTracking = () => {
