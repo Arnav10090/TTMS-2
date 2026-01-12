@@ -83,25 +83,54 @@ export default function LoadingGateStatus() {
       setGates((prev) => {
         const next = prev.map((g) => {
           if (Math.random() > 0.92) {
-            const order: GateStatus[] = ['available','occupied','reserved']
+            const order: ItemStatus[] = ['available','occupied','reserved']
             const idx = Math.floor(Math.random()*order.length)
             return { ...g, status: order[idx] }
           }
           return g
         })
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+        try { localStorage.setItem('loadingGateStatuses', JSON.stringify(next)) } catch {}
         return next
       })
     }, 30000)
-    const syncFromStorage = () => {
+
+    const syncTareWeights = () => {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY)
-        if (raw) setGates(JSON.parse(raw) as Gate[])
+        const raw = localStorage.getItem('tareWeightStatuses')
+        if (raw) setTareWeights(JSON.parse(raw) as Item[])
       } catch {}
     }
-    window.addEventListener('storage', syncFromStorage)
-    window.addEventListener('loadingGateStatuses-updated', syncFromStorage as any)
-    return () => { clearInterval(id); window.removeEventListener('storage', syncFromStorage); window.removeEventListener('loadingGateStatuses-updated', syncFromStorage as any) }
+
+    const syncGates = () => {
+      try {
+        const raw = localStorage.getItem('loadingGateStatuses')
+        if (raw) setGates(JSON.parse(raw) as Item[])
+      } catch {}
+    }
+
+    const syncWtPostLoadings = () => {
+      try {
+        const raw = localStorage.getItem('wtPostLoadingStatuses')
+        if (raw) setWtPostLoadings(JSON.parse(raw) as Item[])
+      } catch {}
+    }
+
+    window.addEventListener('storage', syncTareWeights)
+    window.addEventListener('storage', syncGates)
+    window.addEventListener('storage', syncWtPostLoadings)
+    window.addEventListener('tareWeightStatuses-updated', syncTareWeights as any)
+    window.addEventListener('loadingGateStatuses-updated', syncGates as any)
+    window.addEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
+
+    return () => {
+      clearInterval(id)
+      window.removeEventListener('storage', syncTareWeights)
+      window.removeEventListener('storage', syncGates)
+      window.removeEventListener('storage', syncWtPostLoadings)
+      window.removeEventListener('tareWeightStatuses-updated', syncTareWeights as any)
+      window.removeEventListener('loadingGateStatuses-updated', syncGates as any)
+      window.removeEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
+    }
   }, [])
 
 
