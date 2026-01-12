@@ -140,21 +140,32 @@ export default function LoadingGateStatus() {
       } catch {}
     }
 
+    const syncGateExits = () => {
+      try {
+        const raw = localStorage.getItem('gateExitStatuses')
+        if (raw) setGateExits(JSON.parse(raw) as Item[])
+      } catch {}
+    }
+
     window.addEventListener('storage', syncTareWeights)
     window.addEventListener('storage', syncGates)
     window.addEventListener('storage', syncWtPostLoadings)
+    window.addEventListener('storage', syncGateExits)
     window.addEventListener('tareWeightStatuses-updated', syncTareWeights as any)
     window.addEventListener('loadingGateStatuses-updated', syncGates as any)
     window.addEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
+    window.addEventListener('gateExitStatuses-updated', syncGateExits as any)
 
     return () => {
       clearInterval(id)
       window.removeEventListener('storage', syncTareWeights)
       window.removeEventListener('storage', syncGates)
       window.removeEventListener('storage', syncWtPostLoadings)
+      window.removeEventListener('storage', syncGateExits)
       window.removeEventListener('tareWeightStatuses-updated', syncTareWeights as any)
       window.removeEventListener('loadingGateStatuses-updated', syncGates as any)
       window.removeEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
+      window.removeEventListener('gateExitStatuses-updated', syncGateExits as any)
     }
   }, [])
 
