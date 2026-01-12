@@ -522,6 +522,9 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                   <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-700">
                     {row.rfidNo ?? '-'}
                   </td>
+                  <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-700">
+                    {row.reportingTime ? row.reportingTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : '-'}
+                  </td>
                   <td className="px-1 py-1 whitespace-nowrap">
                     <TimeCell
                       label="Gate Entry"
