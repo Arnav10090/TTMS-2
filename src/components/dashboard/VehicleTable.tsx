@@ -529,6 +529,8 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                 { key: "gateExit", label: "Gate Exit" },
                 { key: "progress", label: "Progress" },
                 { key: "ttr", label: "TTR" },
+                { key: "totalDwellTime", label: "Total Dwell Time" },
+                { key: "dwellRatio", label: "Dwell Ratio" },
               ].map((col) => (
                 <th
                   key={col.key}
