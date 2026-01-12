@@ -3,6 +3,7 @@ export type StageState = {
   state: 'completed' | 'active' | 'pending'
   waitTime: number
   stdTime: number
+  idleTime?: number // Extra time taken beyond 1.5x standard time
 }
 
 export type VehicleRow = {
@@ -16,4 +17,6 @@ export type VehicleRow = {
   timestamp: string
   reportingTime?: Date | null
   stages: Record<StageKey, StageState>
+  totalDwellTime?: number // Sum of idle times across all stages
+  dwellRatio?: number // Total dwell time / TTR
 }

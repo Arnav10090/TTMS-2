@@ -29,6 +29,15 @@ function sortData(
   });
 }
 
+// Hardcoded standard times for each stage (in minutes)
+const STAGE_STANDARDS: Record<StageKey, number> = {
+  gateEntry: 5,
+  tareWeighing: 15,
+  loading: 75, // 1 hr 15 min
+  postLoadingWeighing: 25,
+  gateExit: 30,
+}
+
 // Get the next stage in the workflow
 function getNextStage(currentStage: StageKey): StageKey | null {
   const order: StageKey[] = [
@@ -42,15 +51,51 @@ function getNextStage(currentStage: StageKey): StageKey | null {
   return currentIndex < order.length - 1 ? order[currentIndex + 1] : null;
 }
 
-// Check if current stage should blink (waiting time exceeds 1.5x standard time -> >45m when std=30)
+// Calculate truck idle time for a specific stage
+// Idle time starts counting after 1.5x the standard time for that stage
+function calculateStageIdleTime(row: VehicleRow, stage: StageKey): number {
+  const stageState = row.stages[stage];
+  const stdTime = STAGE_STANDARDS[stage];
+  const threshold = stdTime * 1.5;
+
+  if (stageState.waitTime > threshold) {
+    return stageState.waitTime - threshold;
+  }
+  return 0;
+}
+
+// Calculate total dwell time for a vehicle (sum of idle times across all stages)
+function calculateTotalDwellTime(row: VehicleRow): number {
+  const order: StageKey[] = [
+    "gateEntry",
+    "tareWeighing",
+    "loading",
+    "postLoadingWeighing",
+    "gateExit",
+  ];
+
+  return order.reduce((sum, stage) => {
+    return sum + calculateStageIdleTime(row, stage);
+  }, 0);
+}
+
+// Calculate dwell ratio: Total Dwell Time / TTR
+function calculateDwellRatio(row: VehicleRow): number {
+  const ttr = calculateTTR(row);
+  const totalDwell = calculateTotalDwellTime(row);
+
+  return ttr > 0 ? Number((totalDwell / ttr).toFixed(2)) : 0;
+}
+
+// Check if current stage should blink (waiting time exceeds 1.5x standard time)
 function shouldStageBlink(row: VehicleRow, stage: StageKey): boolean {
   const stageState = row.stages[stage];
   if (stageState.state !== "active") return false;
   // Gate Entry should never blink
   if (stage === 'gateEntry') return false;
-  const std = stageState.stdTime || 30;
-  const ratio = std ? stageState.waitTime / std : 0;
-  return ratio > 1.5;
+  const stdTime = STAGE_STANDARDS[stage];
+  const threshold = stdTime * 1.5;
+  return stageState.waitTime > threshold;
 }
 
 function getStageStatus(
@@ -58,9 +103,8 @@ function getStageStatus(
   row: VehicleRow,
   stage: StageKey
 ) {
-  const ratio = stageState.stdTime
-    ? stageState.waitTime / stageState.stdTime
-    : 0;
+  const stdTime = STAGE_STANDARDS[stage];
+  const ratio = stdTime ? stageState.waitTime / stdTime : 0;
 
   // 1) Green Light - Stage completed
   if (stageState.state === "completed") {
@@ -84,11 +128,11 @@ function getStageStatus(
       };
     }
 
-    const std = stageState.stdTime || 30;
-    const r = std ? stageState.waitTime / std : 0;
+    const threshold1_5x = stdTime * 1.5;
+    const threshold2x = stdTime * 2.0;
 
     // Critical - much higher than standard (>= 2x)
-    if (r >= 2.0) {
+    if (stageState.waitTime >= threshold2x) {
       return {
         status: "critical" as const,
         className: "status-cell status-critical",
@@ -97,8 +141,8 @@ function getStageStatus(
       };
     }
 
-    // Blink when exceed 1.5x standard (>45m for std=30)
-    if (r > 1.5) {
+    // Blink when exceed 1.5x standard
+    if (stageState.waitTime > threshold1_5x) {
       return {
         status: "active" as const,
         className: "status-cell status-next",

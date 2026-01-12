@@ -15,28 +15,60 @@ export const dashboardService = {
   },
   async getVehicleRows(): Promise<VehicleRow[]> {
     const stages: StageKey[] = ['gateEntry','tareWeighing','loading','postLoadingWeighing','gateExit']
+
+    // Hardcoded standard times for each stage in minutes
+    const STAGE_STANDARDS: Record<StageKey, number> = {
+      gateEntry: 5,
+      tareWeighing: 15,
+      loading: 75, // 1 hr 15 min
+      postLoadingWeighing: 25,
+      gateExit: 30,
+    }
+
     return range(25).map((i) => {
       const activeIndex = Math.floor(Math.random()*stages.length)
-      // Set standard time for every stage to 30 minutes as per new requirement
-      const DEFAULT_STD = 30
       const record: Record<StageKey, StageState> = {
-        gateEntry: { state: 'pending', waitTime: 0, stdTime: DEFAULT_STD },
-        tareWeighing: { state: 'pending', waitTime: 0, stdTime: DEFAULT_STD },
-        loading: { state: 'pending', waitTime: 0, stdTime: DEFAULT_STD },
-        postLoadingWeighing: { state: 'pending', waitTime: 0, stdTime: DEFAULT_STD },
-        gateExit: { state: 'pending', waitTime: 0, stdTime: DEFAULT_STD },
+        gateEntry: { state: 'pending', waitTime: 0, stdTime: STAGE_STANDARDS.gateEntry },
+        tareWeighing: { state: 'pending', waitTime: 0, stdTime: STAGE_STANDARDS.tareWeighing },
+        loading: { state: 'pending', waitTime: 0, stdTime: STAGE_STANDARDS.loading },
+        postLoadingWeighing: { state: 'pending', waitTime: 0, stdTime: STAGE_STANDARDS.postLoadingWeighing },
+        gateExit: { state: 'pending', waitTime: 0, stdTime: STAGE_STANDARDS.gateExit },
       }
+
       stages.forEach((k, idx) => {
         // random wait time up to twice the standard for more realistic data
-        const wt = Math.round(Math.random()* (record[k].stdTime * 2))
+        const stdTime = STAGE_STANDARDS[k]
+        const wt = Math.round(Math.random() * (stdTime * 2))
+
+        // Calculate idle time: if waitTime > 1.5 * stdTime, idle time = waitTime - (1.5 * stdTime)
+        const threshold = stdTime * 1.5
+        const idleTime = wt > threshold ? wt - threshold : 0
+
         record[k] = {
           state: idx < activeIndex ? 'completed' : idx === activeIndex ? 'active' : 'pending',
           waitTime: wt,
-          stdTime: record[k].stdTime,
+          stdTime: stdTime,
+          idleTime: idleTime,
         }
       })
+
+      // Calculate total dwell time (sum of idle times for all stages)
+      const totalDwellTime = stages.reduce((sum, stage) => sum + (record[stage].idleTime || 0), 0)
+
       const tareWt = Math.round(10 + Math.random()*20) * 100
       const wtAfter = Math.round(tareWt + Math.random()*3000)
+
+      // Calculate TTR from completed stages
+      const ttrValue = stages.reduce((sum, stage) => {
+        if (record[stage].state === 'completed') {
+          return sum + record[stage].waitTime
+        }
+        return sum
+      }, 0)
+
+      // Calculate dwell ratio: totalDwellTime / TTR
+      const dwellRatio = ttrValue > 0 ? (totalDwellTime / ttrValue) : 0
+
       return {
         sn: i+1,
         regNo: `MH12-${1000 + i}`,
@@ -44,9 +76,11 @@ export const dashboardService = {
         tareWt,
         wtAfter,
         progress: Math.round(Math.random()*100),
-        ttr: Math.round(60 + Math.random()*120),
+        ttr: ttrValue,
         timestamp: new Date(Date.now() - Math.random()* 1000*60*60*24).toISOString(),
         stages: record,
+        totalDwellTime,
+        dwellRatio,
       }
     })
   },
