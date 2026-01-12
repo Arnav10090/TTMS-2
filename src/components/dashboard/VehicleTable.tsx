@@ -477,6 +477,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                 { key: "sn", label: "SN" },
                 { key: "regNo", label: "Vehicle Reg No" },
                 { key: "rfidNo", label: "RFID No." },
+                { key: "reportingTime", label: "Reporting Time" },
                 { key: "gateEntry", label: "Gate Entry" },
                 { key: "tareWeighing", label: "Tare Weight" },
                 { key: "loading", label: "Loading" },
