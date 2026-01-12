@@ -2,13 +2,11 @@
 
 import { useEffect, useState } from 'react'
 
-type GateStatus = 'available'|'occupied'|'reserved'
+type ItemStatus = 'available'|'occupied'|'reserved'
 
-type Gate = { id: string; status: GateStatus }
+type Item = { id: string; status: ItemStatus }
 
-const STORAGE_KEY = 'loadingGateStatuses'
-
-function statusColor(s: GateStatus) {
+function statusColor(s: ItemStatus) {
   return s === 'available' ? 'bg-green-500' : s === 'occupied' ? 'bg-red-500' : 'bg-yellow-500'
 }
 
