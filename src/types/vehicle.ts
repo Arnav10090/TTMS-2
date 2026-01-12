@@ -14,5 +14,6 @@ export type VehicleRow = {
   progress: number
   ttr: number
   timestamp: string
+  reportingTime?: Date | null
   stages: Record<StageKey, StageState>
 }
