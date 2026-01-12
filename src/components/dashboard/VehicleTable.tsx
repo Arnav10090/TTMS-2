@@ -265,9 +265,9 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
 
   // compute max TTR across all provided data rows so we can blink the regNo with maximum TTR
   const maxTTR = useMemo(() => {
-    if (!data || data.length === 0) return 0
-    return data.reduce((m, r) => Math.max(m, calculateTTR(r)), 0)
-  }, [data]);
+    if (!dataWithTimes || dataWithTimes.length === 0) return 0
+    return dataWithTimes.reduce((m, r) => Math.max(m, calculateTTR(r)), 0)
+  }, [dataWithTimes]);
 
   const sorted = useMemo(
     () => sortData(filtered, sortKey, sortDir),
