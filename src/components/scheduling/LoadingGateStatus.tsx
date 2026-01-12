@@ -45,8 +45,18 @@ export default function LoadingGateStatus() {
     return init
   })
 
+  const [gateExits, setGateExits] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('gateExitStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch {}
+    const init = Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i+1}`, status: 'available' as const }))
+    try { localStorage.setItem('gateExitStatuses', JSON.stringify(init)) } catch {}
+    return init
+  })
+
   // Helper to get vehicle number for an allocated item
-  const getVehicleForItem = (itemId: string, itemType: 'tare' | 'gate' | 'wtpost'): string | null => {
+  const getVehicleForItem = (itemId: string, itemType: 'tare' | 'gate' | 'wtpost' | 'exit'): string | null => {
     try {
       const key = itemType === 'tare' ? 'vehicleTareWeightAssignments' : itemType === 'gate' ? 'vehicleLoadingGateAssignments' : 'vehicleWtPostLoadingAssignments'
       const raw = localStorage.getItem(key)
