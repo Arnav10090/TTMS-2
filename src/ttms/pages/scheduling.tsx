@@ -180,6 +180,22 @@ export default function TTMSSchedulingPage() {
                 window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
               }
             } catch {}
+            try {
+              const mapKey = 'vehicleGateExitAssignments'
+              const raw = localStorage.getItem(mapKey)
+              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+              const exitId = map[row.regNo]
+              if (exitId) {
+                delete map[row.regNo]
+                localStorage.setItem(mapKey, JSON.stringify(map))
+                const key = 'gateExitStatuses'
+                const eRaw = localStorage.getItem(key)
+                const items = eRaw ? JSON.parse(eRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
+                const next = items.map(item=> item.id===exitId ? {...item, status:'available' as const} : item)
+                localStorage.setItem(key, JSON.stringify(next))
+                window.dispatchEvent(new Event('gateExitStatuses-updated'))
+              }
+            } catch {}
             s.setVehicleEntries((rows)=>rows.map(r=> r.id===row.id ? { ...r, position: '' } : r))
           }}
         />
