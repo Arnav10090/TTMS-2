@@ -16,8 +16,13 @@ function sortData(
   dir: "asc" | "desc"
 ) {
   return [...rows].sort((a, b) => {
-    const av = a[key] as any;
-    const bv = b[key] as any;
+    let av = a[key] as any;
+    let bv = b[key] as any;
+
+    // Handle Date objects
+    if (av instanceof Date) av = av.getTime();
+    if (bv instanceof Date) bv = bv.getTime();
+
     if (av < bv) return dir === "asc" ? -1 : 1;
     if (av > bv) return dir === "asc" ? 1 : -1;
     return 0;
