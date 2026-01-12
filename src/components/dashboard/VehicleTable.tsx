@@ -641,12 +641,6 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                   <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-900 text-center">
                     {calculatedTTR} min
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-900 text-center">
-                    {calculateTotalDwellTime(row).toFixed(1)} min
-                  </td>
-                  <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-900 text-center">
-                    {calculateDwellRatio(row).toFixed(2)}
-                  </td>
                 </tr>
               );
             })}
