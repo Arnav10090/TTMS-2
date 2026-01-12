@@ -246,14 +246,14 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2 bg-blue-50 border-r border-blue-300">
+                <td className="px-3 py-2 bg-blue-50 border-r border-blue-300 w-[140px]">
                   <select value={r.tareWeight} onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
                     <option value="">Select Area</option>
                     <option value="Area 1">Area 1</option>
                     <option value="Area 2">Area 2</option>
                   </select>
                 </td>
-                <td className="px-3 py-2 bg-blue-50">
+                <td className="px-3 py-2 bg-blue-50 w-[140px]">
                   {(() => {
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
