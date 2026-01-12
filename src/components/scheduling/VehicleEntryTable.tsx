@@ -224,8 +224,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     } catch {}
                     return (
                       <select value={r.loadingGate} onChange={(e)=>setCell(r.id,'loadingGate',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                        <option value="">No Gate</option>
-                        {Array.from({length:12},(_,i)=>`G-${i+1}`).map((g)=> <option key={g} value={g}>{g}</option>)}
+                        <option value="">Select</option>
+                        {Array.from({length:8},(_,i)=>`G-${i+1}`).map((g)=> <option key={g} value={g}>{g}</option>)}
                       </select>
                     )
                   })()}
