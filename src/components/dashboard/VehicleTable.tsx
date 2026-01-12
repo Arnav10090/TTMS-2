@@ -29,6 +29,15 @@ function sortData(
   });
 }
 
+// Hardcoded standard times for each stage (in minutes)
+const STAGE_STANDARDS: Record<StageKey, number> = {
+  gateEntry: 5,
+  tareWeighing: 15,
+  loading: 75, // 1 hr 15 min
+  postLoadingWeighing: 25,
+  gateExit: 30,
+}
+
 // Get the next stage in the workflow
 function getNextStage(currentStage: StageKey): StageKey | null {
   const order: StageKey[] = [
@@ -40,6 +49,42 @@ function getNextStage(currentStage: StageKey): StageKey | null {
   ];
   const currentIndex = order.indexOf(currentStage);
   return currentIndex < order.length - 1 ? order[currentIndex + 1] : null;
+}
+
+// Calculate truck idle time for a specific stage
+// Idle time starts counting after 1.5x the standard time for that stage
+function calculateStageIdleTime(row: VehicleRow, stage: StageKey): number {
+  const stageState = row.stages[stage];
+  const stdTime = STAGE_STANDARDS[stage];
+  const threshold = stdTime * 1.5;
+
+  if (stageState.waitTime > threshold) {
+    return stageState.waitTime - threshold;
+  }
+  return 0;
+}
+
+// Calculate total dwell time for a vehicle (sum of idle times across all stages)
+function calculateTotalDwellTime(row: VehicleRow): number {
+  const order: StageKey[] = [
+    "gateEntry",
+    "tareWeighing",
+    "loading",
+    "postLoadingWeighing",
+    "gateExit",
+  ];
+
+  return order.reduce((sum, stage) => {
+    return sum + calculateStageIdleTime(row, stage);
+  }, 0);
+}
+
+// Calculate dwell ratio: Total Dwell Time / TTR
+function calculateDwellRatio(row: VehicleRow): number {
+  const ttr = calculateTTR(row);
+  const totalDwell = calculateTotalDwellTime(row);
+
+  return ttr > 0 ? Number((totalDwell / ttr).toFixed(2)) : 0;
 }
 
 // Check if current stage should blink (waiting time exceeds 1.5x standard time -> >45m when std=30)
