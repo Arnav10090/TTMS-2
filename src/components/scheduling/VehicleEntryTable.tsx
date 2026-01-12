@@ -232,9 +232,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 </td>
                 <td className="px-3 py-2">
                   <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                    <option value="">Select Area</option>
-                    <option value="Area 1">Area 1</option>
-                    <option value="Area 2">Area 2</option>
+                    <option value="">Select</option>
+                    {Array.from({length:4},(_,i)=>`WPL-${i+1}`).map((wpl)=> <option key={wpl} value={wpl}>{wpl}</option>)}
                   </select>
                 </td>
                 <td className="px-3 py-2 text-center">
