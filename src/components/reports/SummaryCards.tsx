@@ -1,15 +1,24 @@
 "use client"
 
-export default function SummaryCards({ horizontal = false }: { horizontal?: boolean } = {}) {
+import { RangeMode } from '@/components/ui/TimeRangeToggle'
+import { scaleNumberByRange } from '@/utils/range'
+
+export default function SummaryCards({ horizontal = false, range = 'today', customFrom, customTo }: { horizontal?: boolean; range?: RangeMode; customFrom?: string; customTo?: string } = {}) {
   const grad = 'linear-gradient(135deg, #E91E63 0%, #AD1457 100%)'
 
-  const cards = [
+  const baseCards = [
     { title: 'Daily Truck Count', primary: { label: 'No. of Trucks', value: 48 }, metric: { name: 'Gate Entry', total: 685, avg: 14.3 } },
     { title: 'Tare Weight Metrics', primary: { label: 'No. of Trucks', value: 48 }, metric: { name: 'Tare Weight', total: 650, avg: 9.4 } },
     { title: 'Loading Metrics', primary: { label: 'No. of Trucks', value: 48 }, metric: { name: 'Loading', total: 1650, avg: 35 } },
     { title: 'Post-Loading Weight', primary: { label: 'No. of Trucks', value: 42 }, metric: { name: 'Weight after Loading', total: 765, avg: 18.2, unit: 'kg' } },
     { title: 'Gate Exit', primary: { label: 'No. of Trucks', value: 38 }, metric: { name: 'Gate Exit', total: 930, avg: 24.5 } },
   ] as const
+
+  const cards = baseCards.map((c) => ({
+    ...c,
+    primary: { ...c.primary, value: Math.round(scaleNumberByRange(c.primary.value, range, undefined, customFrom, customTo)) },
+    metric: { ...c.metric, total: Math.round(scaleNumberByRange(c.metric.total, range, undefined, customFrom, customTo)), avg: Math.round(scaleNumberByRange(c.metric.avg, range, undefined, customFrom, customTo) * 10) / 10 },
+  }))
 
   if (horizontal) {
     return (

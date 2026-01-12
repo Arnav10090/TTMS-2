@@ -133,7 +133,9 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 { key: 'regNo', label: 'Vehicle Reg No', w: 'w-[160px]' },
                 { key: 'area', label: 'Area', w: 'w-[100px]' },
                 { key: 'position', label: 'Position', w: 'w-[120px]' },
+                { key: 'tareWeight', label: 'Tare Weight', w: 'w-[140px]' },
                 { key: 'loadingGate', label: 'Loading Gate', w: 'w-[140px]' },
+                { key: 'wtPostLoading', label: 'Wt Post Loading', w: 'w-[140px]' },
                 { key: 'actions', label: 'Actions', w: 'w-[120px]', align: 'text-center' },
               ].map((c) => (
                 <th
@@ -205,6 +207,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                   })()}
                 </td>
                 <td className="px-3 py-2">
+                  <select value={r.tareWeight} onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
+                    <option value="">Select Area</option>
+                    <option value="Area 1">Area 1</option>
+                    <option value="Area 2">Area 2</option>
+                  </select>
+                </td>
+                <td className="px-3 py-2">
                   {(() => {
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
@@ -221,6 +230,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                       </select>
                     )
                   })()}
+                </td>
+                <td className="px-3 py-2">
+                  <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
+                    <option value="">Select Area</option>
+                    <option value="Area 1">Area 1</option>
+                    <option value="Area 2">Area 2</option>
+                  </select>
                 </td>
                 <td className="px-3 py-2 text-center">
                   <div className="flex gap-2 justify-center">

@@ -11,7 +11,9 @@ export type VehicleEntry = {
   regNo: string
   area: string
   position: string
+  tareWeight: string
   loadingGate: string
+  wtPostLoading: string
   selected: boolean
 }
 export type AlertItem = { id: string; level: 'critical'|'warning'|'info'|'success'; message: string; ts: number }
@@ -42,7 +44,9 @@ export function useSchedulingState() {
       regNo: `MH12-${1000 + i}`,
       area: 'AREA-1',
       position: '',
+      tareWeight: '',
       loadingGate: '',
+      wtPostLoading: '',
       selected: false,
     })))
 
@@ -97,7 +101,9 @@ export function useSchedulingState() {
         regNo: entry.regNo || '',
         area: entry.area || 'AREA-1',
         position: entry.position || '',
+        tareWeight: entry.tareWeight || '',
         loadingGate: entry.loadingGate || '',
+        wtPostLoading: entry.wtPostLoading || '',
         selected: false,
       }
       return [row, ...rows]
@@ -105,9 +111,9 @@ export function useSchedulingState() {
   }, [])
 
   const generateReport = useCallback(() => {
-    const header = ['SN','Gate Entry Time','Vehicle Reg No','Area','Position','Loading Gate']
+    const header = ['SN','Gate Entry Time','Vehicle Reg No','Area','Position','Tare Weight','Loading Gate','Wt Post Loading']
     const csv = [header.join(',')].concat(
-      vehicleEntries.map((r) => [r.sn, r.gateEntryTime, r.regNo, r.area, r.position, r.loadingGate].join(','))
+      vehicleEntries.map((r) => [r.sn, r.gateEntryTime, r.regNo, r.area, r.position, r.tareWeight, r.loadingGate, r.wtPostLoading].join(','))
     ).join('\n')
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)

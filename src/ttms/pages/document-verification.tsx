@@ -5,9 +5,14 @@ import DocumentUploadZone from '@/components/document/DocumentUploadZone'
 import SearchableOrderList from '@/components/document/SearchableOrderList'
 import RFIDModule from '@/components/document/RFIDModule'
 import DriverHelperDetails from '@/components/document/DriverHelperDetails'
-import { useState } from 'react'
+import VehicleQueueTable from '@/components/document/VehicleQueueTable'
+import { useState, useRef } from 'react'
+import { useRealTimeData } from '@/hooks/useRealTimeData'
 
 export default function TTMSDocumentVerificationPage() {
+  const { vehicleData } = useRealTimeData()
+  const formRef = useRef<HTMLDivElement>(null)
+
   const [modalSrc, setModalSrc] = useState<string | null>(null)
   const [vehicleRegNo, setVehicleRegNo] = useState<string>('')
   const [inputValue, setInputValue] = useState<string>('')
@@ -31,9 +36,23 @@ export default function TTMSDocumentVerificationPage() {
     if (typeof v.helper === 'boolean') setHelperValid(v.helper)
   }
 
+  const handleVerifyDocs = (regNo: string) => {
+    setInputValue(regNo)
+    setVehicleRegNo(regNo)
+    setError(null)
+    // Scroll to form section
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
     <DashboardLayout>
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch">
+      <div className="mb-6">
+        <VehicleQueueTable vehicles={vehicleData} onVerifyDocs={handleVerifyDocs} />
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch" ref={formRef}>
         <div className="xl:col-span-1 space-y-4">
           <div className="card p-4">
             <label className="block text-sm font-medium text-slate-600 mb-2"><p>Vehicle Reg No. (Eg. MH12-1001)</p></label>

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 type Person = {
+  name: string;
   language: string;
   phone: string;
   locationOn: boolean;
@@ -38,12 +39,14 @@ const LANGUAGES = [
 
 export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }: { vehicleRegNo?: string; onValidationChange?: (valid: { driver: boolean; helper: boolean }) => void }) {
   const [driver, setDriver] = useState<Person>({
+    name: "",
     language: "",
     phone: "",
     locationOn: false,
     locationShared: false,
   });
   const [helper, setHelper] = useState<Person>({
+    name: "",
     language: "",
     phone: "",
     locationOn: false,
@@ -53,20 +56,20 @@ export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }
   // Prefill demo driver/helper details when vehicleRegNo is provided
   useEffect(() => {
     if (!vehicleRegNo) {
-      setDriver({ language: '', phone: '', locationOn: false, locationShared: false })
-      setHelper({ language: '', phone: '', locationOn: false, locationShared: false })
+      setDriver({ name: '', language: '', phone: '', locationOn: false, locationShared: false })
+      setHelper({ name: '', language: '', phone: '', locationOn: false, locationShared: false })
       return
     }
     const digits = vehicleRegNo.replace(/\D/g, '')
     const last4 = (digits ? digits.slice(-4) : '0001')
     const makePhone = (prefix: string) => (prefix + last4).padEnd(10, '0').slice(0, 10)
-    setDriver({ language: 'English', phone: makePhone('90000'), locationOn: false, locationShared: false, phoneVerified: false })
-    setHelper({ language: 'Hindi', phone: makePhone('90001'), locationOn: false, locationShared: false, phoneVerified: false })
+    setDriver({ name: 'John Doe', language: 'English', phone: makePhone('90000'), locationOn: false, locationShared: false, phoneVerified: false })
+    setHelper({ name: 'Jane Smith', language: 'Hindi', phone: makePhone('90001'), locationOn: false, locationShared: false, phoneVerified: false })
   }, [vehicleRegNo])
 
   useEffect(() => {
-    const dValid = driver.language.trim().length > 0 && driver.phone.length === 10 && driver.locationOn && driver.locationShared
-    const hValid = helper.language.trim().length > 0 && helper.phone.length === 10 && helper.locationOn && helper.locationShared
+    const dValid = driver.name.trim().length > 0 && driver.language.trim().length > 0 && driver.phone.length === 10 && driver.locationOn && driver.locationShared
+    const hValid = helper.name.trim().length > 0 && helper.language.trim().length > 0 && helper.phone.length === 10 && helper.locationOn && helper.locationShared
     onValidationChange?.({ driver: dValid, helper: hValid })
   }, [driver, helper, onValidationChange])
 
@@ -157,6 +160,25 @@ function Section({
   return (
     <div className="rounded-ui border border-slate-200 p-3">
       <h4 className="font-medium text-slate-700 mb-3">{title}</h4>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
+        <div>
+          <label
+            htmlFor={`${prefix}-name`}
+            className="block text-sm text-slate-600 mb-1"
+          >
+            Name: <span className="text-red-600">*</span>
+          </label>
+          <input
+            id={`${prefix}-name`}
+            type="text"
+            value={person.name}
+            onChange={(e) => onChange({ ...person, name: e.target.value })}
+            placeholder={`Enter ${prefix} name`}
+            className="w-full border border-slate-300 rounded-ui px-3 py-2"
+            aria-required
+          />
+        </div>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <div>
           <label
