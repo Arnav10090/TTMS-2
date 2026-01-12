@@ -56,6 +56,7 @@ export function useRealTimeData() {
         const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
         map[vehicleNo] = { area, label }
         localStorage.setItem(key, JSON.stringify(map))
+        window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
       } catch {}
     }
 

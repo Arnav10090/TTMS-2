@@ -2,30 +2,73 @@
 
 import { useEffect, useState } from 'react'
 
-type GateStatus = 'available'|'occupied'|'reserved'
+type ItemStatus = 'available'|'occupied'|'reserved'
 
-type Gate = { id: string; status: GateStatus }
+type Item = { id: string; status: ItemStatus }
 
-const STORAGE_KEY = 'loadingGateStatuses'
-
-function statusColor(s: GateStatus) {
+function statusColor(s: ItemStatus) {
   return s === 'available' ? 'bg-green-500' : s === 'occupied' ? 'bg-red-500' : 'bg-yellow-500'
 }
 
 export default function LoadingGateStatus() {
-  const [gates, setGates] = useState<Gate[]>(() => {
+  const [tareWeights, setTareWeights] = useState<Item[]>(() => {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY)
-      if (raw) return JSON.parse(raw) as Gate[]
+      const raw = localStorage.getItem('tareWeightStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch {}
+    const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i+1}`, status: 'available' as const }))
+    try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch {}
+    return init
+  })
+
+  const [gates, setGates] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('loadingGateStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
     } catch {}
     const init = Array.from({ length: 12 }, (_, i) => {
       const r = Math.random()
-      const status: GateStatus = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
+      const status: ItemStatus = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
       return { id: `G-${i+1}`, status }
     })
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(init)) } catch {}
+    try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch {}
     return init
   })
+
+  const [wtPostLoadings, setWtPostLoadings] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('wtPostLoadingStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch {}
+    const init = Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i+1}`, status: 'available' as const }))
+    try { localStorage.setItem('wtPostLoadingStatuses', JSON.stringify(init)) } catch {}
+    return init
+  })
+
+  const [gateExits, setGateExits] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('gateExitStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch {}
+    const init = Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i+1}`, status: 'available' as const }))
+    try { localStorage.setItem('gateExitStatuses', JSON.stringify(init)) } catch {}
+    return init
+  })
+
+  // Helper to get vehicle number for an allocated item
+  const getVehicleForItem = (itemId: string, itemType: 'tare' | 'gate' | 'wtpost' | 'exit'): string | null => {
+    try {
+      const key = itemType === 'tare' ? 'vehicleTareWeightAssignments' : itemType === 'gate' ? 'vehicleLoadingGateAssignments' : itemType === 'wtpost' ? 'vehicleWtPostLoadingAssignments' : 'vehicleGateExitAssignments'
+      const raw = localStorage.getItem(key)
+      const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+      for (const [vehicle, assignedId] of Object.entries(map)) {
+        if (assignedId === itemId) {
+          return vehicle
+        }
+      }
+    } catch {}
+    return null
+  }
 
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [pendingGate, setPendingGate] = useState<Gate | null>(null)
@@ -65,25 +108,65 @@ export default function LoadingGateStatus() {
       setGates((prev) => {
         const next = prev.map((g) => {
           if (Math.random() > 0.92) {
-            const order: GateStatus[] = ['available','occupied','reserved']
+            const order: ItemStatus[] = ['available','occupied','reserved']
             const idx = Math.floor(Math.random()*order.length)
             return { ...g, status: order[idx] }
           }
           return g
         })
-        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+        try { localStorage.setItem('loadingGateStatuses', JSON.stringify(next)) } catch {}
         return next
       })
     }, 30000)
-    const syncFromStorage = () => {
+
+    const syncTareWeights = () => {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY)
-        if (raw) setGates(JSON.parse(raw) as Gate[])
+        const raw = localStorage.getItem('tareWeightStatuses')
+        if (raw) setTareWeights(JSON.parse(raw) as Item[])
       } catch {}
     }
-    window.addEventListener('storage', syncFromStorage)
-    window.addEventListener('loadingGateStatuses-updated', syncFromStorage as any)
-    return () => { clearInterval(id); window.removeEventListener('storage', syncFromStorage); window.removeEventListener('loadingGateStatuses-updated', syncFromStorage as any) }
+
+    const syncGates = () => {
+      try {
+        const raw = localStorage.getItem('loadingGateStatuses')
+        if (raw) setGates(JSON.parse(raw) as Item[])
+      } catch {}
+    }
+
+    const syncWtPostLoadings = () => {
+      try {
+        const raw = localStorage.getItem('wtPostLoadingStatuses')
+        if (raw) setWtPostLoadings(JSON.parse(raw) as Item[])
+      } catch {}
+    }
+
+    const syncGateExits = () => {
+      try {
+        const raw = localStorage.getItem('gateExitStatuses')
+        if (raw) setGateExits(JSON.parse(raw) as Item[])
+      } catch {}
+    }
+
+    window.addEventListener('storage', syncTareWeights)
+    window.addEventListener('storage', syncGates)
+    window.addEventListener('storage', syncWtPostLoadings)
+    window.addEventListener('storage', syncGateExits)
+    window.addEventListener('tareWeightStatuses-updated', syncTareWeights as any)
+    window.addEventListener('loadingGateStatuses-updated', syncGates as any)
+    window.addEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
+    window.addEventListener('gateExitStatuses-updated', syncGateExits as any)
+
+    return () => {
+      clearInterval(id)
+      window.removeEventListener('storage', syncTareWeights)
+      window.removeEventListener('storage', syncGates)
+      window.removeEventListener('storage', syncWtPostLoadings)
+      window.removeEventListener('storage', syncGateExits)
+      window.removeEventListener('tareWeightStatuses-updated', syncTareWeights as any)
+      window.removeEventListener('loadingGateStatuses-updated', syncGates as any)
+      window.removeEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
+      window.removeEventListener('gateExitStatuses-updated', syncGateExits as any)
+    }
   }, [])
 
 
@@ -99,18 +182,18 @@ export default function LoadingGateStatus() {
             <h4 className="text-xs font-semibold text-slate-700">Tare Weight</h4>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            {Array.from({ length: 4 }, (_, i) => {
-              const baseStatuses: Array<'available' | 'occupied' | 'reserved'> = ['available', 'occupied', 'reserved', 'available']
-              const status = baseStatuses[i % baseStatuses.length]
-              const statusLabel = status === 'reserved' ? 'allocated' : status
+            {tareWeights.map((item) => {
+              const statusLabel = item.status === 'reserved' ? 'allocated' : item.status
+              const vehicleNo = getVehicleForItem(item.id, 'tare')
+              const tooltipText = vehicleNo ? `${item.id} - ${statusLabel} (${vehicleNo})` : `${item.id} - ${statusLabel}`
               return (
                 <button
-                  key={`tw-${i}`}
-                  className={`relative rounded-ui ${statusColor(status)} text-white h-12 flex items-center justify-center transition cursor-default`}
-                  title={`TW-${i + 1} - ${statusLabel}`}
-                  aria-label={`TW-${i + 1} - ${statusLabel}`}
+                  key={item.id}
+                  className={`relative rounded-ui ${statusColor(item.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
+                  title={tooltipText}
+                  aria-label={tooltipText}
                 >
-                  <span className="text-xs font-semibold">TW-{i + 1}</span>
+                  <span className="text-xs font-semibold">{item.id}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
                 </button>
               )
@@ -125,15 +208,16 @@ export default function LoadingGateStatus() {
           </div>
           <div className="grid grid-cols-4 gap-2">
             {gates.slice(0, 8).map((g) => {
-              const isAvailable = g.status === 'available'
               const statusLabel = g.status === 'reserved' ? 'allocated' : g.status
+              const vehicleNo = getVehicleForItem(g.id, 'gate')
+              const tooltipText = vehicleNo ? `${g.id} - ${statusLabel} (${vehicleNo})` : `${g.id} - ${statusLabel}`
               return (
                 <button
                   key={g.id}
                   onClick={() => { /* allocation disabled from grid */ }}
                   className={`relative rounded-ui ${statusColor(g.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
-                  title={`${g.id} - ${statusLabel}`}
-                  aria-label={`${g.id} - ${statusLabel}`}
+                  title={tooltipText}
+                  aria-label={tooltipText}
                 >
                   <span className="text-xs font-semibold">{g.id}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
@@ -149,18 +233,18 @@ export default function LoadingGateStatus() {
             <h4 className="text-xs font-semibold text-slate-700">Wt Post Loading</h4>
           </div>
           <div className="grid grid-cols-2 gap-2">
-            {Array.from({ length: 4 }, (_, i) => {
-              const baseStatuses: Array<'available' | 'occupied' | 'reserved'> = ['available', 'occupied', 'reserved', 'available']
-              const status = baseStatuses[i % baseStatuses.length]
-              const statusLabel = status === 'reserved' ? 'allocated' : status
+            {wtPostLoadings.map((item) => {
+              const statusLabel = item.status === 'reserved' ? 'allocated' : item.status
+              const vehicleNo = getVehicleForItem(item.id, 'wtpost')
+              const tooltipText = vehicleNo ? `${item.id} - ${statusLabel} (${vehicleNo})` : `${item.id} - ${statusLabel}`
               return (
                 <button
-                  key={`wpl-${i}`}
-                  className={`relative rounded-ui ${statusColor(status)} text-white h-12 flex items-center justify-center transition cursor-default`}
-                  title={`WPL-${i + 1} - ${statusLabel}`}
-                  aria-label={`WPL-${i + 1} - ${statusLabel}`}
+                  key={item.id}
+                  className={`relative rounded-ui ${statusColor(item.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
+                  title={tooltipText}
+                  aria-label={tooltipText}
                 >
-                  <span className="text-xs font-semibold">WPL-{i + 1}</span>
+                  <span className="text-xs font-semibold">{item.id}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
                 </button>
               )
@@ -168,6 +252,32 @@ export default function LoadingGateStatus() {
           </div>
         </div>
       </div>
+
+      {/* Gate Exit Section - Full Width */}
+      <div className="mt-4 flex flex-col gap-2">
+        <div className="bg-orange-100 rounded-ui p-2 text-center">
+          <h4 className="text-xs font-semibold text-orange-700">Gate Exit</h4>
+        </div>
+        <div className="grid grid-cols-1 gap-2">
+          {gateExits.map((item) => {
+            const statusLabel = item.status === 'reserved' ? 'allocated' : item.status
+            const vehicleNo = getVehicleForItem(item.id, 'exit')
+            const tooltipText = vehicleNo ? `${item.id} - ${statusLabel} (${vehicleNo})` : `${item.id} - ${statusLabel}`
+            return (
+              <button
+                key={item.id}
+                className={`relative rounded-ui ${statusColor(item.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
+                title={tooltipText}
+                aria-label={tooltipText}
+              >
+                <span className="text-xs font-semibold">{item.id}</span>
+                <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
       <div className="mt-3 flex items-center gap-3 text-xs text-slate-600">
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-green-500 inline-block" /> Available</div>
         <div className="flex items-center gap-1"><span className="w-3 h-3 rounded-sm bg-red-500 inline-block" /> Occupied</div>

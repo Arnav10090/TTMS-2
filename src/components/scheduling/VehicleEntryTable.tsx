@@ -70,22 +70,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
     }
   }, [parkingData])
 
-  useEffect(() => {
-    let changed = false
-    const updated = rows.map((r) => {
-      if (r.position) return r
-      const areaKey = (r.area || 'AREA-1') as 'AREA-1'|'AREA-2'
-      const first = availableByArea[areaKey]?.[0]
-      if (first) {
-        changed = true
-        return { ...r, position: first }
-      }
-      return r
-    })
-    if (changed) {
-      onRowsChange(updated)
-    }
-  }, [rows, availableByArea, onRowsChange])
+  // Removed auto-assignment of position to prevent interference with "Select spot" option
+  // Users should explicitly select a position from the dropdown
 
   const toggleAll = (checked: boolean) => {
     const ids = new Set(paged.map(p => p.id))
@@ -179,8 +165,9 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     } catch {}
                     return (
                       <select value={r.area} onChange={(e)=>setCell(r.id,'area',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                        <option>AREA-1</option>
-                        <option>AREA-2</option>
+                        <option value="">Select area</option>
+                        <option value="AREA-1">AREA-1</option>
+                        <option value="AREA-2">AREA-2</option>
                       </select>
                     )
                   })()}

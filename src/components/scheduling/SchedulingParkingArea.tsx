@@ -25,6 +25,20 @@ export default function SchedulingParkingArea({
   // Derive area key from the title (expects "AREA-1" or "AREA-2" to be present)
   const areaKey = (title.match(/AREA-1|AREA-2/)?.[0] as 'AREA-1' | 'AREA-2') ?? 'AREA-1'
 
+  // Get vehicle number for a parking spot
+  const getVehicleForSpot = (spotLabel: string): string | null => {
+    try {
+      const raw = localStorage.getItem('vehicleParkingAssignments')
+      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
+      for (const [vehicle, assignment] of Object.entries(map)) {
+        if (assignment.area === areaKey && assignment.label === spotLabel) {
+          return vehicle
+        }
+      }
+    } catch {}
+    return null
+  }
+
   // Persisted map: `${area}-${label}` -> color class
   const [colorMap, setColorMap] = useState<Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'>>(() => {
     try {
@@ -62,17 +76,24 @@ export default function SchedulingParkingArea({
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
   const [toast, setToast] = useState<{message: string} | null>(null)
 
-  // Sync color map from localStorage when updated elsewhere
+  // Sync color map and vehicle assignments from localStorage when updated elsewhere
   useEffect(() => {
     const sync = () => {
       try {
         const saved = localStorage.getItem('parkingColorMap')
         if (saved) setColorMap(JSON.parse(saved))
       } catch {}
+      // Force a re-render to update tooltips with new vehicle assignments
+      setColorMap(prev => ({ ...prev }))
     }
     window.addEventListener('storage', sync)
     window.addEventListener('parkingColorMap-updated', sync as any)
-    return () => { window.removeEventListener('storage', sync); window.removeEventListener('parkingColorMap-updated', sync as any) }
+    window.addEventListener('vehicleParkingAssignments-updated', sync as any)
+    return () => {
+      window.removeEventListener('storage', sync)
+      window.removeEventListener('parkingColorMap-updated', sync as any)
+      window.removeEventListener('vehicleParkingAssignments-updated', sync as any)
+    }
   }, [])
 
   const openConfirm = (label: string) => {
@@ -113,6 +134,8 @@ export default function SchedulingParkingArea({
           row.map((cell, c) => {
             const currentColor = (colorMap[`${areaKey}-${cell.label}`] ?? spotColor(cell.status))
             const statusLabel = currentColor === 'bg-green-500' ? 'available' : currentColor === 'bg-red-500' ? 'occupied' : 'allocated'
+            const vehicleNo = getVehicleForSpot(cell.label)
+            const tooltipText = vehicleNo ? `${cell.label} - ${statusLabel} (${vehicleNo})` : `${cell.label} - ${statusLabel}`
             return (
               <button
                 key={`${r}-${c}`}
@@ -120,8 +143,8 @@ export default function SchedulingParkingArea({
                 disabled
                 aria-disabled
                 className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default`}
-                title={`${cell.label} - ${statusLabel}`}
-                aria-label={`${cell.label} - ${statusLabel}`}
+                title={tooltipText}
+                aria-label={tooltipText}
               >
                 <span className="text-[11px] md:text-xs font-medium">{cell.label}</span>
                 <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
