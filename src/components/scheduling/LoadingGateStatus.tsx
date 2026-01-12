@@ -187,15 +187,16 @@ export default function LoadingGateStatus() {
           </div>
           <div className="grid grid-cols-4 gap-2">
             {gates.slice(0, 8).map((g) => {
-              const isAvailable = g.status === 'available'
               const statusLabel = g.status === 'reserved' ? 'allocated' : g.status
+              const vehicleNo = getVehicleForItem(g.id, 'gate')
+              const tooltipText = vehicleNo ? `${g.id} - ${statusLabel} (${vehicleNo})` : `${g.id} - ${statusLabel}`
               return (
                 <button
                   key={g.id}
                   onClick={() => { /* allocation disabled from grid */ }}
                   className={`relative rounded-ui ${statusColor(g.status)} text-white h-12 flex items-center justify-center transition cursor-default`}
-                  title={`${g.id} - ${statusLabel}`}
-                  aria-label={`${g.id} - ${statusLabel}`}
+                  title={tooltipText}
+                  aria-label={tooltipText}
                 >
                   <span className="text-xs font-semibold">{g.id}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
