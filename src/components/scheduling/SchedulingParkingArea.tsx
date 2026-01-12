@@ -25,6 +25,20 @@ export default function SchedulingParkingArea({
   // Derive area key from the title (expects "AREA-1" or "AREA-2" to be present)
   const areaKey = (title.match(/AREA-1|AREA-2/)?.[0] as 'AREA-1' | 'AREA-2') ?? 'AREA-1'
 
+  // Get vehicle number for a parking spot
+  const getVehicleForSpot = (spotLabel: string): string | null => {
+    try {
+      const raw = localStorage.getItem('vehicleParkingAssignments')
+      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
+      for (const [vehicle, assignment] of Object.entries(map)) {
+        if (assignment.area === areaKey && assignment.label === spotLabel) {
+          return vehicle
+        }
+      }
+    } catch {}
+    return null
+  }
+
   // Persisted map: `${area}-${label}` -> color class
   const [colorMap, setColorMap] = useState<Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'>>(() => {
     try {
