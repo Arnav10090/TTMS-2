@@ -212,8 +212,8 @@ function TimeCell({
 }
 
 export default function VehicleTable({ data }: { data: VehicleRow[] }) {
-  const [sortKey, setSortKey] = useState<keyof VehicleRow>("sn");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
+  const [sortKey, setSortKey] = useState<keyof VehicleRow>("reportingTime");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [day, setDay] = useState<Date | null>(null);
@@ -223,6 +223,20 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   const [selectedVehicle, setSelectedVehicle] = useState<VehicleRow | null>(null);
   const [selectedStage, setSelectedStage] = useState<StageKey | null>(null);
   const pageSize = 7;
+
+  // Generate random reporting times in descending order
+  const dataWithTimes = useMemo(() => {
+    const now = new Date();
+    return data.map((row, index) => {
+      if (!row.reportingTime) {
+        // Generate random time within last 8 hours, with descending order for top vehicles
+        const minutesAgo = Math.floor(Math.random() * 480); // 0-480 minutes (8 hours)
+        const reportingTime = new Date(now.getTime() - minutesAgo * 60000);
+        return { ...row, reportingTime };
+      }
+      return row;
+    });
+  }, [data]);
 
   const handleStageClick = (vehicle: VehicleRow, stage: StageKey) => {
     setSelectedVehicle(vehicle);
