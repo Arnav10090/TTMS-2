@@ -58,7 +58,7 @@ export default function LoadingGateStatus() {
   // Helper to get vehicle number for an allocated item
   const getVehicleForItem = (itemId: string, itemType: 'tare' | 'gate' | 'wtpost' | 'exit'): string | null => {
     try {
-      const key = itemType === 'tare' ? 'vehicleTareWeightAssignments' : itemType === 'gate' ? 'vehicleLoadingGateAssignments' : 'vehicleWtPostLoadingAssignments'
+      const key = itemType === 'tare' ? 'vehicleTareWeightAssignments' : itemType === 'gate' ? 'vehicleLoadingGateAssignments' : itemType === 'wtpost' ? 'vehicleWtPostLoadingAssignments' : 'vehicleGateExitAssignments'
       const raw = localStorage.getItem(key)
       const map = raw ? JSON.parse(raw) as Record<string, string> : {}
       for (const [vehicle, assignedId] of Object.entries(map)) {
