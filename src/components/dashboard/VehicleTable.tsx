@@ -245,7 +245,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   };
 
   const filtered = useMemo(() => {
-    return data.filter((row) => {
+    return dataWithTimes.filter((row) => {
       const matchReg = row.regNo.toLowerCase().includes(query.toLowerCase());
       const ts = new Date(row.timestamp).getTime();
       const matchDay = day
@@ -256,7 +256,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
         (end ? ts <= end.getTime() : true);
       return matchReg && matchDay && matchPeriod;
     });
-  }, [data, query, day, start, end]);
+  }, [dataWithTimes, query, day, start, end]);
 
   // compute max TTR across all provided data rows so we can blink the regNo with maximum TTR
   const maxTTR = useMemo(() => {
