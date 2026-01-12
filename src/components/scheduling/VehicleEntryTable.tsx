@@ -165,8 +165,9 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     } catch {}
                     return (
                       <select value={r.area} onChange={(e)=>setCell(r.id,'area',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                        <option>AREA-1</option>
-                        <option>AREA-2</option>
+                        <option value="">Select area</option>
+                        <option value="AREA-1">AREA-1</option>
+                        <option value="AREA-2">AREA-2</option>
                       </select>
                     )
                   })()}
