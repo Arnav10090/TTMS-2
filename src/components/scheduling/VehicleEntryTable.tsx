@@ -206,14 +206,14 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2 bg-blue-50 border-r border-blue-300 w-[140px]">
+                <td className="px-3 py-2">
                   <select value={r.tareWeight} onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
                     <option value="">Select Area</option>
                     <option value="Area 1">Area 1</option>
                     <option value="Area 2">Area 2</option>
                   </select>
                 </td>
-                <td className="px-3 py-2 bg-blue-50 w-[140px]">
+                <td className="px-3 py-2">
                   {(() => {
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
@@ -231,14 +231,14 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2 bg-blue-50 border-l border-blue-300 w-[140px]">
+                <td className="px-3 py-2">
                   <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
                     <option value="">Select Area</option>
                     <option value="Area 1">Area 1</option>
                     <option value="Area 2">Area 2</option>
                   </select>
                 </td>
-                <td className="px-3 py-2 text-center w-[120px]">
+                <td className="px-3 py-2 text-center">
                   <div className="flex gap-2 justify-center">
                     <button
                       className="px-3 py-1.5 rounded-ui bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
