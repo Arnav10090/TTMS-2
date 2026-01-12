@@ -127,6 +127,8 @@ export default function SchedulingParkingArea({
           row.map((cell, c) => {
             const currentColor = (colorMap[`${areaKey}-${cell.label}`] ?? spotColor(cell.status))
             const statusLabel = currentColor === 'bg-green-500' ? 'available' : currentColor === 'bg-red-500' ? 'occupied' : 'allocated'
+            const vehicleNo = getVehicleForSpot(cell.label)
+            const tooltipText = vehicleNo ? `${cell.label} - ${statusLabel} (${vehicleNo})` : `${cell.label} - ${statusLabel}`
             return (
               <button
                 key={`${r}-${c}`}
@@ -134,8 +136,8 @@ export default function SchedulingParkingArea({
                 disabled
                 aria-disabled
                 className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default`}
-                title={`${cell.label} - ${statusLabel}`}
-                aria-label={`${cell.label} - ${statusLabel}`}
+                title={tooltipText}
+                aria-label={tooltipText}
               >
                 <span className="text-[11px] md:text-xs font-medium">{cell.label}</span>
                 <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
