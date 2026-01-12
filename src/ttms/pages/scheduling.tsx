@@ -42,6 +42,23 @@ export default function TTMSSchedulingPage() {
             } else {
               labels.forEach(lbl => allocateSpot((row.area as 'AREA-1'|'AREA-2'), lbl, row.regNo))
             }
+            if (row.tareWeight) {
+              try {
+                const key = 'vehicleTareWeightAssignments'
+                const raw = localStorage.getItem(key)
+                const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+                map[row.regNo] = row.tareWeight
+                localStorage.setItem(key, JSON.stringify(map))
+              } catch {}
+              try {
+                const key = 'tareWeightStatuses'
+                const raw = localStorage.getItem(key)
+                const items = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:4},(_,i)=>({id:`TW-${i+1}`,status:'available' as const}))
+                const next = items.map(item=> item.id===row.tareWeight ? {...item, status:'reserved' as const} : item)
+                localStorage.setItem(key, JSON.stringify(next))
+                window.dispatchEvent(new Event('tareWeightStatuses-updated'))
+              } catch {}
+            }
             if (row.loadingGate) {
               try {
                 const key = 'vehicleLoadingGateAssignments'
@@ -54,9 +71,26 @@ export default function TTMSSchedulingPage() {
                 const key = 'loadingGateStatuses'
                 const raw = localStorage.getItem(key)
                 const gates = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:12},(_,i)=>({id:`G-${i+1}`,status:'available' as const}))
-                const next = gates.map(g=> g.id===row.loadingGate ? {...g, status:'occupied' as const} : g)
+                const next = gates.map(g=> g.id===row.loadingGate ? {...g, status:'reserved' as const} : g)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('loadingGateStatuses-updated'))
+              } catch {}
+            }
+            if (row.wtPostLoading) {
+              try {
+                const key = 'vehicleWtPostLoadingAssignments'
+                const raw = localStorage.getItem(key)
+                const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+                map[row.regNo] = row.wtPostLoading
+                localStorage.setItem(key, JSON.stringify(map))
+              } catch {}
+              try {
+                const key = 'wtPostLoadingStatuses'
+                const raw = localStorage.getItem(key)
+                const items = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:4},(_,i)=>({id:`WPL-${i+1}`,status:'available' as const}))
+                const next = items.map(item=> item.id===row.wtPostLoading ? {...item, status:'reserved' as const} : item)
+                localStorage.setItem(key, JSON.stringify(next))
+                window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
               } catch {}
             }
           }}
