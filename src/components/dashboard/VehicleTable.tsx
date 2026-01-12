@@ -103,9 +103,8 @@ function getStageStatus(
   row: VehicleRow,
   stage: StageKey
 ) {
-  const ratio = stageState.stdTime
-    ? stageState.waitTime / stageState.stdTime
-    : 0;
+  const stdTime = STAGE_STANDARDS[stage];
+  const ratio = stdTime ? stageState.waitTime / stdTime : 0;
 
   // 1) Green Light - Stage completed
   if (stageState.state === "completed") {
@@ -129,11 +128,11 @@ function getStageStatus(
       };
     }
 
-    const std = stageState.stdTime || 30;
-    const r = std ? stageState.waitTime / std : 0;
+    const threshold1_5x = stdTime * 1.5;
+    const threshold2x = stdTime * 2.0;
 
     // Critical - much higher than standard (>= 2x)
-    if (r >= 2.0) {
+    if (stageState.waitTime >= threshold2x) {
       return {
         status: "critical" as const,
         className: "status-cell status-critical",
@@ -142,8 +141,8 @@ function getStageStatus(
       };
     }
 
-    // Blink when exceed 1.5x standard (>45m for std=30)
-    if (r > 1.5) {
+    // Blink when exceed 1.5x standard
+    if (stageState.waitTime > threshold1_5x) {
       return {
         status: "active" as const,
         className: "status-cell status-next",
