@@ -190,12 +190,17 @@ export default function TTMSAlarmsPage() {
             <div className="text-xs text-slate-600">Showing {filtered.length === 0 ? 0 : Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Rows per page</label>
-              <select value={rowsPerPage} onChange={(e)=>setRowsPerPage(parseInt(e.target.value))} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200 text-sm">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
+              <Select value={String(rowsPerPage)} onValueChange={(val) => setRowsPerPage(parseInt(val))}>
+                <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200 w-[140px]">
+                  <SelectValue placeholder="Rows" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="10" className="hover:bg-primary/10 cursor-pointer">10</SelectItem>
+                  <SelectItem value="25" className="hover:bg-primary/10 cursor-pointer">25</SelectItem>
+                  <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50</SelectItem>
+                  <SelectItem value="100" className="hover:bg-primary/10 cursor-pointer">100</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="flex items-center gap-1">
