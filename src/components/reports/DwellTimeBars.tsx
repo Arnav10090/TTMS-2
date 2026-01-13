@@ -2,6 +2,8 @@
 
 import { VehicleRow, StageKey } from '@/types/vehicle'
 import { useMemo } from 'react'
+import { scaleNumberByRange } from '@/utils/range'
+import { RangeMode } from '@/components/ui/TimeRangeToggle'
 
 const stages: StageKey[] = ['gateEntry', 'tareWeighing', 'loading', 'postLoadingWeighing', 'gateExit']
 
@@ -24,7 +26,7 @@ const calculateDwellMetricsForStage = (stageKey: StageKey, vehicleData: VehicleR
   }
 }
 
-export default function DwellTimeBars({ vehicleData = [] }: { vehicleData?: VehicleRow[] }) {
+export default function DwellTimeBars({ vehicleData = [], range = 'today', customFrom = '', customTo = '' }: { vehicleData?: VehicleRow[]; range?: RangeMode; customFrom?: string; customTo?: string }) {
   const dwellMetrics = useMemo(() => {
     if (vehicleData.length === 0) {
       return { totalDwell: 0, avgDwell: 0 }
@@ -40,11 +42,15 @@ export default function DwellTimeBars({ vehicleData = [] }: { vehicleData?: Vehi
       avgDwellSum += metrics.avgDwellTime
     })
 
+    // Apply range scaling
+    const scaledTotalDwell = Math.round(scaleNumberByRange(totalDwellSum, range, undefined, customFrom, customTo))
+    const scaledAvgDwell = Math.round(scaleNumberByRange(avgDwellSum, range, undefined, customFrom, customTo) * 10) / 10
+
     return {
-      totalDwell: totalDwellSum,
-      avgDwell: avgDwellSum,
+      totalDwell: scaledTotalDwell,
+      avgDwell: scaledAvgDwell,
     }
-  }, [vehicleData])
+  }, [vehicleData, range, customFrom, customTo])
 
   const maxValue = Math.max(dwellMetrics.totalDwell, dwellMetrics.avgDwell, 1)
 
