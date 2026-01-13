@@ -32,9 +32,23 @@ export type DispatchData = {
   trend: Trend
 }
 
+export type DwellData = {
+  totalDwellDay: number
+  totalDwellCum: number
+  avgDwellDay: number
+  avgDwellCum: number
+  totalDwellRatioDay: number
+  totalDwellRatioCum: number
+  avgDwellRatioDay: number
+  avgDwellRatioCum: number
+  trend: Trend
+  sparkline: { v: number }[]
+}
+
 export type KPIData = {
   capacity: CapacityData
   turnaround: TurnaroundData
   vehicles: VehiclesData
   dispatch: DispatchData
+  dwell: DwellData
 }
