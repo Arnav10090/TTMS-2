@@ -82,15 +82,6 @@ export default function DwellTimeVisualization({ vehicle }: { vehicle?: VehicleR
           <span className="font-semibold text-slate-800">TOTAL DWELL TIME:</span>
           <span className="text-slate-700">{dwellMetrics.totalDwell} min</span>
         </div>
-
-        <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-          {dwellMetrics.stageDwellTimes.map((s) => (
-            <div key={`legend-${s.stage}`} className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-sm inline-block" style={{ background: s.color }} aria-hidden="true" />
-              <span className="text-slate-700 text-xs">{s.label}</span>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   )
