@@ -173,7 +173,8 @@ export default function TTMSHistoryPage() {
                 { key: 'tareWt', label: 'Tare Wt' },
                 { key: 'wtAfter', label: 'Wt After' },
                 { key: 'ttr', label: 'TTR (min)' },
-                { key: 'timestamp', label: 'Timestamp' },
+                { key: 'totalDwellTime', label: 'Total Dwell (min)' },
+                { key: 'timestamp', label: 'Reporting time' },
                 { key: 'remarks', label: 'Remarks' },
               ].map((col) => (
                 <th key={col.key} className="px-3 py-3 text-center text-xs font-semibold text-muted-foreground border border-border/40">
