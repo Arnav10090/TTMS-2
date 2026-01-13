@@ -6,6 +6,8 @@ import SearchHeader from '@/components/reports/SearchHeader'
 import ProcessTimeline from '@/components/reports/ProcessTimeline'
 import SummaryCards from '@/components/reports/SummaryCards'
 import TotalTimeStackedBar from '@/components/reports/TotalTimeStackedBar'
+import DwellTimeBars from '@/components/reports/DwellTimeBars'
+import DwellTimeVisualization from '@/components/reports/DwellTimeVisualization'
 import TimeRangeToggle, { RangeMode } from '@/components/ui/TimeRangeToggle'
 import RangeHint from '@/components/ui/TimeRangeHint'
 import { ReportStep, ReportStepKey } from '@/types/reports'
@@ -80,24 +82,25 @@ export default function TTMSReportsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4">
-        <div className="flex items-center justify-between mb-4">
-          <div />
-          <div className="flex flex-col items-end">
-            <TimeRangeToggle
-              mode={range}
-              setMode={setRange}
-              hideCompare
-              customFrom={customFrom}
-              customTo={customTo}
-              onCustomFromChange={setCustomFrom}
-              onCustomToChange={setCustomTo}
-            />
-            <RangeHint mode={range} customFrom={customFrom} customTo={customTo} />
-          </div>
+        <div className="flex items-center justify-end gap-4 mb-4">
+          <TimeRangeToggle
+            mode={range}
+            setMode={setRange}
+            hideCompare
+            customFrom={customFrom}
+            customTo={customTo}
+            onCustomFromChange={setCustomFrom}
+            onCustomToChange={setCustomTo}
+          />
+          <RangeHint mode={range} customFrom={customFrom} customTo={customTo} />
         </div>
 
         <div className="w-full">
-          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} />
+          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} vehicleData={vehicleData} />
+        </div>
+
+        <div className="w-full">
+          <DwellTimeBars vehicleData={vehicleData} range={range} customFrom={customFrom} customTo={customTo} />
         </div>
 
         <div>
@@ -107,6 +110,7 @@ export default function TTMSReportsPage() {
         <div className="space-y-4">
           <ProcessTimeline steps={steps} active={active} onSelect={setActive} vehicle={vehicle} />
           <TotalTimeStackedBar steps={steps} active={active} onSelect={setActive} />
+          <DwellTimeVisualization vehicle={vehicleData.find((v) => v.regNo === vehicle)} />
         </div>
 
       </div>
