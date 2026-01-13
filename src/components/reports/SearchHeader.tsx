@@ -35,6 +35,18 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
 
   const stats = useMemo(() => {
     const stageKeys: Array<'gateEntry' | 'tareWeighing' | 'loading' | 'postLoadingWeighing' | 'gateExit'> = ['gateEntry', 'tareWeighing', 'loading', 'postLoadingWeighing', 'gateExit']
+
+    // If a vehicle is selected, show metrics for that vehicle only
+    if (value) {
+      const vehicle = vehicleData.find((v) => v.regNo === value)
+      if (vehicle) {
+        const avgDwell = vehicle.totalDwellTime ? Math.round((vehicle.totalDwellTime / stageKeys.length) * 10) / 10 : 0
+        const dwellRatio = vehicle.dwellRatio ? Math.round(vehicle.dwellRatio * 10000) / 100 : 0
+        return { avgDwell, dwellRatio }
+      }
+    }
+
+    // If no vehicle selected, show aggregate for all vehicles
     if (vehicleData.length === 0) {
       return { avgDwell: 0, dwellRatio: 0 }
     }
@@ -60,7 +72,7 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
     const dwellRatio = totalWaitTime > 0 ? Math.round((totalDwell / totalWaitTime) * 10000) / 100 : 0
 
     return { avgDwell, dwellRatio }
-  }, [vehicleData])
+  }, [vehicleData, value])
 
   return (
     <div className="card p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
