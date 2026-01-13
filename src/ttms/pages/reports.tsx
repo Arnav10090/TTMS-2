@@ -100,7 +100,7 @@ export default function TTMSReportsPage() {
         </div>
 
         <div className="w-full">
-          <DwellTimeBars vehicleData={vehicleData} />
+          <DwellTimeBars vehicleData={vehicleData} range={range} customFrom={customFrom} customTo={customTo} />
         </div>
 
         <div>
