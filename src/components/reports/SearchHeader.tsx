@@ -72,8 +72,8 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
       }
     })
 
-    const avgDwell = validVehicles > 0 ? Math.round((totalDwell / validVehicles) * 10) / 10 : 0
-    const dwellRatio = totalTimeTaken > 0 ? Math.round((totalDwell / totalTimeTaken) * 10000) / 100 : 0
+    const avgDwell = validVehicles > 0 ? Math.round((totalDwell / stageKeys.length) * 10) / 10 : 0
+    const dwellRatio = (totalTimeTaken && totalTimeTaken > 0 && totalDwell > 0) ? Math.round((totalDwell / totalTimeTaken) * 10000) / 100 : 0
 
     return { avgDwell, dwellRatio }
   }, [vehicleData, value])
