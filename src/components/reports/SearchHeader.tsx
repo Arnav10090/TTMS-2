@@ -6,7 +6,7 @@ import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 
-const shifts = ['Day', 'Shift-A', 'Shift-B', 'Shift-C'] as const
+const shifts = ['Shift', 'Shift-A', 'Shift-B', 'Shift-C'] as const
 
 type Props = {
   value?: string
