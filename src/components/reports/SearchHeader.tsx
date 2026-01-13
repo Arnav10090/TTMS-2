@@ -44,6 +44,14 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
 
   useEffect(() => { setQuery(value ?? '') }, [value])
 
+  // Clear vehicle selection when shift changes
+  useEffect(() => {
+    if (value && options.length > 0 && !options.includes(value)) {
+      onVehicleChange?.('')
+      setQuery('')
+    }
+  }, [shift])
+
 
   const stats = useMemo(() => {
     const stageKeys: Array<'gateEntry' | 'tareWeighing' | 'loading' | 'postLoadingWeighing' | 'gateExit'> = ['gateEntry', 'tareWeighing', 'loading', 'postLoadingWeighing', 'gateExit']
