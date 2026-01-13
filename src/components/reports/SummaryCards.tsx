@@ -32,24 +32,20 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
     }
 
     let totalDwell = 0
-    let totalRatio = 0
-    let count = 0
+    let totalWaitTime = 0
 
     vehicleData.forEach((vehicle) => {
       const stage = vehicle.stages[stageKey]
       if (stage && stage.idleTime !== undefined) {
         totalDwell += stage.idleTime
-        if (stage.waitTime > 0) {
-          totalRatio += (stage.idleTime / stage.waitTime)
-          count++
-        }
+        totalWaitTime += stage.waitTime || 0
       }
     })
 
     return {
       totalDwellTime: Math.round(totalDwell),
       avgDwellTime: vehicleData.length > 0 ? Math.round((totalDwell / vehicleData.length) * 10) / 10 : 0,
-      dwellRatio: count > 0 ? Math.round((totalRatio / count) * 100) / 100 : 0,
+      dwellRatio: totalWaitTime > 0 ? Math.round((totalDwell / totalWaitTime) * 10000) / 100 : 0,
     }
   }
 
