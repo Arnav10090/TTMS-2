@@ -12,6 +12,7 @@ export function useRealTimeData() {
     turnaround: { avgDay: 0, avgCum: 0, lastYear: 0, trend: { direction: 'up', percentage: 0 }, performanceColor: 'blue', sparkline: [] },
     vehicles: { inDay: 0, outDay: 0, inCum: 0, outCum: 0, trend: { direction: 'up', percentage: 0 }, target: 0 },
     dispatch: { today: 0, cumMonth: 0, targetDay: 0, trend: { direction: 'up', percentage: 0 } },
+    dwell: { totalDwellDay: 0, totalDwellCum: 0, avgDwellDay: 0, avgDwellCum: 0, totalDwellRatioDay: 0, totalDwellRatioCum: 0, avgDwellRatioDay: 0, avgDwellRatioCum: 0, trend: { direction: 'up', percentage: 0 }, sparkline: [] },
   })
   const [vehicleData, setVehicleData] = useState<VehicleRow[]>([])
   const [parkingData, setParkingData] = useState<ParkingData>({ 'AREA-1': [], 'AREA-2': [] } as any)
