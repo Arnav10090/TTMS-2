@@ -98,7 +98,7 @@ export default function TTMSReportsPage() {
         </div>
 
         <div className="w-full">
-          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} />
+          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} vehicleData={vehicleData} />
         </div>
 
         <div>
