@@ -28,24 +28,27 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
   // Calculate dwell metrics for each stage
   const calculateDwellMetrics = (stageKey: StageKey) => {
     if (vehicleData.length === 0) {
-      return { totalDwellTime: 0, avgDwellTime: 0, dwellRatio: 0 }
+      return { totalDwellTime: 0, avgDwellTime: 0, dwellRatio: 0, stageTotal: 0 }
     }
 
     let totalDwell = 0
-    let totalWaitTime = 0
+    let stageTotal = 0
 
     vehicleData.forEach((vehicle) => {
       const stage = vehicle.stages[stageKey]
-      if (stage && stage.idleTime !== undefined) {
-        totalDwell += stage.idleTime
-        totalWaitTime += stage.waitTime || 0
+      if (stage) {
+        if (stage.idleTime !== undefined) {
+          totalDwell += stage.idleTime
+        }
+        stageTotal += stage.waitTime || 0
       }
     })
 
     return {
       totalDwellTime: Math.round(totalDwell),
       avgDwellTime: vehicleData.length > 0 ? Math.round((totalDwell / vehicleData.length) * 10) / 10 : 0,
-      dwellRatio: totalWaitTime > 0 ? Math.round((totalDwell / totalWaitTime) * 10000) / 100 : 0,
+      dwellRatio: stageTotal > 0 ? (totalDwell / stageTotal) * 100 : 0,
+      stageTotal: Math.round(stageTotal),
     }
   }
 
