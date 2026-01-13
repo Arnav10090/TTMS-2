@@ -84,6 +84,20 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
                   <span>Avg {c.metric.name} time</span>
                   <span className="font-semibold">{c.metric.avg} min</span>
                 </div>
+                <div className="border-t border-white/30 pt-2 mt-2">
+                  <div className="flex justify-between items-center">
+                    <span>Total Dwell time</span>
+                    <span className="font-semibold">{c.dwell.totalDwellTime} min</span>
+                  </div>
+                  <div className="flex justify-between items-center mt-1">
+                    <span>Avg Dwell time</span>
+                    <span className="font-semibold">{c.dwell.avgDwellTime} min</span>
+                  </div>
+                  <div className="flex justify-between items-center mt-1">
+                    <span>Dwell Ratio</span>
+                    <span className="font-semibold">{(c.dwell.dwellRatio * 100).toFixed(2)}%</span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
@@ -110,6 +124,20 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
             <div className="flex justify-between items-center">
               <span>Avg {c.metric.name} time</span>
               <span className="font-semibold">{c.metric.avg} min</span>
+            </div>
+            <div className="border-t border-white/30 pt-2 mt-2">
+              <div className="flex justify-between items-center">
+                <span>Total Dwell time</span>
+                <span className="font-semibold">{c.dwell.totalDwellTime} min</span>
+              </div>
+              <div className="flex justify-between items-center mt-1">
+                <span>Avg Dwell time</span>
+                <span className="font-semibold">{c.dwell.avgDwellTime} min</span>
+              </div>
+              <div className="flex justify-between items-center mt-1">
+                <span>Dwell Ratio</span>
+                <span className="font-semibold">{(c.dwell.dwellRatio * 100).toFixed(2)}%</span>
+              </div>
             </div>
           </div>
         </div>
