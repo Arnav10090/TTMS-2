@@ -50,7 +50,7 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
       onVehicleChange?.('')
       setQuery('')
     }
-  }, [shift])
+  }, [shift, value, options, onVehicleChange])
 
 
   const stats = useMemo(() => {
