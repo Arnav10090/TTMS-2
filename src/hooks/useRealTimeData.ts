@@ -92,11 +92,13 @@ export function useRealTimeData() {
         const util = Math.max(0, Math.min(100, jitter(prev.capacity.utilization, 6)))
         const avgDay = Math.max(60, jitter(prev.turnaround.avgDay, 6))
         const performanceColor = avgDay < 90 ? 'green' : avgDay < 110 ? 'yellow' : 'red'
+        const avgDwell = Math.max(1, jitter(prev.dwell.avgDwellDay, 3))
         return {
           capacity: { ...prev.capacity, utilization: util, trend: { direction: Math.random()>0.5?'up':'down', percentage: Math.round(Math.random()*5*10)/10 } },
           turnaround: { ...prev.turnaround, avgDay, performanceColor, sparkline: [...prev.turnaround.sparkline.slice(1), { v: avgDay }] },
           vehicles: { ...prev.vehicles, inDay: jitter(prev.vehicles.inDay, 8), outDay: jitter(prev.vehicles.outDay, 8) },
           dispatch: { ...prev.dispatch, today: jitter(prev.dispatch.today, 8) },
+          dwell: { ...prev.dwell, avgDwellDay: avgDwell, totalDwellDay: Math.round(avgDwell * 5), totalDwellRatioDay: Math.round((avgDwell / avgDay) * 10000) / 100, avgDwellRatioDay: Math.round((avgDwell / avgDay) * 10000) / 100, sparkline: [...prev.dwell.sparkline.slice(1), { v: avgDwell }] },
         }
       })
       setVehicleData((rows) => rows.map((r) => ({ ...r, progress: Math.min(100, r.progress + (Math.random()>0.7? 1 : 0)) })))
