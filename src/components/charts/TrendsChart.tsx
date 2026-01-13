@@ -86,6 +86,7 @@ export default function TrendsChart({ data, range, height = 'h-56' }: { data: KP
             <Line type="monotone" dataKey="ttr" stroke="#7c3aed" dot={false} name="Avg TTR (min)" strokeWidth={2} />
             <Line type="monotone" dataKey="vehicles" stroke="#10b981" dot={false} name="Vehicles" strokeWidth={2} />
             <Line type="monotone" dataKey="dispatch" stroke="#f59e0b" dot={false} name="Dispatch" strokeWidth={2} />
+            <Line type="monotone" dataKey="dwell" stroke="#3b82f6" dot={false} name="Avg Dwell (min)" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
