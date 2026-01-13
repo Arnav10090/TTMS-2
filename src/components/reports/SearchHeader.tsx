@@ -125,7 +125,7 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
           ))}
         </select>
       </div>
-      <div className="flex items-center gap-6 text-xs whitespace-nowrap md:border-l md:border-slate-200 md:pl-6">
+      <div className="flex items-center gap-6 text-sm whitespace-nowrap md:border-l md:border-slate-200 md:pl-6">
         <div>
           <span className="text-slate-600 mr-2">Avg Dwell Time:</span>
           <span className="font-bold text-slate-900">{stats.avgDwell} min</span>
