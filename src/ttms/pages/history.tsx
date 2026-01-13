@@ -233,6 +233,7 @@ export default function TTMSHistoryPage() {
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{r.tareWt}</td>
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{r.wtAfter}</td>
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{calculatedTTR}</td>
+                <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{r.totalDwellTime ?? 0}</td>
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{new Date(r.timestamp).toLocaleString()}</td>
                 <td className="px-3 py-2 text-sm text-center border border-border/30">{r.remarks}</td>
               </tr>
