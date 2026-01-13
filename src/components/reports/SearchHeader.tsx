@@ -33,6 +33,35 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
   useEffect(() => { setQuery(value ?? '') }, [value])
 
 
+  const stats = useMemo(() => {
+    const stageKeys: Array<'gateEntry' | 'tareWeighing' | 'loading' | 'postLoadingWeighing' | 'gateExit'> = ['gateEntry', 'tareWeighing', 'loading', 'postLoadingWeighing', 'gateExit']
+    if (vehicleData.length === 0) {
+      return { avgDwell: 0, dwellRatio: 0 }
+    }
+
+    let totalDwell = 0
+    let totalWaitTime = 0
+    let validVehicles = 0
+
+    vehicleData.forEach((vehicle) => {
+      stageKeys.forEach((stage) => {
+        const stageData = vehicle.stages[stage]
+        if (stageData && stageData.idleTime !== undefined) {
+          totalDwell += stageData.idleTime
+          totalWaitTime += stageData.waitTime || 0
+        }
+      })
+      if (vehicle.totalDwellTime !== undefined) {
+        validVehicles++
+      }
+    })
+
+    const avgDwell = validVehicles > 0 ? Math.round((totalDwell / validVehicles) * 10) / 10 : 0
+    const dwellRatio = totalWaitTime > 0 ? Math.round((totalDwell / totalWaitTime) * 10000) / 100 : 0
+
+    return { avgDwell, dwellRatio }
+  }, [vehicleData])
+
   return (
     <div className="card p-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div className="flex items-center gap-3 w-full md:w-auto">
@@ -83,6 +112,16 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
+      </div>
+      <div className="flex items-center gap-6 text-xs whitespace-nowrap md:border-l md:border-slate-200 md:pl-6">
+        <div>
+          <span className="text-slate-600 mr-2">Avg Dwell Time:</span>
+          <span className="font-bold text-slate-900">{stats.avgDwell} min</span>
+        </div>
+        <div>
+          <span className="text-slate-600 mr-2">Dwell Ratio:</span>
+          <span className="font-bold text-slate-900">{stats.dwellRatio}%</span>
+        </div>
       </div>
     </div>
   )
