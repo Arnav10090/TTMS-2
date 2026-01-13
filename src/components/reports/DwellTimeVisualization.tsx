@@ -93,21 +93,16 @@ export default function DwellTimeVisualization({ vehicle }: { vehicle?: VehicleR
         </div>
       </div>
 
-      {/* Average Dwell Time Bar */}
-      <div className="card p-3">
-        <h3 className="text-slate-800 font-semibold mb-1">Average Dwell Time</h3>
-        <div className="text-center text-xs text-slate-600 mt-1 tracking-wide flex items-center justify-center gap-2">
-          <span className="font-semibold text-slate-800">AVG DWELL TIME:</span>
-          <span className="text-slate-700 text-sm">{dwellMetrics.avgDwell} min</span>
+      {/* Average Dwell Time and Dwell Ratio - Text Only */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="card p-3">
+          <h3 className="text-slate-800 font-semibold mb-2">Average Dwell Time</h3>
+          <div className="text-2xl font-bold text-slate-800">{dwellMetrics.avgDwell} <span className="text-sm">min</span></div>
         </div>
-      </div>
 
-      {/* Dwell Ratio */}
-      <div className="card p-3">
-        <h3 className="text-slate-800 font-semibold mb-1">Dwell Ratio</h3>
-        <div className="text-center text-xs text-slate-600 mt-1 tracking-wide flex items-center justify-center gap-2">
-          <span className="font-semibold text-slate-800">DWELL RATIO:</span>
-          <span className="text-slate-700 text-sm">{dwellMetrics.dwellRatio}%</span>
+        <div className="card p-3">
+          <h3 className="text-slate-800 font-semibold mb-2">Dwell Ratio</h3>
+          <div className="text-2xl font-bold text-slate-800">{dwellMetrics.dwellRatio} <span className="text-sm">%</span></div>
         </div>
       </div>
     </div>
