@@ -35,7 +35,7 @@ export default function DwellStatsLine({ vehicleData = [] }: { vehicleData?: Veh
   }, [vehicleData])
 
   return (
-    <div className="flex items-center gap-8 text-xs whitespace-nowrap">
+    <div className="flex items-center gap-8 text-sm whitespace-nowrap">
       <div>
         <span className="text-slate-600 mr-2">Avg Dwell Time:</span>
         <span className="font-bold text-slate-900">{stats.avgDwell} min</span>
