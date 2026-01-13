@@ -126,12 +126,17 @@ export default function TTMSAlarmsPage() {
           <h2 className="text-lg font-semibold">Alarms</h2>
           <div className="flex items-center gap-2 flex-wrap">
             <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
-            <select value={severity} onChange={(e)=>setSeverity(e.target.value as 'all'|'critical'|'warning'|'info')} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
-              <option value="all" className="hover:bg-blue-100">All Severities</option>
-              <option value="critical" className="hover:bg-blue-100">Critical</option>
-              <option value="warning" className="hover:bg-blue-100">Warning</option>
-              <option value="info" className="hover:bg-blue-100">Info</option>
-            </select>
+            <Select value={severity} onValueChange={(s) => setSeverity(s as 'all'|'critical'|'warning'|'info')}>
+              <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200 w-[160px]">
+                <SelectValue placeholder="All Severities" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                <SelectItem value="all" className="hover:bg-primary/10 cursor-pointer">All Severities</SelectItem>
+                <SelectItem value="critical" className="hover:bg-primary/10 cursor-pointer">Critical</SelectItem>
+                <SelectItem value="warning" className="hover:bg-primary/10 cursor-pointer">Warning</SelectItem>
+                <SelectItem value="info" className="hover:bg-primary/10 cursor-pointer">Info</SelectItem>
+              </SelectContent>
+            </Select>
             <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
             <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
           </div>
