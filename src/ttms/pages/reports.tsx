@@ -96,6 +96,9 @@ export default function TTMSReportsPage() {
               onCustomToChange={setCustomTo}
             />
             <RangeHint mode={range} customFrom={customFrom} customTo={customTo} />
+            <div className="mt-3">
+              <DwellStatsLine vehicleData={vehicleData} />
+            </div>
           </div>
         </div>
 
