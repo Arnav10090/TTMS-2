@@ -54,15 +54,16 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
 
   const cards = baseCards.map((c) => {
     const dwellMetrics = calculateDwellMetrics(c.stageKey)
+    const scaledMetricTotal = Math.round(scaleNumberByRange(dwellMetrics.stageTotal, range, undefined, customFrom, customTo))
     const scaledDwell = {
       totalDwellTime: Math.round(scaleNumberByRange(dwellMetrics.totalDwellTime, range, undefined, customFrom, customTo)),
       avgDwellTime: Math.round(scaleNumberByRange(dwellMetrics.avgDwellTime, range, undefined, customFrom, customTo) * 10) / 10,
-      dwellRatio: dwellMetrics.dwellRatio, // Ratio stays the same
+      dwellRatio: dwellMetrics.dwellRatio, // Already in percentage form
     }
     return {
       ...c,
       primary: { ...c.primary, value: Math.round(scaleNumberByRange(c.primary.value, range, undefined, customFrom, customTo)) },
-      metric: { ...c.metric, total: Math.round(scaleNumberByRange(c.metric.total, range, undefined, customFrom, customTo)), avg: Math.round(scaleNumberByRange(c.metric.avg, range, undefined, customFrom, customTo) * 10) / 10 },
+      metric: { ...c.metric, total: scaledMetricTotal, avg: Math.round(scaleNumberByRange(c.metric.avg, range, undefined, customFrom, customTo) * 10) / 10 },
       dwell: scaledDwell,
     }
   })
