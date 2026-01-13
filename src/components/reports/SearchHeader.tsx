@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Search, ChevronDown, Clock } from 'lucide-react'
 import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 
 const shifts = ['Shift', 'Shift-A', 'Shift-B', 'Shift-C'] as const
