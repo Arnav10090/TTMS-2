@@ -18,7 +18,7 @@ export default function DwellTimeKPI({ data, loading, range }: { data: DwellData
         { label: 'Avg Ratio (Day)', value: scaleDisplayValue(`${data.avgDwellRatioDay.toFixed(2)}%`, range) },
       ]}
       trend={data.trend}
-      tone="blue"
+      tone="yellow"
       icon={<Clock size={16} />}
       loading={loading}
       footer={
