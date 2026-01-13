@@ -55,9 +55,10 @@ export default function TTMSDashboardPage() {
         <TrendsChart data={kpiData} range={range} height="h-[70vh]" />
       </Modal>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-6">
         <CapacityUtilizationKPI data={kpiData.capacity} loading={loading} range={range} />
         <TurnaroundTimeKPI data={kpiData.turnaround} loading={loading} range={range} />
+        <DwellTimeKPI data={kpiData.dwell} loading={loading} range={range} />
         <VehicleSummaryKPI data={kpiData.vehicles} loading={loading} range={range} />
         <DispatchSummaryKPI data={kpiData.dispatch} loading={loading} range={range} />
       </div>
