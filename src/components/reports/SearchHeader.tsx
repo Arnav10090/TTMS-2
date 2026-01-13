@@ -24,11 +24,23 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
   const options = useMemo(() => {
     const base = vehicleData.map((v) => v.regNo)
     const set = Array.from(new Set(base))
-    if (showAll) return set.slice(0, 20)
-    if (!query) return set.slice(0, 20)
+
+    // Filter vehicles based on selected shift
+    let filteredByShift = set
+    if (shift === 'Shift-A') {
+      filteredByShift = set.slice(0, 5)
+    } else if (shift === 'Shift-B') {
+      filteredByShift = set.slice(5, 10)
+    } else if (shift === 'Shift-C') {
+      filteredByShift = set.slice(10)
+    }
+
+    // Apply search query if present
+    if (showAll) return filteredByShift
+    if (!query) return filteredByShift
     const q = query.toLowerCase()
-    return set.filter((r) => r.toLowerCase().includes(q)).slice(0, 20)
-  }, [vehicleData, query, showAll])
+    return filteredByShift.filter((r) => r.toLowerCase().includes(q))
+  }, [vehicleData, query, showAll, shift])
 
   useEffect(() => { setQuery(value ?? '') }, [value])
 
