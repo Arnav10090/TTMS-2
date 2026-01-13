@@ -5,27 +5,44 @@ import { useMemo } from 'react'
 
 const stages: StageKey[] = ['gateEntry', 'tareWeighing', 'loading', 'postLoadingWeighing', 'gateExit']
 
+const calculateDwellMetricsForStage = (stageKey: StageKey, vehicleData: VehicleRow[]) => {
+  if (vehicleData.length === 0) {
+    return { totalDwellTime: 0, avgDwellTime: 0 }
+  }
+
+  let totalDwell = 0
+  vehicleData.forEach((vehicle) => {
+    const stage = vehicle.stages[stageKey]
+    if (stage && stage.idleTime !== undefined) {
+      totalDwell += stage.idleTime
+    }
+  })
+
+  return {
+    totalDwellTime: Math.round(totalDwell),
+    avgDwellTime: vehicleData.length > 0 ? Math.round((totalDwell / vehicleData.length) * 10) / 10 : 0,
+  }
+}
+
 export default function DwellTimeBars({ vehicleData = [] }: { vehicleData?: VehicleRow[] }) {
   const dwellMetrics = useMemo(() => {
     if (vehicleData.length === 0) {
       return { totalDwell: 0, avgDwell: 0 }
     }
 
-    let totalDwell = 0
-    vehicleData.forEach((vehicle) => {
-      stages.forEach((stage) => {
-        const stageData = vehicle.stages[stage]
-        if (stageData && stageData.idleTime !== undefined) {
-          totalDwell += stageData.idleTime
-        }
-      })
+    // Calculate metrics for each stage and sum the rounded values to match KPI cards
+    let totalDwellSum = 0
+    let avgDwellSum = 0
+
+    stages.forEach((stage) => {
+      const metrics = calculateDwellMetricsForStage(stage, vehicleData)
+      totalDwellSum += metrics.totalDwellTime
+      avgDwellSum += metrics.avgDwellTime
     })
 
-    const avgDwell = vehicleData.length > 0 ? Math.round((totalDwell / vehicleData.length) * 10) / 10 : 0
-
     return {
-      totalDwell: Math.round(totalDwell),
-      avgDwell,
+      totalDwell: totalDwellSum,
+      avgDwell: avgDwellSum,
     }
   }, [vehicleData])
 
