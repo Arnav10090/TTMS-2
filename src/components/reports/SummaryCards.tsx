@@ -100,7 +100,7 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
                   </div>
                   <div className="flex justify-between items-center mt-1">
                     <span>Dwell Ratio</span>
-                    <span className="font-semibold">{(c.dwell.dwellRatio * 100).toFixed(2)}%</span>
+                    <span className="font-semibold">{c.dwell.dwellRatio.toFixed(2)}%</span>
                   </div>
                 </div>
               </div>
