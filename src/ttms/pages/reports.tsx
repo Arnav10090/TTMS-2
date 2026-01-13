@@ -44,7 +44,7 @@ export default function TTMSReportsPage() {
   const { vehicleData } = useRealTimeData()
 
   const [vehicle, setVehicle] = useState<string>('')
-  const [shift, setShift] = useState<'Day'|'Shift-A'|'Shift-B'|'Shift-C'>('Day')
+  const [shift, setShift] = useState<'Shift'|'Shift-A'|'Shift-B'|'Shift-C'>('Shift')
   const [active, setActive] = useState<ReportStepKey>('loading')
   const [steps, setSteps] = useState<ReportStep[]>(baseSteps)
   const [loading, setLoading] = useState(true)
