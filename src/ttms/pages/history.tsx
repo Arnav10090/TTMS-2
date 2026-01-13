@@ -173,7 +173,8 @@ export default function TTMSHistoryPage() {
                 { key: 'tareWt', label: 'Tare Wt' },
                 { key: 'wtAfter', label: 'Wt After' },
                 { key: 'ttr', label: 'TTR (min)' },
-                { key: 'timestamp', label: 'Timestamp' },
+                { key: 'totalDwellTime', label: 'Total Dwell (min)' },
+                { key: 'timestamp', label: 'Reporting time' },
                 { key: 'remarks', label: 'Remarks' },
               ].map((col) => (
                 <th key={col.key} className="px-3 py-3 text-center text-xs font-semibold text-muted-foreground border border-border/40">
@@ -187,9 +188,9 @@ export default function TTMSHistoryPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={17} className="p-6 text-center text-muted-foreground">Loading...</td></tr>
+              <tr><td colSpan={18} className="p-6 text-center text-muted-foreground">Loading...</td></tr>
             ) : pageData.length === 0 ? (
-              <tr><td colSpan={17} className="p-6 text-center text-muted-foreground">No records</td></tr>
+              <tr><td colSpan={18} className="p-6 text-center text-muted-foreground">No records</td></tr>
             ) : pageData.map((r) => {
               const times = (() => {
                 const order = ['gateEntry','tareWeighing','loading','postLoadingWeighing','gateExit'] as const
@@ -232,6 +233,7 @@ export default function TTMSHistoryPage() {
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{r.tareWt}</td>
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{r.wtAfter}</td>
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{calculatedTTR}</td>
+                <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{r.totalDwellTime ?? 0}</td>
                 <td className="px-3 py-2 text-sm font-mono text-center border border-border/30">{new Date(r.timestamp).toLocaleString()}</td>
                 <td className="px-3 py-2 text-sm text-center border border-border/30">{r.remarks}</td>
               </tr>

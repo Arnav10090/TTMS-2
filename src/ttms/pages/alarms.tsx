@@ -3,6 +3,7 @@
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { useEffect, useMemo, useState } from 'react'
 import { AlertManager } from '@/utils/alerts'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
 export default function TTMSAlarmsPage() {
   const [rows, setRows] = useState<any[]>([])
@@ -125,12 +126,17 @@ export default function TTMSAlarmsPage() {
           <h2 className="text-lg font-semibold">Alarms</h2>
           <div className="flex items-center gap-2 flex-wrap">
             <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
-            <select value={severity} onChange={(e)=>setSeverity(e.target.value as 'all'|'critical'|'warning'|'info')} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
-              <option value="all" className="hover:bg-blue-100">All Severities</option>
-              <option value="critical" className="hover:bg-blue-100">Critical</option>
-              <option value="warning" className="hover:bg-blue-100">Warning</option>
-              <option value="info" className="hover:bg-blue-100">Info</option>
-            </select>
+            <Select value={severity} onValueChange={(s) => setSeverity(s as 'all'|'critical'|'warning'|'info')}>
+              <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200 w-[160px]">
+                <SelectValue placeholder="All Severities" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                <SelectItem value="all" className="hover:bg-primary/10 cursor-pointer">All Severities</SelectItem>
+                <SelectItem value="critical" className="hover:bg-primary/10 cursor-pointer">Critical</SelectItem>
+                <SelectItem value="warning" className="hover:bg-primary/10 cursor-pointer">Warning</SelectItem>
+                <SelectItem value="info" className="hover:bg-primary/10 cursor-pointer">Info</SelectItem>
+              </SelectContent>
+            </Select>
             <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
             <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
           </div>
@@ -184,12 +190,17 @@ export default function TTMSAlarmsPage() {
             <div className="text-xs text-slate-600">Showing {filtered.length === 0 ? 0 : Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Rows per page</label>
-              <select value={rowsPerPage} onChange={(e)=>setRowsPerPage(parseInt(e.target.value))} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200 text-sm">
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-              </select>
+              <Select value={String(rowsPerPage)} onValueChange={(val) => setRowsPerPage(parseInt(val))}>
+                <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200 w-[140px]">
+                  <SelectValue placeholder="Rows" />
+                </SelectTrigger>
+                <SelectContent className="bg-popover border-border z-50 shadow-lg">
+                  <SelectItem value="10" className="hover:bg-primary/10 cursor-pointer">10</SelectItem>
+                  <SelectItem value="25" className="hover:bg-primary/10 cursor-pointer">25</SelectItem>
+                  <SelectItem value="50" className="hover:bg-primary/10 cursor-pointer">50</SelectItem>
+                  <SelectItem value="100" className="hover:bg-primary/10 cursor-pointer">100</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           <div className="flex items-center gap-1">
