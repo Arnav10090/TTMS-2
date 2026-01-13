@@ -12,24 +12,19 @@ export default function DwellStatsLine({ vehicleData = [] }: { vehicleData?: Veh
     }
 
     let totalDwell = 0
-    let totalWaitTime = 0
+    let totalTimeTaken = 0
     let validVehicles = 0
 
     vehicleData.forEach((vehicle) => {
-      stages.forEach((stage) => {
-        const stageData = vehicle.stages[stage]
-        if (stageData && stageData.idleTime !== undefined) {
-          totalDwell += stageData.idleTime
-          totalWaitTime += stageData.waitTime || 0
-        }
-      })
       if (vehicle.totalDwellTime !== undefined) {
+        totalDwell += vehicle.totalDwellTime
+        totalTimeTaken += vehicle.ttr || 0
         validVehicles++
       }
     })
 
     const avgDwell = validVehicles > 0 ? Math.round((totalDwell / validVehicles) * 10) / 10 : 0
-    const dwellRatio = totalWaitTime > 0 ? Math.round((totalDwell / totalWaitTime) * 10000) / 100 : 0
+    const dwellRatio = totalTimeTaken > 0 ? Math.round((totalDwell / totalTimeTaken) * 10000) / 100 : 0
 
     return { avgDwell, dwellRatio }
   }, [vehicleData])
