@@ -101,6 +101,10 @@ export default function TTMSReportsPage() {
           <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} vehicleData={vehicleData} />
         </div>
 
+        <div className="w-full">
+          <DwellTimeBars vehicleData={vehicleData} />
+        </div>
+
         <div>
           <SearchHeader value={vehicle} onVehicleChange={setVehicle} shift={shift} onShiftChange={setShift} />
         </div>
