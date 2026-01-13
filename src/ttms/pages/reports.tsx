@@ -113,6 +113,7 @@ export default function TTMSReportsPage() {
         <div className="space-y-4">
           <ProcessTimeline steps={steps} active={active} onSelect={setActive} vehicle={vehicle} />
           <TotalTimeStackedBar steps={steps} active={active} onSelect={setActive} />
+          <DwellTimeVisualization vehicle={vehicleData.find((v) => v.regNo === vehicle)} />
         </div>
 
       </div>
