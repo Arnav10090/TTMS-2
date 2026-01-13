@@ -40,8 +40,17 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
     if (value) {
       const vehicle = vehicleData.find((v) => v.regNo === value)
       if (vehicle) {
-        const avgDwell = vehicle.totalDwellTime ? Math.round((vehicle.totalDwellTime / stageKeys.length) * 10) / 10 : 0
-        const dwellRatio = vehicle.ttr && vehicle.totalDwellTime ? Math.round((vehicle.totalDwellTime / vehicle.ttr) * 10000) / 100 : 0
+        // Calculate total dwell time from all stages
+        let totalDwell = 0
+        stageKeys.forEach((stage) => {
+          const stageData = vehicle.stages[stage]
+          if (stageData && stageData.idleTime !== undefined) {
+            totalDwell += stageData.idleTime
+          }
+        })
+
+        const avgDwell = totalDwell > 0 ? Math.round((totalDwell / stageKeys.length) * 10) / 10 : 0
+        const dwellRatio = vehicle.ttr && totalDwell > 0 ? Math.round((totalDwell / vehicle.ttr) * 10000) / 100 : 0
         return { avgDwell, dwellRatio }
       }
     }
