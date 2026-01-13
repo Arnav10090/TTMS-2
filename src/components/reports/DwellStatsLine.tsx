@@ -12,37 +12,37 @@ export default function DwellStatsLine({ vehicleData = [] }: { vehicleData?: Veh
     }
 
     let totalDwell = 0
-    let totalWaitTime = 0
-    let validVehicles = 0
+    let totalTimeTaken = 0
 
     vehicleData.forEach((vehicle) => {
+      // Calculate total dwell time from all stages
+      let vehicleDwell = 0
       stages.forEach((stage) => {
         const stageData = vehicle.stages[stage]
         if (stageData && stageData.idleTime !== undefined) {
-          totalDwell += stageData.idleTime
-          totalWaitTime += stageData.waitTime || 0
+          vehicleDwell += stageData.idleTime
         }
       })
-      if (vehicle.totalDwellTime !== undefined) {
-        validVehicles++
-      }
+      totalDwell += vehicleDwell
+      totalTimeTaken += vehicle.ttr || 0
     })
 
-    const avgDwell = validVehicles > 0 ? Math.round((totalDwell / validVehicles) * 10) / 10 : 0
-    const dwellRatio = totalWaitTime > 0 ? Math.round((totalDwell / totalWaitTime) * 10000) / 100 : 0
+    // Avg Dwell Time = Total Dwell Time / Number of Stages (5)
+    const avgDwell = totalDwell > 0 ? Math.round((totalDwell / stages.length) * 10) / 10 : 0
+    const dwellRatio = totalTimeTaken > 0 ? Math.round((totalDwell / totalTimeTaken) * 10000) / 100 : 0
 
     return { avgDwell, dwellRatio }
   }, [vehicleData])
 
   return (
-    <div className="flex items-center gap-8 text-xs whitespace-nowrap">
+    <div className="flex items-center gap-8 text-lg whitespace-nowrap">
       <div>
         <span className="text-slate-600 mr-2">Avg Dwell Time:</span>
         <span className="font-bold text-slate-900">{stats.avgDwell} min</span>
       </div>
       <div>
         <span className="text-slate-600 mr-2">Dwell Ratio:</span>
-        <span className="font-bold text-slate-900">{stats.dwellRatio}%</span>
+        <span className="font-bold text-slate-900">{stats.dwellRatio.toFixed(2)}%</span>
       </div>
     </div>
   )

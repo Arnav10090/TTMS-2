@@ -12,6 +12,7 @@ export function useRealTimeData() {
     turnaround: { avgDay: 0, avgCum: 0, lastYear: 0, trend: { direction: 'up', percentage: 0 }, performanceColor: 'blue', sparkline: [] },
     vehicles: { inDay: 0, outDay: 0, inCum: 0, outCum: 0, trend: { direction: 'up', percentage: 0 }, target: 0 },
     dispatch: { today: 0, cumMonth: 0, targetDay: 0, trend: { direction: 'up', percentage: 0 } },
+    dwell: { totalDwellDay: 0, totalDwellCum: 0, avgDwellDay: 0, avgDwellCum: 0, totalDwellRatioDay: 0, totalDwellRatioCum: 0, avgDwellRatioDay: 0, avgDwellRatioCum: 0, trend: { direction: 'up', percentage: 0 }, sparkline: [] },
   })
   const [vehicleData, setVehicleData] = useState<VehicleRow[]>([])
   const [parkingData, setParkingData] = useState<ParkingData>({ 'AREA-1': [], 'AREA-2': [] } as any)
@@ -91,11 +92,13 @@ export function useRealTimeData() {
         const util = Math.max(0, Math.min(100, jitter(prev.capacity.utilization, 6)))
         const avgDay = Math.max(60, jitter(prev.turnaround.avgDay, 6))
         const performanceColor = avgDay < 90 ? 'green' : avgDay < 110 ? 'yellow' : 'red'
+        const avgDwell = Math.max(1, jitter(prev.dwell.avgDwellDay, 3))
         return {
           capacity: { ...prev.capacity, utilization: util, trend: { direction: Math.random()>0.5?'up':'down', percentage: Math.round(Math.random()*5*10)/10 } },
           turnaround: { ...prev.turnaround, avgDay, performanceColor, sparkline: [...prev.turnaround.sparkline.slice(1), { v: avgDay }] },
           vehicles: { ...prev.vehicles, inDay: jitter(prev.vehicles.inDay, 8), outDay: jitter(prev.vehicles.outDay, 8) },
           dispatch: { ...prev.dispatch, today: jitter(prev.dispatch.today, 8) },
+          dwell: { ...prev.dwell, avgDwellDay: avgDwell, totalDwellDay: Math.round(avgDwell * 5), totalDwellRatioDay: Math.round((avgDwell / avgDay) * 10000) / 100, avgDwellRatioDay: Math.round((avgDwell / avgDay) * 10000) / 100, sparkline: [...prev.dwell.sparkline.slice(1), { v: avgDwell }] },
         }
       })
       setVehicleData((rows) => rows.map((r) => ({ ...r, progress: Math.min(100, r.progress + (Math.random()>0.7? 1 : 0)) })))

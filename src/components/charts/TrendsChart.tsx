@@ -58,6 +58,10 @@ export default function TrendsChart({ data, range, height = 'h-56' }: { data: KP
   const dispatchVals = distributeTotal(dispatchTotal, points)
   const dispatchSeries = dispatchVals.map((v, i) => ({ x: labels[i], dispatch: v }))
 
+  // Dwell: avgDwell data
+  const dwellBase = Math.max(0, Math.round(data.dwell.avgDwellDay * 10) / 10)
+  const dwellSeries = Array.from({ length: points }, (_, i) => ({ x: labels[i], dwell: Math.max(0, Math.round((dwellBase + (Math.sin(i / points * Math.PI * 2) * 0.8) + (Math.random() - 0.5) * 0.6) * 10) / 10) }))
+
   // Merge into single data array
   const merged = Array.from({ length: points }, (_, i) => ({
     x: labels[i],
@@ -65,6 +69,7 @@ export default function TrendsChart({ data, range, height = 'h-56' }: { data: KP
     ttr: ttrSeries[i].ttr,
     vehicles: vehiclesSeries[i].vehicles,
     dispatch: dispatchSeries[i].dispatch,
+    dwell: dwellSeries[i].dwell,
   }))
 
   return (
@@ -81,6 +86,7 @@ export default function TrendsChart({ data, range, height = 'h-56' }: { data: KP
             <Line type="monotone" dataKey="ttr" stroke="#7c3aed" dot={false} name="Avg TTR (min)" strokeWidth={2} />
             <Line type="monotone" dataKey="vehicles" stroke="#10b981" dot={false} name="Vehicles" strokeWidth={2} />
             <Line type="monotone" dataKey="dispatch" stroke="#f59e0b" dot={false} name="Dispatch" strokeWidth={2} />
+            <Line type="monotone" dataKey="dwell" stroke="#3b82f6" dot={false} name="Avg Dwell (min)" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>

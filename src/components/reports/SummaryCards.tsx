@@ -28,42 +28,42 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
   // Calculate dwell metrics for each stage
   const calculateDwellMetrics = (stageKey: StageKey) => {
     if (vehicleData.length === 0) {
-      return { totalDwellTime: 0, avgDwellTime: 0, dwellRatio: 0 }
+      return { totalDwellTime: 0, avgDwellTime: 0, dwellRatio: 0, stageTotal: 0 }
     }
 
     let totalDwell = 0
-    let totalRatio = 0
-    let count = 0
+    let stageTotal = 0
 
     vehicleData.forEach((vehicle) => {
       const stage = vehicle.stages[stageKey]
-      if (stage && stage.idleTime !== undefined) {
-        totalDwell += stage.idleTime
-        if (stage.waitTime > 0) {
-          totalRatio += (stage.idleTime / stage.waitTime)
-          count++
+      if (stage) {
+        if (stage.idleTime !== undefined) {
+          totalDwell += stage.idleTime
         }
+        stageTotal += stage.waitTime || 0
       }
     })
 
     return {
       totalDwellTime: Math.round(totalDwell),
       avgDwellTime: vehicleData.length > 0 ? Math.round((totalDwell / vehicleData.length) * 10) / 10 : 0,
-      dwellRatio: count > 0 ? Math.round((totalRatio / count) * 100) / 100 : 0,
+      dwellRatio: stageTotal > 0 ? (totalDwell / stageTotal) * 100 : 0,
+      stageTotal: Math.round(stageTotal),
     }
   }
 
   const cards = baseCards.map((c) => {
     const dwellMetrics = calculateDwellMetrics(c.stageKey)
+    const scaledMetricTotal = Math.round(scaleNumberByRange(dwellMetrics.stageTotal, range, undefined, customFrom, customTo))
     const scaledDwell = {
       totalDwellTime: Math.round(scaleNumberByRange(dwellMetrics.totalDwellTime, range, undefined, customFrom, customTo)),
       avgDwellTime: Math.round(scaleNumberByRange(dwellMetrics.avgDwellTime, range, undefined, customFrom, customTo) * 10) / 10,
-      dwellRatio: dwellMetrics.dwellRatio, // Ratio stays the same
+      dwellRatio: dwellMetrics.dwellRatio, // Already in percentage form
     }
     return {
       ...c,
       primary: { ...c.primary, value: Math.round(scaleNumberByRange(c.primary.value, range, undefined, customFrom, customTo)) },
-      metric: { ...c.metric, total: Math.round(scaleNumberByRange(c.metric.total, range, undefined, customFrom, customTo)), avg: Math.round(scaleNumberByRange(c.metric.avg, range, undefined, customFrom, customTo) * 10) / 10 },
+      metric: { ...c.metric, total: scaledMetricTotal, avg: Math.round(scaleNumberByRange(c.metric.avg, range, undefined, customFrom, customTo) * 10) / 10 },
       dwell: scaledDwell,
     }
   })
@@ -100,7 +100,7 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
                   </div>
                   <div className="flex justify-between items-center mt-1">
                     <span>Dwell Ratio</span>
-                    <span className="font-semibold">{(c.dwell.dwellRatio * 100).toFixed(2)}%</span>
+                    <span className="font-semibold">{c.dwell.dwellRatio.toFixed(2)}%</span>
                   </div>
                 </div>
               </div>

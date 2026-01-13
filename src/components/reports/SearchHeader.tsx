@@ -6,7 +6,7 @@ import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 
-const shifts = ['Day', 'Shift-A', 'Shift-B', 'Shift-C'] as const
+const shifts = ['Shift', 'Shift-A', 'Shift-B', 'Shift-C'] as const
 
 type Props = {
   value?: string
@@ -24,13 +24,33 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
   const options = useMemo(() => {
     const base = vehicleData.map((v) => v.regNo)
     const set = Array.from(new Set(base))
-    if (showAll) return set.slice(0, 20)
-    if (!query) return set.slice(0, 20)
+
+    // Filter vehicles based on selected shift
+    let filteredByShift = set
+    if (shift === 'Shift-A') {
+      filteredByShift = set.slice(0, 5)
+    } else if (shift === 'Shift-B') {
+      filteredByShift = set.slice(5, 10)
+    } else if (shift === 'Shift-C') {
+      filteredByShift = set.slice(10)
+    }
+
+    // Apply search query if present
+    if (showAll) return filteredByShift
+    if (!query) return filteredByShift
     const q = query.toLowerCase()
-    return set.filter((r) => r.toLowerCase().includes(q)).slice(0, 20)
-  }, [vehicleData, query, showAll])
+    return filteredByShift.filter((r) => r.toLowerCase().includes(q))
+  }, [vehicleData, query, showAll, shift])
 
   useEffect(() => { setQuery(value ?? '') }, [value])
+
+  // Clear vehicle selection when shift changes
+  useEffect(() => {
+    if (value && options.length > 0 && !options.includes(value)) {
+      onVehicleChange?.('')
+      setQuery('')
+    }
+  }, [shift, value, options, onVehicleChange])
 
 
   const stats = useMemo(() => {
@@ -40,8 +60,17 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
     if (value) {
       const vehicle = vehicleData.find((v) => v.regNo === value)
       if (vehicle) {
-        const avgDwell = vehicle.totalDwellTime ? Math.round((vehicle.totalDwellTime / stageKeys.length) * 10) / 10 : 0
-        const dwellRatio = vehicle.dwellRatio ? Math.round(vehicle.dwellRatio * 10000) / 100 : 0
+        // Calculate total dwell time from all stages
+        let totalDwell = 0
+        stageKeys.forEach((stage) => {
+          const stageData = vehicle.stages[stage]
+          if (stageData && stageData.idleTime !== undefined) {
+            totalDwell += stageData.idleTime
+          }
+        })
+
+        const avgDwell = totalDwell > 0 ? Math.round((totalDwell / stageKeys.length) * 10) / 10 : 0
+        const dwellRatio = (vehicle.ttr && vehicle.ttr > 0 && totalDwell > 0) ? Math.round((totalDwell / vehicle.ttr) * 10000) / 100 : 0
         return { avgDwell, dwellRatio }
       }
     }
@@ -52,24 +81,19 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
     }
 
     let totalDwell = 0
-    let totalWaitTime = 0
+    let totalTimeTaken = 0
     let validVehicles = 0
 
     vehicleData.forEach((vehicle) => {
-      stageKeys.forEach((stage) => {
-        const stageData = vehicle.stages[stage]
-        if (stageData && stageData.idleTime !== undefined) {
-          totalDwell += stageData.idleTime
-          totalWaitTime += stageData.waitTime || 0
-        }
-      })
       if (vehicle.totalDwellTime !== undefined) {
+        totalDwell += vehicle.totalDwellTime
+        totalTimeTaken += vehicle.ttr || 0
         validVehicles++
       }
     })
 
-    const avgDwell = validVehicles > 0 ? Math.round((totalDwell / validVehicles) * 10) / 10 : 0
-    const dwellRatio = totalWaitTime > 0 ? Math.round((totalDwell / totalWaitTime) * 10000) / 100 : 0
+    const avgDwell = validVehicles > 0 ? Math.round((totalDwell / stageKeys.length) * 10) / 10 : 0
+    const dwellRatio = (totalTimeTaken && totalTimeTaken > 0 && totalDwell > 0) ? Math.round((totalDwell / totalTimeTaken) * 10000) / 100 : 0
 
     return { avgDwell, dwellRatio }
   }, [vehicleData, value])
@@ -125,14 +149,14 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
           ))}
         </select>
       </div>
-      <div className="flex items-center gap-6 text-xs whitespace-nowrap md:border-l md:border-slate-200 md:pl-6">
+      <div className="flex items-center gap-6 text-lg whitespace-nowrap md:border-l md:border-slate-200 md:pl-6">
         <div>
           <span className="text-slate-600 mr-2">Avg Dwell Time:</span>
           <span className="font-bold text-slate-900">{stats.avgDwell} min</span>
         </div>
         <div>
           <span className="text-slate-600 mr-2">Dwell Ratio:</span>
-          <span className="font-bold text-slate-900">{stats.dwellRatio}%</span>
+          <span className="font-bold text-slate-900">{stats.dwellRatio.toFixed(2)}%</span>
         </div>
       </div>
     </div>

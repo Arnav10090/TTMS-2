@@ -40,15 +40,6 @@ export default function TotalTimeStackedBar({ steps, active, onSelect }: {
         <span className="font-semibold text-slate-800">TOTAL TIME TAKEN:</span>
         <span className="text-slate-700">{total} min</span>
       </div>
-
-      <div className="mt-2 flex flex-wrap items-center gap-2 text-xs">
-        {steps.map((s) => (
-          <div key={`legend-${s.key}`} className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-sm inline-block" style={{ background: colorMap[s.key] }} aria-hidden="true" />
-            <span className="text-slate-700 text-xs">{s.label}</span>
-          </div>
-        ))}
-      </div>
     </div>
   )
 }
