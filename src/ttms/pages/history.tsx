@@ -188,9 +188,9 @@ export default function TTMSHistoryPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={17} className="p-6 text-center text-muted-foreground">Loading...</td></tr>
+              <tr><td colSpan={18} className="p-6 text-center text-muted-foreground">Loading...</td></tr>
             ) : pageData.length === 0 ? (
-              <tr><td colSpan={17} className="p-6 text-center text-muted-foreground">No records</td></tr>
+              <tr><td colSpan={18} className="p-6 text-center text-muted-foreground">No records</td></tr>
             ) : pageData.map((r) => {
               const times = (() => {
                 const order = ['gateEntry','tareWeighing','loading','postLoadingWeighing','gateExit'] as const
