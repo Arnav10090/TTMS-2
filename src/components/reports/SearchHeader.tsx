@@ -139,16 +139,16 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
             </div>
           )}
         </div>
-        <select
-          className="hidden md:block border border-slate-200 rounded-ui px-2 py-2"
-          value={shift}
-          onChange={(e) => onShiftChange(e.target.value as any)}
-          aria-label="Select shift"
-        >
-          {shifts.map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
+        <Select value={shift} onValueChange={(s) => onShiftChange(s as any)}>
+          <SelectTrigger className="hidden md:flex border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200 w-[140px]">
+            <SelectValue placeholder="Select shift" />
+          </SelectTrigger>
+          <SelectContent className="bg-popover border-border z-50 shadow-lg">
+            {shifts.map((s) => (
+              <SelectItem key={s} value={s} className="hover:bg-primary/10 cursor-pointer">{s}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
       <div className="flex items-center gap-6 text-lg whitespace-nowrap md:border-l md:border-slate-200 md:pl-6">
         <div>
