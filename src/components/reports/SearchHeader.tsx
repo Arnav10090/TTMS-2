@@ -127,7 +127,7 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
         </div>
         <div>
           <span className="text-slate-600 mr-2">Dwell Ratio:</span>
-          <span className="font-bold text-slate-900">{stats.dwellRatio}%</span>
+          <span className="font-bold text-slate-900">{stats.dwellRatio.toFixed(2)}%</span>
         </div>
       </div>
     </div>
