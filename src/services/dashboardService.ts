@@ -11,6 +11,7 @@ export const dashboardService = {
       turnaround: { avgDay: 92, avgCum: 95, lastYear: 102, trend: { direction: 'down', percentage: 1.4 }, performanceColor: 'yellow', sparkline: range(20).map(() => ({ v: Math.round(80 + Math.random()*40) })) },
       vehicles: { inDay: 140, outDay: 132, inCum: 1980, outCum: 1968, trend: { direction: 'up', percentage: 5.1 }, target: 150 },
       dispatch: { today: 88, cumMonth: 1220, targetDay: 120, trend: { direction: 'up', percentage: 2.3 } },
+      dwell: { totalDwellDay: 125, totalDwellCum: 450, avgDwellDay: 2.5, avgDwellCum: 2.1, totalDwellRatioDay: 2.72, totalDwellRatioCum: 2.35, avgDwellRatioDay: 2.72, avgDwellRatioCum: 2.35, trend: { direction: 'down', percentage: 0.8 }, sparkline: range(20).map(() => ({ v: Math.round(2 + Math.random()*3) })) },
     }
   },
   async getVehicleRows(): Promise<VehicleRow[]> {
