@@ -82,21 +82,16 @@ export default function TTMSReportsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-4">
-        <div className="flex flex-col items-end gap-2 mb-4">
-          <div className="flex items-center gap-6">
-            <TimeRangeToggle
-              mode={range}
-              setMode={setRange}
-              hideCompare
-              customFrom={customFrom}
-              customTo={customTo}
-              onCustomFromChange={setCustomFrom}
-              onCustomToChange={setCustomTo}
-            />
-            <div className="border-l border-slate-200 pl-6">
-              <DwellStatsLine vehicleData={vehicleData} />
-            </div>
-          </div>
+        <div className="flex items-center justify-end gap-4 mb-4">
+          <TimeRangeToggle
+            mode={range}
+            setMode={setRange}
+            hideCompare
+            customFrom={customFrom}
+            customTo={customTo}
+            onCustomFromChange={setCustomFrom}
+            onCustomToChange={setCustomTo}
+          />
           <RangeHint mode={range} customFrom={customFrom} customTo={customTo} />
         </div>
 
