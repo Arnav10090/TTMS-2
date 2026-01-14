@@ -52,35 +52,31 @@ export default function TTMSDocumentVerificationPage() {
         <VehicleQueueTable vehicles={vehicleData} onVerifyDocs={handleVerifyDocs} />
       </div>
 
-      <div className="mb-6">
-        <div className="card p-4" ref={formRef}>
-          <label className="block text-sm font-medium text-slate-600 mb-2"><p>Vehicle Reg No. (Eg. MH12-1001)</p></label>
-          <div className="flex items-center gap-2 mb-3">
-            <input value={inputValue} onChange={(e)=>setInputValue(e.target.value.toUpperCase())} placeholder="Enter vehicle reg no. e.g. MH12-1001" className="flex-1 text-sm px-2 py-1 border rounded-md" />
-            <button onClick={validateAndSet} className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm">Enter</button>
-            <button onClick={() => { setInputValue(''); setVehicleRegNo(''); setError(null) }} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-md text-sm">Clear</button>
-          </div>
-          {error && <div role="alert" aria-live="assertive" className="text-sm text-red-600 mb-2">{error}</div>}
-        </div>
-      </div>
-
-      <div className="mb-6">
-        <div className="card p-4">
-          <h3 className="font-medium text-slate-700 mb-3">Upload Documents</h3>
-          <DocumentUploadZone onPreview={(url) => setModalSrc(url)} />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch" ref={formRef}>
         <div className="xl:col-span-1 space-y-4">
+          <div className="card p-4">
+            <label className="block text-sm font-medium text-slate-600 mb-2"><p>Vehicle Reg No. (Eg. MH12-1001)</p></label>
+            <div className="flex items-center gap-2 mb-3">
+              <input value={inputValue} onChange={(e)=>setInputValue(e.target.value.toUpperCase())} placeholder="Enter vehicle reg no. e.g. MH12-1001" className="flex-1 text-sm px-2 py-1 border rounded-md" />
+              <button onClick={validateAndSet} className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm">Enter</button>
+              <button onClick={() => { setInputValue(''); setVehicleRegNo(''); setError(null) }} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-md text-sm">Clear</button>
+            </div>
+            {error && <div role="alert" aria-live="assertive" className="text-sm text-red-600 mb-2">{error}</div>}
+          </div>
           <div className="card p-4">
             <h3 className="font-medium text-slate-700 mb-3">Driver and Helper Details</h3>
             <DriverHelperDetails vehicleRegNo={vehicleRegNo} onValidationChange={handleValidity} />
           </div>
         </div>
-        <div className="card p-4 xl:col-span-1 flex flex-col min-h-[600px]">
-          <h3 className="font-medium text-slate-700 mb-3">Documents Uploaded by Customer</h3>
-          <SearchableOrderList vehicleRegNo={vehicleRegNo} onOpen={(url) => setModalSrc(url)} />
+        <div className="xl:col-span-1 space-y-4">
+          <div className="card p-4">
+            <h3 className="font-medium text-slate-700 mb-3">Upload Documents</h3>
+            <DocumentUploadZone onPreview={(url) => setModalSrc(url)} />
+          </div>
+          <div className="card p-4 flex flex-col min-h-[400px]">
+            <h3 className="font-medium text-slate-700 mb-3">Documents Uploaded by Customer</h3>
+            <SearchableOrderList vehicleRegNo={vehicleRegNo} onOpen={(url) => setModalSrc(url)} />
+          </div>
         </div>
         <div className="card p-4 xl:col-span-1">
           <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
