@@ -19,6 +19,33 @@ export default function TTMSDocumentVerificationPage() {
   const [error, setError] = useState<string | null>(null)
   const [driverValid, setDriverValid] = useState(false)
   const [helperValid, setHelperValid] = useState(false)
+  const [checklist, setChecklist] = useState({
+    purchaseOrder: false,
+    vehicleRegistration: false,
+    vehiclePUC: false,
+    vehicleInsurance: false,
+    driverDetails: false,
+    driverUniqueId: false,
+    helperDetails: false,
+    helperUniqueId: false,
+  })
+
+  const checklistItems = [
+    { key: 'purchaseOrder', label: 'Purchase Order OK' },
+    { key: 'vehicleRegistration', label: 'Vehicle Registration OK' },
+    { key: 'vehiclePUC', label: 'Vehicle PUC OK' },
+    { key: 'vehicleInsurance', label: 'Vehicle Insurance OK' },
+    { key: 'driverDetails', label: 'Driver Details OK' },
+    { key: 'driverUniqueId', label: 'Driver Unique ID OK' },
+    { key: 'helperDetails', label: 'Helper Details OK' },
+    { key: 'helperUniqueId', label: 'Helper Unique ID OK' },
+  ]
+
+  const allChecklistItemsChecked = Object.values(checklist).every(v => v === true)
+
+  const handleChecklistChange = (key: string) => {
+    setChecklist(prev => ({ ...prev, [key]: !prev[key as keyof typeof checklist] }))
+  }
 
   const validateAndSet = () => {
     const v = inputValue.trim()
@@ -49,7 +76,20 @@ export default function TTMSDocumentVerificationPage() {
   return (
     <DashboardLayout>
       <div className="mb-6">
-        <VehicleQueueTable vehicles={vehicleData} onVerifyDocs={handleVerifyDocs} />
+        <VehicleQueueTable
+          vehicles={vehicleData}
+          onVerifyDocs={handleVerifyDocs}
+          actionButton={
+            <a
+              href="https://google.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-3 rounded-ui bg-blue-600 text-white text-base font-medium hover:bg-blue-700 transition-colors"
+            >
+              Manual Registration →
+            </a>
+          }
+        />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 items-stretch" ref={formRef}>
@@ -62,21 +102,46 @@ export default function TTMSDocumentVerificationPage() {
               <button onClick={() => { setInputValue(''); setVehicleRegNo(''); setError(null) }} className="px-3 py-1 bg-slate-100 text-slate-700 rounded-md text-sm">Clear</button>
             </div>
             {error && <div role="alert" aria-live="assertive" className="text-sm text-red-600 mb-2">{error}</div>}
-            <h3 className="font-medium text-slate-700 mb-3">Upload Documents</h3>
-            <DocumentUploadZone onPreview={(url) => setModalSrc(url)} />
           </div>
           <div className="card p-4">
             <h3 className="font-medium text-slate-700 mb-3">Driver and Helper Details</h3>
             <DriverHelperDetails vehicleRegNo={vehicleRegNo} onValidationChange={handleValidity} />
           </div>
         </div>
-        <div className="card p-4 xl:col-span-1 flex flex-col min-h-[600px]">
-          <h3 className="font-medium text-slate-700 mb-3">Documents Uploaded by Customer</h3>
-          <SearchableOrderList vehicleRegNo={vehicleRegNo} onOpen={(url) => setModalSrc(url)} />
+        <div className="xl:col-span-1 space-y-4">
+          <div className="card p-4">
+            <h3 className="font-medium text-slate-700 mb-3">Upload Documents</h3>
+            <DocumentUploadZone onPreview={(url) => setModalSrc(url)} />
+          </div>
+          <div className="card p-4 flex flex-col min-h-[400px]">
+            <h3 className="font-medium text-slate-700 mb-3">Documents Uploaded by Customer</h3>
+            <SearchableOrderList vehicleRegNo={vehicleRegNo} onOpen={(url) => setModalSrc(url)} />
+          </div>
         </div>
-        <div className="card p-4 xl:col-span-1">
-          <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
-          <RFIDModule extraReady={driverValid && helperValid} />
+        <div className="xl:col-span-1 space-y-4">
+          <div className="card p-4">
+            <h3 className="font-medium text-slate-700 mb-4">Document Confirmation Checklist</h3>
+            <div className="space-y-3">
+              {checklistItems.map((item) => (
+                <div key={item.key} className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id={item.key}
+                    checked={checklist[item.key as keyof typeof checklist]}
+                    onChange={() => handleChecklistChange(item.key)}
+                    className="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer"
+                  />
+                  <label htmlFor={item.key} className="text-sm text-slate-600 cursor-pointer">
+                    {item.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="card p-4">
+            <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
+            <RFIDModule extraReady={driverValid && helperValid && allChecklistItemsChecked} />
+          </div>
         </div>
       </div>
 

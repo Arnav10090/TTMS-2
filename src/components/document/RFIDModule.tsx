@@ -51,27 +51,20 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
           </button>
         </div>
       </div>
-      <div className="flex items-center gap-2 text-sm text-slate-600">
-        <span>Tracking No:</span>
+      <div className="flex items-center gap-2 text-lg text-slate-600">
+        <span className="font-medium">Tracking No:</span>
         {tracking ? (
-          <span className="font-mono font-semibold">{tracking}</span>
+          <span className="font-mono font-semibold text-base">{tracking}</span>
         ) : (
           <span className="text-slate-400">None</span>
         )}
-        <button
-          onClick={clearTracking}
-          className="ml-auto px-2 py-1 rounded-ui text-xs border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-60"
-          disabled={!tracking}
-        >
-          Clear
-        </button>
       </div>
       <div className="flex items-center gap-2 mt-4">
         <div className="ml-auto" />
         <button
-          className={`px-4 py-2 rounded-ui ${canProceed ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
-          disabled={!canProceed}
-          title={!canProceed ? 'Enter an RFID tracking number to proceed' : undefined}
+          className={`px-4 py-2 rounded-ui ${canProceed && extraReady ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
+          disabled={!canProceed || !extraReady}
+          title={!canProceed ? 'Enter an RFID tracking number to proceed' : !extraReady ? 'Complete all document confirmations and details to proceed' : undefined}
         >
           Proceed
         </button>

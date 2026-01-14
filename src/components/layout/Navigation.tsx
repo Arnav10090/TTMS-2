@@ -6,8 +6,8 @@ const tabs = [
   { label: 'Main Dashboard', href: '/ttms/dashboard' },
   { label: 'Document Verification', href: '/ttms/document-verification' },
   { label: 'Scheduling', href: '/ttms/scheduling' },
-  { label: 'Reports', href: '/ttms/reports' },
   { label: 'Alarms', href: '/ttms/alarms' },
+  { label: 'Reports', href: '/ttms/reports' },
   { label: 'Historical Data', href: '/ttms/history' },
   { label: 'Spare Tab', href: '/ttms/spare' },
 ]
