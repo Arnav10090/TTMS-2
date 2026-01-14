@@ -124,20 +124,10 @@ export default function TTMSDocumentVerificationPage() {
                 </div>
               ))}
             </div>
-            <button
-              disabled={!allChecklistItemsChecked}
-              className={`w-full mt-6 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                allChecklistItemsChecked
-                  ? 'bg-green-600 text-white hover:bg-green-700'
-                  : 'bg-slate-100 text-slate-400 cursor-not-allowed'
-              }`}
-            >
-              Proceed
-            </button>
           </div>
           <div className="card p-4">
             <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
-            <RFIDModule extraReady={driverValid && helperValid} />
+            <RFIDModule extraReady={driverValid && helperValid && allChecklistItemsChecked} />
           </div>
         </div>
       </div>
