@@ -105,9 +105,40 @@ export default function TTMSDocumentVerificationPage() {
             <SearchableOrderList vehicleRegNo={vehicleRegNo} onOpen={(url) => setModalSrc(url)} />
           </div>
         </div>
-        <div className="card p-4 xl:col-span-1">
-          <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
-          <RFIDModule extraReady={driverValid && helperValid} />
+        <div className="xl:col-span-1 space-y-4">
+          <div className="card p-4">
+            <h3 className="font-medium text-slate-700 mb-4">Document Confirmation Checklist</h3>
+            <div className="space-y-3">
+              {checklistItems.map((item) => (
+                <div key={item.key} className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id={item.key}
+                    checked={checklist[item.key as keyof typeof checklist]}
+                    onChange={() => handleChecklistChange(item.key)}
+                    className="w-4 h-4 rounded border-slate-300 text-blue-600 cursor-pointer"
+                  />
+                  <label htmlFor={item.key} className="text-sm text-slate-600 cursor-pointer">
+                    {item.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+            <button
+              disabled={!allChecklistItemsChecked}
+              className={`w-full mt-6 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                allChecklistItemsChecked
+                  ? 'bg-green-600 text-white hover:bg-green-700'
+                  : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+              }`}
+            >
+              Proceed
+            </button>
+          </div>
+          <div className="card p-4">
+            <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
+            <RFIDModule extraReady={driverValid && helperValid} />
+          </div>
         </div>
       </div>
 
