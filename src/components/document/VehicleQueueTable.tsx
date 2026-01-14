@@ -24,8 +24,8 @@ export default function VehicleQueueTable({
       </h3>
 
       <div className="overflow-x-auto border border-[#e5e7eb] rounded-ui">
-        <table className="min-w-full text-[12px]">
-          <thead className="bg-[#f3f4f6] text-[13px] font-semibold text-slate-700">
+        <table className="min-w-full text-base">
+          <thead className="bg-[#f3f4f6] text-lg font-semibold text-slate-700">
             <tr>
               <th className="px-3 py-2 text-center w-[80px]">SNo.</th>
               <th className="px-3 py-2 text-center w-[160px]">Vehicle Reg No.</th>
