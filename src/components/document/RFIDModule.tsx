@@ -58,13 +58,6 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
         ) : (
           <span className="text-slate-400">None</span>
         )}
-        <button
-          onClick={clearTracking}
-          className="ml-auto px-2 py-1 rounded-ui text-xs border border-slate-300 text-slate-600 hover:bg-slate-50 disabled:opacity-60"
-          disabled={!tracking}
-        >
-          Clear
-        </button>
       </div>
       <div className="flex items-center gap-2 mt-4">
         <div className="ml-auto" />
