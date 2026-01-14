@@ -51,10 +51,10 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
           </button>
         </div>
       </div>
-      <div className="flex items-center gap-2 text-sm text-slate-600">
-        <span>Tracking No:</span>
+      <div className="flex items-center gap-2 text-lg text-slate-600">
+        <span className="font-medium">Tracking No:</span>
         {tracking ? (
-          <span className="font-mono font-semibold">{tracking}</span>
+          <span className="font-mono font-semibold text-base">{tracking}</span>
         ) : (
           <span className="text-slate-400">None</span>
         )}
