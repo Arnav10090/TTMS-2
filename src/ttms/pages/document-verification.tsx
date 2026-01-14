@@ -76,6 +76,17 @@ export default function TTMSDocumentVerificationPage() {
   return (
     <DashboardLayout>
       <div className="mb-6">
+        <div className="flex justify-between items-start mb-3">
+          <h2 className="text-xl font-semibold text-slate-800">Vehicle Queue</h2>
+          <a
+            href="https://google.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-4 py-2 rounded-ui bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+          >
+            Manual Registration →
+          </a>
+        </div>
         <VehicleQueueTable vehicles={vehicleData} onVerifyDocs={handleVerifyDocs} />
       </div>
 
