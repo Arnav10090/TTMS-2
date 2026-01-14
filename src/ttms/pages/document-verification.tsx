@@ -19,6 +19,33 @@ export default function TTMSDocumentVerificationPage() {
   const [error, setError] = useState<string | null>(null)
   const [driverValid, setDriverValid] = useState(false)
   const [helperValid, setHelperValid] = useState(false)
+  const [checklist, setChecklist] = useState({
+    purchaseOrder: false,
+    vehicleRegistration: false,
+    vehiclePUC: false,
+    vehicleInsurance: false,
+    driverDetails: false,
+    driverUniqueId: false,
+    helperDetails: false,
+    helperUniqueId: false,
+  })
+
+  const checklistItems = [
+    { key: 'purchaseOrder', label: 'Purchase Order OK' },
+    { key: 'vehicleRegistration', label: 'Vehicle Registration OK' },
+    { key: 'vehiclePUC', label: 'Vehicle PUC OK' },
+    { key: 'vehicleInsurance', label: 'Vehicle Insurance OK' },
+    { key: 'driverDetails', label: 'Driver Details OK' },
+    { key: 'driverUniqueId', label: 'Driver Unique ID OK' },
+    { key: 'helperDetails', label: 'Helper Details OK' },
+    { key: 'helperUniqueId', label: 'Helper Unique ID OK' },
+  ]
+
+  const allChecklistItemsChecked = Object.values(checklist).every(v => v === true)
+
+  const handleChecklistChange = (key: string) => {
+    setChecklist(prev => ({ ...prev, [key]: !prev[key as keyof typeof checklist] }))
+  }
 
   const validateAndSet = () => {
     const v = inputValue.trim()
