@@ -53,7 +53,7 @@ export default function VehicleQueueTable({
                   <td className="px-3 py-2 text-center">
                     <button
                       onClick={() => onVerifyDocs(vehicle.regNo)}
-                      className="px-3 py-1.5 rounded-ui bg-blue-600 text-white text-xs font-medium hover:bg-blue-700 transition-colors"
+                      className="px-3 py-1.5 rounded-ui bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
                     >
                       Verify Docs
                     </button>
