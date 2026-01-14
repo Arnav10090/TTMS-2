@@ -139,14 +139,6 @@ export default function CustomerDocumentsViewer({ vehicleRegNo, onOpen, openedSr
         )}
       </div>
 
-      {selectedDoc && (
-        <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <p className="text-sm text-blue-800">
-            <strong>Selected:</strong> {selectedDoc.name}
-          </p>
-          <p className="text-xs text-blue-600 mt-1">Opened in Smart Document Viewer</p>
-        </div>
-      )}
     </div>
   )
 }
