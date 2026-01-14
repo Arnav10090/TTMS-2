@@ -8,20 +8,25 @@ function formatTime(minutes: number): string {
   return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
 }
 
-export default function VehicleQueueTable({ 
-  vehicles, 
-  onVerifyDocs 
-}: { 
+export default function VehicleQueueTable({
+  vehicles,
+  onVerifyDocs,
+  actionButton
+}: {
   vehicles: VehicleRow[]
-  onVerifyDocs: (regNo: string) => void 
+  onVerifyDocs: (regNo: string) => void
+  actionButton?: React.ReactNode
 }) {
   const topTen = vehicles.slice(0, 10)
 
   return (
     <div className="w-full">
-      <h3 className="text-slate-800 font-semibold mb-3 text-lg">
-        Vehicle Queue
-      </h3>
+      <div className="flex justify-between items-center mb-3">
+        <h3 className="text-slate-800 font-semibold text-lg">
+          Vehicle Queue
+        </h3>
+        {actionButton && <div>{actionButton}</div>}
+      </div>
 
       <div className="overflow-x-auto border border-[#e5e7eb] rounded-ui">
         <table className="min-w-full text-base">
