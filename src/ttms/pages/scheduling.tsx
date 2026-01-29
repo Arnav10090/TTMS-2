@@ -5,7 +5,6 @@ import { useSchedulingState } from '@/hooks/useSchedulingState'
 import VehicleEntryTable from '@/components/scheduling/VehicleEntryTable'
 import FacilityMap from '@/components/scheduling/FacilityMap'
 import ManualsList from '@/components/scheduling/ManualsList'
-import MultiSelectDropdown from '@/components/scheduling/MultiSelectDropdown'
 
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 import SchedulingParkingToggle from '@/components/scheduling/SchedulingParkingToggle'
