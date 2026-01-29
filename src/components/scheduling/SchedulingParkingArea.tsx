@@ -61,12 +61,15 @@ export default function SchedulingParkingArea({
 
   // (Removed separate load effect; state is hydrated synchronously)
 
-  // Ensure colors for current grid; seed missing from current status
+  // Ensure colors for current grid; all cells start as green
   useEffect(() => {
     const next = { ...colorMap } as Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'>
     grid.forEach(row => row.forEach(cell => {
       const k = `${areaKey}-${cell.label}`
-      if (!next[k]) next[k] = statusToColor(cell.status)
+      // Initialize all cells as green, but preserve any existing allocations (yellow/red)
+      if (!next[k]) {
+        next[k] = 'bg-green-500'
+      }
     }))
     const changed = Object.keys(next).length !== Object.keys(colorMap).length ||
       Object.keys(next).some(k => next[k] !== colorMap[k as keyof typeof colorMap])
