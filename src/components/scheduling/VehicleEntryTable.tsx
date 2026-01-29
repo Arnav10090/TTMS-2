@@ -259,10 +259,27 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                   })()}
                 </td>
                 <td className="px-4 py-3 w-[140px]">
-                  <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
-                    <option value="">Select</option>
-                    {Array.from({length:4},(_,i)=>`WPL-${i+1}`).map((wpl)=> <option key={wpl} value={wpl}>{wpl}</option>)}
-                  </select>
+                  {(() => {
+                    // Check if this vehicle has an allocated wt post loading
+                    let isAllocated = false
+                    try {
+                      const raw = localStorage.getItem('vehicleWtPostLoadingAssignments')
+                      const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+                      isAllocated = Boolean(map[r.regNo])
+                    } catch {}
+
+                    return (
+                      <select
+                        value={r.wtPostLoading}
+                        onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)}
+                        disabled={isAllocated}
+                        className={`border border-slate-300 rounded px-2 py-1 w-full ${isAllocated ? 'bg-slate-50 cursor-not-allowed opacity-60' : ''}`}
+                      >
+                        <option value="">Select</option>
+                        {Array.from({length:4},(_,i)=>`WPL-${i+1}`).map((wpl)=> <option key={wpl} value={wpl}>{wpl}</option>)}
+                      </select>
+                    )
+                  })()}
                 </td>
                 <td className="px-4 py-3 w-[120px] text-center">
                   <div className="flex gap-2 justify-center">
