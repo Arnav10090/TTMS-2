@@ -276,21 +276,18 @@ export default function LoadingGateStatus() {
             const vehicleNo = getVehicleForItem(item.id, 'exit')
             const tooltipText = vehicleNo ? `${item.id} - ${statusLabel} (${vehicleNo})` : `${item.id} - ${statusLabel}`
             return (
-              <div key={item.id} className="relative">
+              <div key={item.id} className="relative group">
                 <button
                   className={`relative rounded-ui ${statusColor(item.status)} text-white h-12 flex items-center justify-center transition cursor-default w-full`}
-                  onMouseEnter={() => setHoveredItem(item.id)}
-                  onMouseLeave={() => setHoveredItem(null)}
+                  title={tooltipText}
                   aria-label={tooltipText}
                 >
                   <span className="text-xs font-semibold">{item.id}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
                 </button>
-                {hoveredItem === item.id && (
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
-                    {tooltipText}
-                  </div>
-                )}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  {tooltipText}
+                </div>
               </div>
             )
           })}
