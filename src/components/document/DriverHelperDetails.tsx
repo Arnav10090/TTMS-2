@@ -335,6 +335,9 @@ function Section({
           <span>Location is SHARED from phone</span>
         </label>
       </div>
+      <div className="mt-2 text-xs text-slate-500">
+        <span>Note: Subject to GPS mapping coverage in the plant.</span>
+      </div>
     </div>
   );
 }
