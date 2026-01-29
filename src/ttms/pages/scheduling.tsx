@@ -21,7 +21,7 @@ export default function TTMSSchedulingPage() {
         <SchedulingParkingToggle
           data={parkingData}
           onSelect={s.selectParkingSlot}
-          onAllocate={(label, vehicleNo) => allocateSpot(s.selectedArea || 'AREA-1', label, vehicleNo)}
+          onAllocate={(area, label, vehicleNo) => allocateSpot(area as 'AREA-1' | 'AREA-2', label, vehicleNo)}
         />
         <LoadingGateStatus />
       </div>
