@@ -320,9 +320,8 @@ function Section({
             onChange={(e) =>
               onChange({ ...person, locationOn: e.target.checked })
             }
-            aria-required
           />
-          <span>Location is ON on phone <span className="text-red-600">*</span></span>
+          <span>Location is ON on phone</span>
         </label>
         <label className="inline-flex items-center gap-2 text-sm text-slate-700">
           <input
@@ -332,9 +331,8 @@ function Section({
             onChange={(e) =>
               onChange({ ...person, locationShared: e.target.checked })
             }
-            aria-required
           />
-          <span>Location is SHARED from phone <span className="text-red-600">*</span></span>
+          <span>Location is SHARED from phone</span>
         </label>
       </div>
     </div>
