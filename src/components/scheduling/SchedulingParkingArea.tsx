@@ -106,8 +106,22 @@ export default function SchedulingParkingArea({
     window.addEventListener('parkingColorMap-updated', sync as any)
     window.addEventListener('vehicleParkingAssignments-updated', sync as any)
 
-    // Initial sync on mount
-    sync()
+    // Initial sync on mount - initialize all cells as green
+    const initMap: Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> = {}
+    grid.forEach(row => {
+      row.forEach(cell => {
+        initMap[`${areaKey}-${cell.label}`] = 'bg-green-500'
+      })
+    })
+
+    try {
+      const saved = localStorage.getItem('parkingColorMap')
+      const savedMap = saved ? JSON.parse(saved) : {}
+      // Merge: start with all green, then override with any saved allocations
+      setColorMap({ ...initMap, ...savedMap })
+    } catch {
+      setColorMap(initMap)
+    }
 
     return () => {
       window.removeEventListener('storage', sync)
