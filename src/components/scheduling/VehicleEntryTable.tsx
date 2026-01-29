@@ -23,6 +23,19 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
   const [pageSize, setPageSize] = useState(10)
   const [colorMapUpdate, setColorMapUpdate] = useState(0) // Track colorMap updates
 
+  // Listen to colorMap updates from localStorage
+  useEffect(() => {
+    const handleColorMapUpdate = () => {
+      setColorMapUpdate(prev => prev + 1)
+    }
+    window.addEventListener('parkingColorMap-updated', handleColorMapUpdate as any)
+    window.addEventListener('storage', handleColorMapUpdate)
+    return () => {
+      window.removeEventListener('parkingColorMap-updated', handleColorMapUpdate as any)
+      window.removeEventListener('storage', handleColorMapUpdate)
+    }
+  }, [])
+
   const filtered = useMemo(() => rows.filter((r) => r.regNo.toLowerCase().includes(query.toLowerCase())), [rows, query])
   const sorted = useMemo(() => {
     const arr = [...filtered]
