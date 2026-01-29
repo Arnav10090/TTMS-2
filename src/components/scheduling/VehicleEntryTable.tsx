@@ -307,6 +307,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                       Allot
                     </button>
                     {(() => {
+                      // Use assignmentUpdate as a dependency key to ensure this block re-evaluates
+                      void assignmentUpdate
                       let canRevert = false
                       try {
                         const pRaw = localStorage.getItem('vehicleParkingAssignments')
