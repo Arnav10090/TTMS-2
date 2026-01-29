@@ -142,7 +142,8 @@ function Section({
     const otp = String(Math.floor(100000 + Math.random() * 900000));
     setGeneratedOtp(otp);
     setOtpSent(true);
-    alert(`Simulated OTP sent to ${person.phone}`);
+    const role = prefix === 'driver' ? 'Driver' : 'Helper';
+    alert(`OTP sent to ${role}'s phone number`);
   };
 
   const verifyOtp = () => {
