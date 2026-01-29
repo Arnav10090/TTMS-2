@@ -26,11 +26,7 @@ export default function LoadingGateStatus() {
       const raw = localStorage.getItem('loadingGateStatuses')
       if (raw) return JSON.parse(raw) as Item[]
     } catch { }
-    const init = Array.from({ length: 12 }, (_, i) => {
-      const r = Math.random()
-      const status: ItemStatus = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
-      return { id: `G-${i + 1}`, status }
-    })
+    const init = Array.from({ length: 12 }, (_, i) => ({ id: `G-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch { }
     return init
   })
