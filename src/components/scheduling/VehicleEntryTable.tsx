@@ -21,6 +21,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
   const [sortDir, setSortDir] = useState<'asc'|'desc'>('asc')
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
+  const [colorMapUpdate, setColorMapUpdate] = useState(0) // Track colorMap updates
 
   const filtered = useMemo(() => rows.filter((r) => r.regNo.toLowerCase().includes(query.toLowerCase())), [rows, query])
   const sorted = useMemo(() => {
