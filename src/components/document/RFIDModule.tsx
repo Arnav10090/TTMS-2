@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 
-export default function RFIDModule({ extraReady = true }: { extraReady?: boolean }) {
+export default function RFIDModule({ onProceed }: { onProceed?: () => void }) {
   const [rfid, setRfid] = useState('')
   const [tracking, setTracking] = useState('')
 
@@ -16,8 +16,6 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
     setTracking('')
     setRfid('')
   }
-
-  const canProceed = Boolean(tracking)
 
   return (
     <div className="space-y-3">
@@ -62,9 +60,8 @@ export default function RFIDModule({ extraReady = true }: { extraReady?: boolean
       <div className="flex items-center gap-2 mt-4">
         <div className="ml-auto" />
         <button
-          className={`px-4 py-2 rounded-ui ${canProceed && extraReady ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-slate-200 text-slate-500 cursor-not-allowed'}`}
-          disabled={!canProceed || !extraReady}
-          title={!canProceed ? 'Enter an RFID tracking number to proceed' : !extraReady ? 'Complete all document confirmations and details to proceed' : undefined}
+          onClick={onProceed}
+          className="px-4 py-2 rounded-ui bg-green-600 hover:bg-green-700 text-white"
         >
           Proceed
         </button>
