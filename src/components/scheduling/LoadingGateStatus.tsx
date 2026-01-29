@@ -12,10 +12,6 @@ function statusColor(s: ItemStatus) {
 
 export default function LoadingGateStatus() {
   const [tareWeights, setTareWeights] = useState<Item[]>(() => {
-    try {
-      const raw = localStorage.getItem('tareWeightStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
-    } catch { }
     const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch { }
     return init
