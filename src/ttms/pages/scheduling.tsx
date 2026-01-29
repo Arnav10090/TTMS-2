@@ -131,6 +131,7 @@ export default function TTMSSchedulingPage() {
                 const next = items.map(item => item.id === tweightId ? { ...item, status: 'available' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('tareWeightStatuses-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               }
             } catch { }
             try {
@@ -147,6 +148,7 @@ export default function TTMSSchedulingPage() {
                 const next = gates.map(g => g.id === gateId ? { ...g, status: 'available' as const } : g)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('loadingGateStatuses-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               }
             } catch { }
             try {
@@ -163,6 +165,7 @@ export default function TTMSSchedulingPage() {
                 const next = items.map(item => item.id === wpostId ? { ...item, status: 'available' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               }
             } catch { }
             try {
