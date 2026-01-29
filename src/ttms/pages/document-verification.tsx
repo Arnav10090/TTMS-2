@@ -19,6 +19,8 @@ export default function TTMSDocumentVerificationPage() {
   const [error, setError] = useState<string | null>(null)
   const [driverValid, setDriverValid] = useState(false)
   const [helperValid, setHelperValid] = useState(false)
+  const [driverPhoneVerified, setDriverPhoneVerified] = useState(false)
+  const [helperPhoneVerified, setHelperPhoneVerified] = useState(false)
   const [checklist, setChecklist] = useState({
     purchaseOrder: false,
     vehicleRegistration: false,
