@@ -30,8 +30,11 @@ export default function SchedulingParkingArea({
     try {
       const raw = localStorage.getItem('vehicleParkingAssignments')
       const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
+      const normalizedLabel = spotLabel.toUpperCase()
       for (const [vehicle, assignment] of Object.entries(map)) {
-        if (assignment.area === areaKey && assignment.label === spotLabel) {
+        const assignmentArea = assignment.area || ''
+        const assignmentLabel = (assignment.label || '').toUpperCase()
+        if (assignmentArea === areaKey && assignmentLabel === normalizedLabel) {
           return vehicle
         }
       }
