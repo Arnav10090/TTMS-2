@@ -20,9 +20,7 @@ export type AlertItem = { id: string; level: 'critical'|'warning'|'info'|'succes
 
 function makeGrid(count: number, prefix: string): OccupancyCell[] {
   return Array.from({ length: count }, (_, i) => {
-    const r = Math.random()
-    const state: CellState = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
-    return { id: `${prefix}-${i+1}`, state, details: `Slot ${i+1}` }
+    return { id: `${prefix}-${i+1}`, state: 'available', details: `Slot ${i+1}` }
   })
 }
 
