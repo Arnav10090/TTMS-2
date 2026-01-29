@@ -143,7 +143,7 @@ function Section({
     setGeneratedOtp(otp);
     setOtpSent(true);
     const role = prefix === 'driver' ? 'Driver' : 'Helper';
-    alert(`OTP sent to ${role}'s phone number`);
+    alert(`OTP sent to ${role}'s phone number: ${otp}`);
   };
 
   const verifyOtp = () => {
