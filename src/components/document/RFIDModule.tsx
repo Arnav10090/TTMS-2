@@ -60,7 +60,7 @@ export default function RFIDModule({ onProceed }: { onProceed?: (tracking: strin
       <div className="flex items-center gap-2 mt-4">
         <div className="ml-auto" />
         <button
-          onClick={onProceed}
+          onClick={() => onProceed?.(tracking)}
           className="px-4 py-2 rounded-ui bg-green-600 hover:bg-green-700 text-white"
         >
           Proceed
