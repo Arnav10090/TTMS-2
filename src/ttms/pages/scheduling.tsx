@@ -201,11 +201,8 @@ export default function TTMSSchedulingPage() {
         />
       </div>
 
-      <div className="mt-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
         <FacilityMap />
-      </div>
-
-      <div className="mt-4">
         <ManualsList />
       </div>
 

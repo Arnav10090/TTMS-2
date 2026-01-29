@@ -109,16 +109,16 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
       </div>
 
       <div className="overflow-x-auto border border-[#e5e7eb] rounded-ui">
-        <table className="min-w-full text-[12px]">
-          <thead className="bg-[#f3f4f6] text-[13px] font-semibold text-slate-700">
+        <table className="min-w-full text-sm">
+          <thead className="bg-[#f3f4f6] text-base font-semibold text-slate-700">
             <tr>
-              <th className="px-3 py-2"><input type="checkbox" checked={allPageSelected} onChange={(e)=>toggleAll(e.target.checked)} /></th>
+              <th className="px-4 py-3 w-[50px]"><input type="checkbox" checked={allPageSelected} onChange={(e)=>toggleAll(e.target.checked)} /></th>
               {[
                 { key: 'sn', label: 'SN', w: 'w-[60px]' },
-                { key: 'gateEntryTime', label: 'Gate Entry Time', w: 'w-[160px]' },
-                { key: 'regNo', label: 'Vehicle Reg No', w: 'w-[160px]' },
-                { key: 'area', label: 'Area', w: 'w-[100px]' },
-                { key: 'position', label: 'Position', w: 'w-[120px]' },
+                { key: 'gateEntryTime', label: 'Gate Entry Time', w: 'w-[130px]' },
+                { key: 'regNo', label: 'Vehicle Reg No', w: 'w-[130px]' },
+                { key: 'area', label: 'Area', w: 'w-[140px]' },
+                { key: 'position', label: 'Position', w: 'w-[160px]' },
                 { key: 'tareWeight', label: 'Tare Weight', w: 'w-[140px]' },
                 { key: 'loadingGate', label: 'Loading Gate', w: 'w-[140px]' },
                 { key: 'wtPostLoading', label: 'Wt Post Loading', w: 'w-[140px]' },
@@ -126,7 +126,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
               ].map((c) => (
                 <th
                   key={c.key}
-                  className={`px-3 py-2 ${c.align ?? 'text-left'} ${c.w} cursor-pointer`}
+                  className={`px-4 py-3 ${c.align ?? 'text-left'} ${c.w} cursor-pointer`}
                   onClick={() => {
                     if (sortKey === (c.key as keyof VehicleEntry)) {
                       setSortDir(sortDir === 'asc' ? 'desc' : 'asc')
@@ -148,11 +148,11 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
           <tbody>
             {paged.map((r, i) => (
               <tr key={r.id} className={`${i%2===0?'bg-white':'bg-[#f9fafb]'} border-t border-[#e5e7eb] hover:bg-blue-50`}>
-                <td className="px-3 py-2"><input type="checkbox" checked={r.selected} onChange={(e)=>setCell(r.id,'selected',e.target.checked)} /></td>
-                <td className="px-3 py-2">{r.sn}</td>
-                <td className="px-3 py-2"><input type="datetime-local" value={r.gateEntryTime} onChange={(e)=>setCell(r.id,'gateEntryTime',e.target.value)} className="border border-slate-300 rounded px-2 py-1 w-full" /></td>
-                <td className="px-3 py-2"><input type="text" value={r.regNo} onChange={(e)=>setCell(r.id,'regNo',e.target.value)} pattern="[A-Z]{2}[0-9]{2}-[0-9]{4}" className="border border-slate-300 rounded px-2 py-1 w-full" /></td>
-                <td className="px-3 py-2">
+                <td className="px-4 py-3 w-[50px]"><input type="checkbox" checked={r.selected} onChange={(e)=>setCell(r.id,'selected',e.target.checked)} /></td>
+                <td className="px-4 py-3 w-[60px]">{r.sn}</td>
+                <td className="px-4 py-3 w-[130px]"><input type="datetime-local" value={r.gateEntryTime} readOnly className="border border-slate-300 rounded px-2 py-1 w-full bg-slate-50 cursor-not-allowed" /></td>
+                <td className="px-4 py-3 w-[130px]"><input type="text" value={r.regNo} onChange={(e)=>setCell(r.id,'regNo',e.target.value)} pattern="[A-Z]{2}[0-9]{2}-[0-9]{4}" className="border border-slate-300 rounded px-2 py-1 w-full" /></td>
+                <td className="px-4 py-3 w-[140px]">
                   {/* Show assigned parking spot (if any) else allow area selection */}
                   {(() => {
                     try {
@@ -172,7 +172,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2 w-[120px]">
+                <td className="px-4 py-3 w-[160px]">
                   {(() => {
                     const areaKey = (r.area || 'AREA-1') as 'AREA-1'|'AREA-2'
                     const options = availableByArea[areaKey] || []
@@ -193,13 +193,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2">
+                <td className="px-4 py-3 w-[140px]">
                   <select value={r.tareWeight} onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
                     <option value="">Select</option>
                     {Array.from({length:4},(_,i)=>`TW-${i+1}`).map((tw)=> <option key={tw} value={tw}>{tw}</option>)}
                   </select>
                 </td>
-                <td className="px-3 py-2">
+                <td className="px-4 py-3 w-[140px]">
                   {(() => {
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
@@ -217,13 +217,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-3 py-2">
+                <td className="px-4 py-3 w-[140px]">
                   <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
                     <option value="">Select</option>
                     {Array.from({length:4},(_,i)=>`WPL-${i+1}`).map((wpl)=> <option key={wpl} value={wpl}>{wpl}</option>)}
                   </select>
                 </td>
-                <td className="px-3 py-2 text-center">
+                <td className="px-4 py-3 w-[120px] text-center">
                   <div className="flex gap-2 justify-center">
                     <button
                       className="px-3 py-1.5 rounded-ui bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"

@@ -20,9 +20,7 @@ export type AlertItem = { id: string; level: 'critical'|'warning'|'info'|'succes
 
 function makeGrid(count: number, prefix: string): OccupancyCell[] {
   return Array.from({ length: count }, (_, i) => {
-    const r = Math.random()
-    const state: CellState = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
-    return { id: `${prefix}-${i+1}`, state, details: `Slot ${i+1}` }
+    return { id: `${prefix}-${i+1}`, state: 'available', details: `Slot ${i+1}` }
   })
 }
 
@@ -37,7 +35,7 @@ export function useSchedulingState() {
   useEffect(() => {
     setOccupancyGrid(makeGrid(25, 'A'))
     setAvailableGrid(makeGrid(20, 'B'))
-    setVehicleEntries(Array.from({ length: 8 }, (_, i) => ({
+    setVehicleEntries(Array.from({ length: 13 }, (_, i) => ({
       id: (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : `v-${i + 1}`,
       sn: i + 1,
       gateEntryTime: new Date(Date.now() - i * 600000).toISOString().slice(0, 16),

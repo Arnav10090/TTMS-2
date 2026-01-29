@@ -27,15 +27,14 @@ export default function SchedulingParkingArea({
 
   // Get vehicle number for a parking spot
   const getVehicleForSpot = (spotLabel: string): string | null => {
-    try {
-      const raw = localStorage.getItem('vehicleParkingAssignments')
-      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
-      for (const [vehicle, assignment] of Object.entries(map)) {
-        if (assignment.area === areaKey && assignment.label === spotLabel) {
-          return vehicle
-        }
+    const normalizedLabel = spotLabel.toUpperCase()
+    for (const [vehicle, assignment] of Object.entries(vehicleAssignments)) {
+      const assignmentArea = assignment.area || ''
+      const assignmentLabel = (assignment.label || '').toUpperCase()
+      if (assignmentArea === areaKey && assignmentLabel === normalizedLabel) {
+        return vehicle
       }
-    } catch {}
+    }
     return null
   }
 
@@ -48,17 +47,29 @@ export default function SchedulingParkingArea({
     return {}
   })
 
+  // Track vehicle assignments for re-rendering
+  const [vehicleAssignments, setVehicleAssignments] = useState<Record<string, { area: string; label: string }>>(() => {
+    try {
+      const raw = localStorage.getItem('vehicleParkingAssignments')
+      return raw ? JSON.parse(raw) : {}
+    } catch {}
+    return {}
+  })
+
   const statusToColor = (status: 'available' | 'occupied' | 'reserved'): 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500' =>
     status === 'available' ? 'bg-green-500' : status === 'occupied' ? 'bg-red-500' : 'bg-yellow-500'
 
   // (Removed separate load effect; state is hydrated synchronously)
 
-  // Ensure colors for current grid; seed missing from current status
+  // Ensure colors for current grid; all cells start as green
   useEffect(() => {
     const next = { ...colorMap } as Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'>
     grid.forEach(row => row.forEach(cell => {
       const k = `${areaKey}-${cell.label}`
-      if (!next[k]) next[k] = statusToColor(cell.status)
+      // Initialize all cells as green, but preserve any existing allocations (yellow/red)
+      if (!next[k]) {
+        next[k] = 'bg-green-500'
+      }
     }))
     const changed = Object.keys(next).length !== Object.keys(colorMap).length ||
       Object.keys(next).some(k => next[k] !== colorMap[k as keyof typeof colorMap])
@@ -83,18 +94,41 @@ export default function SchedulingParkingArea({
         const saved = localStorage.getItem('parkingColorMap')
         if (saved) setColorMap(JSON.parse(saved))
       } catch {}
+      try {
+        const raw = localStorage.getItem('vehicleParkingAssignments')
+        if (raw) setVehicleAssignments(JSON.parse(raw))
+      } catch {}
       // Force a re-render to update tooltips with new vehicle assignments
       setColorMap(prev => ({ ...prev }))
     }
+
     window.addEventListener('storage', sync)
     window.addEventListener('parkingColorMap-updated', sync as any)
     window.addEventListener('vehicleParkingAssignments-updated', sync as any)
+
+    // Initial sync on mount - initialize all cells as green
+    const initMap: Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> = {}
+    grid.forEach(row => {
+      row.forEach(cell => {
+        initMap[`${areaKey}-${cell.label}`] = 'bg-green-500'
+      })
+    })
+
+    try {
+      const saved = localStorage.getItem('parkingColorMap')
+      const savedMap = saved ? JSON.parse(saved) : {}
+      // Merge: start with all green, then override with any saved allocations
+      setColorMap({ ...initMap, ...savedMap })
+    } catch {
+      setColorMap(initMap)
+    }
+
     return () => {
       window.removeEventListener('storage', sync)
       window.removeEventListener('parkingColorMap-updated', sync as any)
       window.removeEventListener('vehicleParkingAssignments-updated', sync as any)
     }
-  }, [])
+  }, [areaKey, grid])
 
   const openConfirm = (label: string) => {
     setPendingLabel(label)
@@ -137,18 +171,22 @@ export default function SchedulingParkingArea({
             const vehicleNo = getVehicleForSpot(cell.label)
             const tooltipText = vehicleNo ? `${cell.label} - ${statusLabel} (${vehicleNo})` : `${cell.label} - ${statusLabel}`
             return (
-              <button
-                key={`${r}-${c}`}
-                onClick={(e) => { e.preventDefault() }}
-                disabled
-                aria-disabled
-                className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default`}
-                title={tooltipText}
-                aria-label={tooltipText}
-              >
-                <span className="text-[11px] md:text-xs font-medium">{cell.label}</span>
-                <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
-              </button>
+              <div key={`${r}-${c}`} className="relative group">
+                <button
+                  onClick={(e) => { e.preventDefault() }}
+                  disabled
+                  aria-disabled
+                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default w-full`}
+                  title={tooltipText}
+                  aria-label={tooltipText}
+                >
+                  <span className="text-[11px] md:text-xs font-medium">{cell.label}</span>
+                  <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
+                </button>
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  {tooltipText}
+                </div>
+              </div>
             )
           })
         )}
