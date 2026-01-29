@@ -28,10 +28,6 @@ export default function LoadingGateStatus() {
   })
 
   const [wtPostLoadings, setWtPostLoadings] = useState<Item[]>(() => {
-    try {
-      const raw = localStorage.getItem('wtPostLoadingStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
-    } catch { }
     const init = Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('wtPostLoadingStatuses', JSON.stringify(init)) } catch { }
     return init
