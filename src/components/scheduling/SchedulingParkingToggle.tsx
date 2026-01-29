@@ -38,6 +38,7 @@ export default function SchedulingParkingToggle({
         title={`Real-Time Parking Occupancy - ${active}`}
         grid={data[active]}
         onSelect={onSelect}
+        onAllocate={onAllocate}
       />
     </div>
   )
