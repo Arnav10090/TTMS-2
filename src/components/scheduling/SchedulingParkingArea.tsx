@@ -51,6 +51,15 @@ export default function SchedulingParkingArea({
     return {}
   })
 
+  // Track vehicle assignments for re-rendering
+  const [vehicleAssignments, setVehicleAssignments] = useState<Record<string, { area: string; label: string }>>(() => {
+    try {
+      const raw = localStorage.getItem('vehicleParkingAssignments')
+      return raw ? JSON.parse(raw) : {}
+    } catch {}
+    return {}
+  })
+
   const statusToColor = (status: 'available' | 'occupied' | 'reserved'): 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500' =>
     status === 'available' ? 'bg-green-500' : status === 'occupied' ? 'bg-red-500' : 'bg-yellow-500'
 
