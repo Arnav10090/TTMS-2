@@ -93,22 +93,6 @@ export default function TTMSSchedulingPage() {
                 window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
               } catch { }
             }
-            // Allocate Gate Exit - use first GE-1 for now
-            try {
-              const key = 'vehicleGateExitAssignments'
-              const raw = localStorage.getItem(key)
-              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
-              map[row.regNo] = 'GE-1'
-              localStorage.setItem(key, JSON.stringify(map))
-            } catch { }
-            try {
-              const key = 'gateExitStatuses'
-              const raw = localStorage.getItem(key)
-              const items = raw ? JSON.parse(raw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i + 1}`, status: 'available' as const }))
-              const next = items.map(item => item.id === 'GE-1' ? { ...item, status: 'reserved' as const } : item)
-              localStorage.setItem(key, JSON.stringify(next))
-              window.dispatchEvent(new Event('gateExitStatuses-updated'))
-            } catch { }
           }}
           onRevert={(row) => {
             try {
