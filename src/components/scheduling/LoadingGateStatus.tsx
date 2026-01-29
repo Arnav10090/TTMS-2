@@ -11,45 +11,35 @@ function statusColor(s: ItemStatus) {
 }
 
 export default function LoadingGateStatus() {
-  const [tareWeights, setTareWeights] = useState<Item[]>(() => {
+  // Clear all statuses on mount to ensure fresh start with all green cells
+  useEffect(() => {
     try {
-      const raw = localStorage.getItem('tareWeightStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
+      localStorage.removeItem('loadingGateStatuses')
+      localStorage.removeItem('tareWeightStatuses')
+      localStorage.removeItem('wtPostLoadingStatuses')
+      localStorage.removeItem('gateExitStatuses')
     } catch { }
+  }, [])
+
+  const [tareWeights, setTareWeights] = useState<Item[]>(() => {
     const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
   const [gates, setGates] = useState<Item[]>(() => {
-    try {
-      const raw = localStorage.getItem('loadingGateStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
-    } catch { }
-    const init = Array.from({ length: 12 }, (_, i) => {
-      const r = Math.random()
-      const status: ItemStatus = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
-      return { id: `G-${i + 1}`, status }
-    })
+    const init = Array.from({ length: 12 }, (_, i) => ({ id: `G-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
   const [wtPostLoadings, setWtPostLoadings] = useState<Item[]>(() => {
-    try {
-      const raw = localStorage.getItem('wtPostLoadingStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
-    } catch { }
     const init = Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('wtPostLoadingStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
   const [gateExits, setGateExits] = useState<Item[]>(() => {
-    try {
-      const raw = localStorage.getItem('gateExitStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
-    } catch { }
     const init = Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('gateExitStatuses', JSON.stringify(init)) } catch { }
     return init

@@ -87,6 +87,29 @@ export default function SchedulingParkingArea({
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
   const [toast, setToast] = useState<{message: string} | null>(null)
 
+  // Clear localStorage and initialize on component mount (only once)
+  useEffect(() => {
+    try {
+      localStorage.removeItem('parkingColorMap')
+      localStorage.removeItem('vehicleParkingAssignments')
+    } catch {}
+
+    // Initialize all cells as green on mount only
+    const initMap: Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> = {}
+    grid.forEach(row => {
+      row.forEach(cell => {
+        initMap[`${areaKey}-${cell.label}`] = 'bg-green-500'
+      })
+    })
+
+    try {
+      localStorage.setItem('parkingColorMap', JSON.stringify(initMap))
+      setColorMap(initMap)
+    } catch {
+      setColorMap(initMap)
+    }
+  }, []) // Only run on mount
+
   // Sync color map and vehicle assignments from localStorage when updated elsewhere
   useEffect(() => {
     const sync = () => {
@@ -98,37 +121,18 @@ export default function SchedulingParkingArea({
         const raw = localStorage.getItem('vehicleParkingAssignments')
         if (raw) setVehicleAssignments(JSON.parse(raw))
       } catch {}
-      // Force a re-render to update tooltips with new vehicle assignments
-      setColorMap(prev => ({ ...prev }))
     }
 
     window.addEventListener('storage', sync)
     window.addEventListener('parkingColorMap-updated', sync as any)
     window.addEventListener('vehicleParkingAssignments-updated', sync as any)
 
-    // Initial sync on mount - initialize all cells as green
-    const initMap: Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> = {}
-    grid.forEach(row => {
-      row.forEach(cell => {
-        initMap[`${areaKey}-${cell.label}`] = 'bg-green-500'
-      })
-    })
-
-    try {
-      const saved = localStorage.getItem('parkingColorMap')
-      const savedMap = saved ? JSON.parse(saved) : {}
-      // Merge: start with all green, then override with any saved allocations
-      setColorMap({ ...initMap, ...savedMap })
-    } catch {
-      setColorMap(initMap)
-    }
-
     return () => {
       window.removeEventListener('storage', sync)
       window.removeEventListener('parkingColorMap-updated', sync as any)
       window.removeEventListener('vehicleParkingAssignments-updated', sync as any)
     }
-  }, [areaKey, grid])
+  }, [])
 
   const openConfirm = (label: string) => {
     setPendingLabel(label)
@@ -173,10 +177,8 @@ export default function SchedulingParkingArea({
             return (
               <div key={`${r}-${c}`} className="relative group">
                 <button
-                  onClick={(e) => { e.preventDefault() }}
-                  disabled
-                  aria-disabled
-                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default w-full`}
+                  onClick={() => openConfirm(cell.label)}
+                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-pointer hover:opacity-90 w-full`}
                   title={tooltipText}
                   aria-label={tooltipText}
                 >
