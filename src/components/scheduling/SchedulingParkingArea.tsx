@@ -180,10 +180,8 @@ export default function SchedulingParkingArea({
             return (
               <div key={`${r}-${c}`} className="relative group">
                 <button
-                  onClick={(e) => { e.preventDefault() }}
-                  disabled
-                  aria-disabled
-                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default w-full`}
+                  onClick={() => openConfirm(cell.label)}
+                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-pointer hover:opacity-90 w-full`}
                   title={tooltipText}
                   aria-label={tooltipText}
                 >
