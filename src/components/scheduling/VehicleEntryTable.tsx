@@ -115,10 +115,10 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
               <th className="px-4 py-3 w-[50px]"><input type="checkbox" checked={allPageSelected} onChange={(e)=>toggleAll(e.target.checked)} /></th>
               {[
                 { key: 'sn', label: 'SN', w: 'w-[60px]' },
-                { key: 'gateEntryTime', label: 'Gate Entry Time', w: 'w-[160px]' },
-                { key: 'regNo', label: 'Vehicle Reg No', w: 'w-[160px]' },
-                { key: 'area', label: 'Area', w: 'w-[100px]' },
-                { key: 'position', label: 'Position', w: 'w-[120px]' },
+                { key: 'gateEntryTime', label: 'Gate Entry Time', w: 'w-[130px]' },
+                { key: 'regNo', label: 'Vehicle Reg No', w: 'w-[130px]' },
+                { key: 'area', label: 'Area', w: 'w-[140px]' },
+                { key: 'position', label: 'Position', w: 'w-[160px]' },
                 { key: 'tareWeight', label: 'Tare Weight', w: 'w-[140px]' },
                 { key: 'loadingGate', label: 'Loading Gate', w: 'w-[140px]' },
                 { key: 'wtPostLoading', label: 'Wt Post Loading', w: 'w-[140px]' },
