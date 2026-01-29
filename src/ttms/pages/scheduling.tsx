@@ -6,7 +6,7 @@ import VehicleEntryTable from '@/components/scheduling/VehicleEntryTable'
 import FacilityMap from '@/components/scheduling/FacilityMap'
 import ManualsList from '@/components/scheduling/ManualsList'
 import MultiSelectDropdown from '@/components/scheduling/MultiSelectDropdown'
-import AlertBar from '@/components/scheduling/AlertBar'
+
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 import SchedulingParkingToggle from '@/components/scheduling/SchedulingParkingToggle'
 import LoadingGateStatus from '@/components/scheduling/LoadingGateStatus'
@@ -34,13 +34,13 @@ export default function TTMSSchedulingPage() {
           parkingData={parkingData}
           onExportCSV={s.generateReport}
           onPrint={() => window.print()}
-          onAllot={(row)=>{
-            const labels = (row.position || '').split(',').map(s=>s.trim()).filter(Boolean)
+          onAllot={(row) => {
+            const labels = (row.position || '').split(',').map(s => s.trim()).filter(Boolean)
             if (labels.length === 0) {
               const fallback = s.selectedSlots
-              fallback.forEach(lbl => allocateSpot((row.area as 'AREA-1'|'AREA-2'), lbl, row.regNo))
+              fallback.forEach(lbl => allocateSpot((row.area as 'AREA-1' | 'AREA-2'), lbl, row.regNo))
             } else {
-              labels.forEach(lbl => allocateSpot((row.area as 'AREA-1'|'AREA-2'), lbl, row.regNo))
+              labels.forEach(lbl => allocateSpot((row.area as 'AREA-1' | 'AREA-2'), lbl, row.regNo))
             }
             if (row.tareWeight) {
               try {
@@ -49,15 +49,15 @@ export default function TTMSSchedulingPage() {
                 const map = raw ? JSON.parse(raw) as Record<string, string> : {}
                 map[row.regNo] = row.tareWeight
                 localStorage.setItem(key, JSON.stringify(map))
-              } catch {}
+              } catch { }
               try {
                 const key = 'tareWeightStatuses'
                 const raw = localStorage.getItem(key)
-                const items = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:4},(_,i)=>({id:`TW-${i+1}`,status:'available' as const}))
-                const next = items.map(item=> item.id===row.tareWeight ? {...item, status:'reserved' as const} : item)
+                const items = raw ? JSON.parse(raw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i + 1}`, status: 'available' as const }))
+                const next = items.map(item => item.id === row.tareWeight ? { ...item, status: 'reserved' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('tareWeightStatuses-updated'))
-              } catch {}
+              } catch { }
             }
             if (row.loadingGate) {
               try {
@@ -66,15 +66,15 @@ export default function TTMSSchedulingPage() {
                 const map = raw ? JSON.parse(raw) as Record<string, string> : {}
                 map[row.regNo] = row.loadingGate
                 localStorage.setItem(key, JSON.stringify(map))
-              } catch {}
+              } catch { }
               try {
                 const key = 'loadingGateStatuses'
                 const raw = localStorage.getItem(key)
-                const gates = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:12},(_,i)=>({id:`G-${i+1}`,status:'available' as const}))
-                const next = gates.map(g=> g.id===row.loadingGate ? {...g, status:'reserved' as const} : g)
+                const gates = raw ? JSON.parse(raw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : Array.from({ length: 12 }, (_, i) => ({ id: `G-${i + 1}`, status: 'available' as const }))
+                const next = gates.map(g => g.id === row.loadingGate ? { ...g, status: 'reserved' as const } : g)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('loadingGateStatuses-updated'))
-              } catch {}
+              } catch { }
             }
             if (row.wtPostLoading) {
               try {
@@ -83,15 +83,15 @@ export default function TTMSSchedulingPage() {
                 const map = raw ? JSON.parse(raw) as Record<string, string> : {}
                 map[row.regNo] = row.wtPostLoading
                 localStorage.setItem(key, JSON.stringify(map))
-              } catch {}
+              } catch { }
               try {
                 const key = 'wtPostLoadingStatuses'
                 const raw = localStorage.getItem(key)
-                const items = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:4},(_,i)=>({id:`WPL-${i+1}`,status:'available' as const}))
-                const next = items.map(item=> item.id===row.wtPostLoading ? {...item, status:'reserved' as const} : item)
+                const items = raw ? JSON.parse(raw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i + 1}`, status: 'available' as const }))
+                const next = items.map(item => item.id === row.wtPostLoading ? { ...item, status: 'reserved' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
-              } catch {}
+              } catch { }
             }
             // Allocate Gate Exit - use first GE-1 for now
             try {
@@ -100,17 +100,17 @@ export default function TTMSSchedulingPage() {
               const map = raw ? JSON.parse(raw) as Record<string, string> : {}
               map[row.regNo] = 'GE-1'
               localStorage.setItem(key, JSON.stringify(map))
-            } catch {}
+            } catch { }
             try {
               const key = 'gateExitStatuses'
               const raw = localStorage.getItem(key)
-              const items = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:1},(_,i)=>({id:`GE-${i+1}`,status:'available' as const}))
-              const next = items.map(item=> item.id==='GE-1' ? {...item, status:'reserved' as const} : item)
+              const items = raw ? JSON.parse(raw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i + 1}`, status: 'available' as const }))
+              const next = items.map(item => item.id === 'GE-1' ? { ...item, status: 'reserved' as const } : item)
               localStorage.setItem(key, JSON.stringify(next))
               window.dispatchEvent(new Event('gateExitStatuses-updated'))
-            } catch {}
+            } catch { }
           }}
-          onRevert={(row)=>{
+          onRevert={(row) => {
             try {
               const pKey = 'vehicleParkingAssignments'
               const pRaw = localStorage.getItem(pKey)
@@ -119,19 +119,19 @@ export default function TTMSSchedulingPage() {
               if (assigned) {
                 const ovKey = 'parkingStatusOverrides'
                 const ovRaw = localStorage.getItem(ovKey)
-                const ov = ovRaw ? JSON.parse(ovRaw) as Record<string, 'available'|'occupied'|'reserved'> : {}
+                const ov = ovRaw ? JSON.parse(ovRaw) as Record<string, 'available' | 'occupied' | 'reserved'> : {}
                 const k = `${assigned.area}-${assigned.label}`
                 ov[k] = 'available'
                 localStorage.setItem(ovKey, JSON.stringify(ov))
                 delete pMap[row.regNo]
                 localStorage.setItem(pKey, JSON.stringify(pMap))
                 const colorRaw = localStorage.getItem('parkingColorMap')
-                const colorMap = colorRaw ? JSON.parse(colorRaw) as Record<string, 'bg-green-500'|'bg-red-500'|'bg-yellow-500'> : {}
+                const colorMap = colorRaw ? JSON.parse(colorRaw) as Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> : {}
                 colorMap[k] = 'bg-green-500'
                 localStorage.setItem('parkingColorMap', JSON.stringify(colorMap))
                 window.dispatchEvent(new Event('parkingColorMap-updated'))
               }
-            } catch {}
+            } catch { }
             try {
               const mapKey = 'vehicleTareWeightAssignments'
               const raw = localStorage.getItem(mapKey)
@@ -142,12 +142,12 @@ export default function TTMSSchedulingPage() {
                 localStorage.setItem(mapKey, JSON.stringify(map))
                 const key = 'tareWeightStatuses'
                 const tRaw = localStorage.getItem(key)
-                const items = tRaw ? JSON.parse(tRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
-                const next = items.map(item=> item.id===tweightId ? {...item, status:'available' as const} : item)
+                const items = tRaw ? JSON.parse(tRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                const next = items.map(item => item.id === tweightId ? { ...item, status: 'available' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('tareWeightStatuses-updated'))
               }
-            } catch {}
+            } catch { }
             try {
               const mapKey = 'vehicleLoadingGateAssignments'
               const raw = localStorage.getItem(mapKey)
@@ -158,12 +158,12 @@ export default function TTMSSchedulingPage() {
                 localStorage.setItem(mapKey, JSON.stringify(map))
                 const key = 'loadingGateStatuses'
                 const gRaw = localStorage.getItem(key)
-                const gates = gRaw ? JSON.parse(gRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
-                const next = gates.map(g=> g.id===gateId ? {...g, status:'available' as const} : g)
+                const gates = gRaw ? JSON.parse(gRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                const next = gates.map(g => g.id === gateId ? { ...g, status: 'available' as const } : g)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('loadingGateStatuses-updated'))
               }
-            } catch {}
+            } catch { }
             try {
               const mapKey = 'vehicleWtPostLoadingAssignments'
               const raw = localStorage.getItem(mapKey)
@@ -174,12 +174,12 @@ export default function TTMSSchedulingPage() {
                 localStorage.setItem(mapKey, JSON.stringify(map))
                 const key = 'wtPostLoadingStatuses'
                 const wRaw = localStorage.getItem(key)
-                const items = wRaw ? JSON.parse(wRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
-                const next = items.map(item=> item.id===wpostId ? {...item, status:'available' as const} : item)
+                const items = wRaw ? JSON.parse(wRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                const next = items.map(item => item.id === wpostId ? { ...item, status: 'available' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
               }
-            } catch {}
+            } catch { }
             try {
               const mapKey = 'vehicleGateExitAssignments'
               const raw = localStorage.getItem(mapKey)
@@ -190,13 +190,13 @@ export default function TTMSSchedulingPage() {
                 localStorage.setItem(mapKey, JSON.stringify(map))
                 const key = 'gateExitStatuses'
                 const eRaw = localStorage.getItem(key)
-                const items = eRaw ? JSON.parse(eRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
-                const next = items.map(item=> item.id===exitId ? {...item, status:'available' as const} : item)
+                const items = eRaw ? JSON.parse(eRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                const next = items.map(item => item.id === exitId ? { ...item, status: 'available' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('gateExitStatuses-updated'))
               }
-            } catch {}
-            s.setVehicleEntries((rows)=>rows.map(r=> r.id===row.id ? { ...r, position: '' } : r))
+            } catch { }
+            s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, position: '' } : r))
           }}
         />
         <FacilityMap />
@@ -207,7 +207,7 @@ export default function TTMSSchedulingPage() {
         <MultiSelectDropdown />
       </div>
 
-      <AlertBar alerts={s.alerts} onRefresh={s.refreshAlerts} />
+
     </DashboardLayout>
   )
 }

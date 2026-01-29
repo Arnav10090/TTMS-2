@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect } from 'react'
 import { VehicleRow } from '@/types/vehicle'
 
 function formatTime(minutes: number): string {
@@ -18,6 +19,54 @@ export default function VehicleQueueTable({
   actionButton?: React.ReactNode
 }) {
   const topTen = vehicles.slice(0, 10)
+  // Store persistent remarks
+  const [remarks, setRemarks] = useState<Record<string, string>>({})
+  // Store items currently being edited (true = show input)
+  const [editing, setEditing] = useState<Record<string, boolean>>({})
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('vehicleRemarks')
+      if (stored) {
+        setRemarks(JSON.parse(stored))
+      }
+    } catch { }
+  }, [])
+
+  const handleRemarkChange = (regNo: string, val: string) => {
+    setRemarks(prev => ({ ...prev, [regNo]: val }))
+  }
+
+  const saveRemark = (regNo: string) => {
+    try {
+      const stored = localStorage.getItem('vehicleRemarks')
+      const parsed = stored ? JSON.parse(stored) : {}
+      parsed[regNo] = remarks[regNo] || ''
+      localStorage.setItem('vehicleRemarks', JSON.stringify(parsed))
+      // Switch off edit mode
+      setEditing(prev => ({ ...prev, [regNo]: false }))
+    } catch { }
+  }
+
+  const enableEdit = (regNo: string) => {
+    setEditing(prev => ({ ...prev, [regNo]: true }))
+  }
+
+  const deleteRemark = (regNo: string) => {
+    if (confirm('Are you sure you want to delete this remark?')) {
+      const next = { ...remarks }
+      delete next[regNo]
+      setRemarks(next)
+      setEditing(prev => ({ ...prev, [regNo]: true })) // Revert to input mode (empty)
+
+      try {
+        const stored = localStorage.getItem('vehicleRemarks')
+        const parsed = stored ? JSON.parse(stored) : {}
+        delete parsed[regNo]
+        localStorage.setItem('vehicleRemarks', JSON.stringify(parsed))
+      } catch { }
+    }
+  }
 
   return (
     <div className="w-full">
@@ -43,7 +92,9 @@ export default function VehicleQueueTable({
             {topTen.map((vehicle, index) => {
               const reportingMinutes = index * 5
               const reportingTime = formatTime(reportingMinutes)
-              
+              const savedValue = remarks[vehicle.regNo]
+              const isEditing = editing[vehicle.regNo] ?? (!savedValue) // Default to edit if no value
+
               return (
                 <tr
                   key={vehicle.sn}
@@ -52,8 +103,44 @@ export default function VehicleQueueTable({
                   <td className="px-3 py-2 font-medium text-gray-900 text-center">{index + 1}</td>
                   <td className="px-3 py-2 font-medium text-gray-900 text-center">{vehicle.regNo}</td>
                   <td className="px-3 py-2 text-gray-700 text-center">{reportingTime}</td>
-                  <td className="px-3 py-2 text-gray-700 text-center">
-                    {vehicle.progress < 30 ? 'Pending' : vehicle.progress < 70 ? 'In Progress' : 'Ready for Verification'}
+                  <td className="px-3 py-2 text-gray-700 text-center align-middle">
+                    {isEditing ? (
+                      <div className="flex items-center gap-2 w-full">
+                        <input
+                          type="text"
+                          value={savedValue || ''}
+                          onChange={(e) => handleRemarkChange(vehicle.regNo, e.target.value)}
+                          className="border border-gray-300 rounded px-2 py-1 text-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          placeholder="Enter remarks"
+                        />
+                        <button
+                          onClick={() => saveRemark(vehicle.regNo)}
+                          className="px-3 py-1 rounded bg-green-600 text-white hover:bg-green-700 text-sm font-medium flex-shrink-0"
+                        >
+                          Save
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-between w-full px-2 min-h-[32px] gap-2">
+                        <span className="text-sm text-gray-800 text-left flex-grow break-all">
+                          {savedValue}
+                        </span>
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <button
+                            onClick={() => enableEdit(vehicle.regNo)}
+                            className="px-2 py-1 rounded text-blue-600 hover:bg-blue-50 text-sm font-medium border border-transparent hover:border-blue-200 transition-colors"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => deleteRemark(vehicle.regNo)}
+                            className="px-2 py-1 rounded text-red-600 hover:bg-red-50 text-sm font-medium border border-transparent hover:border-red-200 transition-colors"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </td>
                   <td className="px-3 py-2 text-center">
                     <button

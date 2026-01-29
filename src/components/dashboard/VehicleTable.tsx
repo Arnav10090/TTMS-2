@@ -384,10 +384,10 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
               value={
                 start
                   ? new Date(
-                      start.getTime() - start.getTimezoneOffset() * 60000
-                    )
-                      .toISOString()
-                      .slice(0, -1)
+                    start.getTime() - start.getTimezoneOffset() * 60000
+                  )
+                    .toISOString()
+                    .slice(0, -1)
                   : ""
               }
               onChange={(e) =>
@@ -429,8 +429,8 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
               value={
                 end
                   ? new Date(end.getTime() - end.getTimezoneOffset() * 60000)
-                      .toISOString()
-                      .slice(0, -1)
+                    .toISOString()
+                    .slice(0, -1)
                   : ""
               }
               onChange={(e) =>
@@ -532,9 +532,10 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
               ].map((col) => (
                 <th
                   key={col.key}
-                  className="select-none py-1 px-2 text-xs text-center"
+                  className={`select-none py-3 px-2 text-xs font-semibold text-slate-600 border-b border-slate-200 align-middle ${['regNo', 'rfidNo'].includes(col.key) ? 'text-left' : 'text-center'
+                    }`}
                 >
-                  <div className="flex items-center justify-center gap-1">
+                  <div className={`flex items-center gap-1 ${['regNo', 'rfidNo'].includes(col.key) ? 'justify-start' : 'justify-center'}`}>
                     <span>{col.label}</span>
                   </div>
                 </th>
@@ -548,14 +549,13 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
               return (
                 <tr
                   key={row.sn}
-                  className={`${
-                    index % 2 === 0 ? "bg-white" : "bg-gray-50"
-                  } border-b border-slate-100 hover:bg-blue-50 transition-colors`}
+                  className={`${index % 2 === 0 ? "bg-white" : "bg-gray-50"
+                    } border-b border-slate-100 hover:bg-blue-50 transition-colors`}
                 >
-                  <td className="px-1 py-1 text-xs font-medium text-gray-900 whitespace-nowrap text-center">
+                  <td className="px-2 py-3 text-xs font-medium text-gray-900 whitespace-nowrap text-center align-middle">
                     {row.sn}
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap">
+                  <td className="px-2 py-3 whitespace-nowrap align-middle text-left">
                     <div className="flex items-center gap-2">
                       <Truck className="w-4 h-4 text-gray-400" />
                       <span className={`text-sm font-medium text-gray-900 max-w-[110px] truncate ${calculatedTTR > 225 && row.stages.gateExit.state !== 'completed' ? 'hard-blink' : ''}`}>
@@ -563,64 +563,64 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       </span>
                     </div>
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-700">
+                  <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-700 align-middle text-left">
                     {row.rfidNo ?? '-'}
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-700">
+                  <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-700 align-middle text-center">
                     {row.reportingTime ? row.reportingTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : '-'}
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap">
+                  <td className="px-2 py-3 whitespace-nowrap text-center align-middle">
                     <TimeCell
                       label="Gate Entry"
                       stage="gateEntry"
                       data={row}
                       display={times.gateEntry}
-                      onAlert={() => {}}
+                      onAlert={() => { }}
                       onStageClick={handleStageClick}
                     />
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap">
+                  <td className="px-2 py-3 whitespace-nowrap text-center align-middle">
                     <TimeCell
                       label="Tare Weighing"
                       stage="tareWeighing"
                       data={row}
                       display={times.tareWeighing}
-                      onAlert={() => {}}
+                      onAlert={() => { }}
                       onStageClick={handleStageClick}
                     />
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap">
+                  <td className="px-2 py-3 whitespace-nowrap text-center align-middle">
                     <TimeCell
                       label="Loading"
                       stage="loading"
                       data={row}
                       display={times.loading}
-                      onAlert={() => {}}
+                      onAlert={() => { }}
                       onStageClick={handleStageClick}
                     />
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap">
+                  <td className="px-2 py-3 whitespace-nowrap text-center align-middle">
                     <TimeCell
                       label="Post Load Weigh"
                       stage="postLoadingWeighing"
                       data={row}
                       display={times.postLoadingWeighing}
-                      onAlert={() => {}}
+                      onAlert={() => { }}
                       onStageClick={handleStageClick}
                     />
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap">
+                  <td className="px-2 py-3 whitespace-nowrap text-center align-middle">
                     <TimeCell
                       label="Gate Exit"
                       stage="gateExit"
                       data={row}
                       display={times.gateExit}
-                      onAlert={() => {}}
+                      onAlert={() => { }}
                       onStageClick={handleStageClick}
                     />
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap min-w-[110px]">
-                    <div className="flex items-center gap-2">
+                  <td className="px-2 py-3 whitespace-nowrap min-w-[110px] align-middle">
+                    <div className="flex items-center gap-2 justify-center">
                       <div className="w-full min-w-[80px]">
                         <ProgressBar
                           value={row.progress}
@@ -628,8 +628,8 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                             row.progress >= 80
                               ? "green"
                               : row.progress >= 50
-                              ? "yellow"
-                              : "red"
+                                ? "yellow"
+                                : "red"
                           }
                         />
                       </div>
@@ -638,7 +638,7 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                       </span>
                     </div>
                   </td>
-                  <td className="px-1 py-1 whitespace-nowrap text-sm text-gray-900 text-center">
+                  <td className="px-2 py-3 whitespace-nowrap text-sm text-gray-900 text-center align-middle">
                     {calculatedTTR} min
                   </td>
                 </tr>
@@ -698,24 +698,28 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
         }
 
         @keyframes legendBlink {
-   0%, 100% {
-   opacity: 1;
-   background-color: #f59e0b;
-   }
-  50% {
-  opacity: 0.2;
-  background-color: #fbbf24;
-  }
+          0% {
+            opacity: 1;
+            background-color: #ef4444; /* Red */
+          }
+          50% {
+             opacity: 0.1;
+             background-color: #fbbf24; /* Amber */
+          }
+          100% {
+            opacity: 1;
+            background-color: #ef4444; /* Red */
+          }
+        }
+ 
+ .legend-blink-box {
+   display: inline-block;
+   width: 16px;
+   height: 16px;
+   border-radius: 3px;
+   background-color: #ef4444;
+   animation: legendBlink 0.8s ease-in-out infinite;
  }
-
-.legend-blink-box {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border-radius: 3px;
-  background-color: #f59e0b;
-  animation: legendBlink 0.8s ease-in-out infinite;
-}
         
         .hard-blink {
   animation: urgentBlink 0.8s ease-in-out infinite;

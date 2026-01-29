@@ -9,7 +9,6 @@ const tabs = [
   { label: 'Alarms', href: '/ttms/alarms' },
   { label: 'Reports', href: '/ttms/reports' },
   { label: 'Historical Data', href: '/ttms/history' },
-  { label: 'Spare Tab', href: '/ttms/spare' },
 ]
 
 export default function Navigation() {

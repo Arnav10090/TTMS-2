@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-type ItemStatus = 'available'|'occupied'|'reserved'
+type ItemStatus = 'available' | 'occupied' | 'reserved'
 
 type Item = { id: string; status: ItemStatus }
 
@@ -15,9 +15,9 @@ export default function LoadingGateStatus() {
     try {
       const raw = localStorage.getItem('tareWeightStatuses')
       if (raw) return JSON.parse(raw) as Item[]
-    } catch {}
-    const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i+1}`, status: 'available' as const }))
-    try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch {}
+    } catch { }
+    const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i + 1}`, status: 'available' as const }))
+    try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
@@ -25,13 +25,13 @@ export default function LoadingGateStatus() {
     try {
       const raw = localStorage.getItem('loadingGateStatuses')
       if (raw) return JSON.parse(raw) as Item[]
-    } catch {}
+    } catch { }
     const init = Array.from({ length: 12 }, (_, i) => {
       const r = Math.random()
       const status: ItemStatus = r > 0.66 ? 'available' : r > 0.33 ? 'occupied' : 'reserved'
-      return { id: `G-${i+1}`, status }
+      return { id: `G-${i + 1}`, status }
     })
-    try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch {}
+    try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
@@ -39,9 +39,9 @@ export default function LoadingGateStatus() {
     try {
       const raw = localStorage.getItem('wtPostLoadingStatuses')
       if (raw) return JSON.parse(raw) as Item[]
-    } catch {}
-    const init = Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i+1}`, status: 'available' as const }))
-    try { localStorage.setItem('wtPostLoadingStatuses', JSON.stringify(init)) } catch {}
+    } catch { }
+    const init = Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i + 1}`, status: 'available' as const }))
+    try { localStorage.setItem('wtPostLoadingStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
@@ -49,9 +49,9 @@ export default function LoadingGateStatus() {
     try {
       const raw = localStorage.getItem('gateExitStatuses')
       if (raw) return JSON.parse(raw) as Item[]
-    } catch {}
-    const init = Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i+1}`, status: 'available' as const }))
-    try { localStorage.setItem('gateExitStatuses', JSON.stringify(init)) } catch {}
+    } catch { }
+    const init = Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i + 1}`, status: 'available' as const }))
+    try { localStorage.setItem('gateExitStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
@@ -66,17 +66,17 @@ export default function LoadingGateStatus() {
           return vehicle
         }
       }
-    } catch {}
+    } catch { }
     return null
   }
 
   const [confirmOpen, setConfirmOpen] = useState(false)
-  const [pendingGate, setPendingGate] = useState<Gate | null>(null)
+  const [pendingGate, setPendingGate] = useState<Item | null>(null)
   const [vehicleNo, setVehicleNo] = useState('')
   const vehiclePattern = /^[A-Z]{2}\d{2}-\d{4}$/
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
 
-  const openConfirm = (gate: Gate) => { setPendingGate(gate); setVehicleNo(''); setConfirmOpen(true) }
+  const openConfirm = (gate: Item) => { setPendingGate(gate); setVehicleNo(''); setConfirmOpen(true) }
   const closeConfirm = () => { setConfirmOpen(false); setPendingGate(null) }
   const [toast, setToast] = useState<{ message: string } | null>(null)
 
@@ -84,8 +84,8 @@ export default function LoadingGateStatus() {
     if (!pendingGate || !isVehicleValid) return
     const assignedVehicle = vehicleNo.trim()
     setGates((prev) => {
-      const next = prev.map(g => g.id === pendingGate.id ? { ...g, status: 'occupied' as const } : g)
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(next)) } catch {}
+      const next = prev.map(g => g.id === pendingGate?.id ? { ...g, status: 'occupied' as const } : g)
+      try { localStorage.setItem('loadingGateStatuses', JSON.stringify(next)) } catch { }
       return next
     })
 
@@ -96,7 +96,7 @@ export default function LoadingGateStatus() {
       const map = raw ? JSON.parse(raw) as Record<string, string> : {}
       map[assignedVehicle] = pendingGate.id
       localStorage.setItem(key, JSON.stringify(map))
-    } catch {}
+    } catch { }
 
     setToast({ message: `Loading gate ${pendingGate.id} allocated to ${assignedVehicle}.` })
     setTimeout(() => setToast(null), 5000)
@@ -108,13 +108,13 @@ export default function LoadingGateStatus() {
       setGates((prev) => {
         const next = prev.map((g) => {
           if (Math.random() > 0.92) {
-            const order: ItemStatus[] = ['available','occupied','reserved']
-            const idx = Math.floor(Math.random()*order.length)
+            const order: ItemStatus[] = ['available', 'occupied', 'reserved']
+            const idx = Math.floor(Math.random() * order.length)
             return { ...g, status: order[idx] }
           }
           return g
         })
-        try { localStorage.setItem('loadingGateStatuses', JSON.stringify(next)) } catch {}
+        try { localStorage.setItem('loadingGateStatuses', JSON.stringify(next)) } catch { }
         return next
       })
     }, 30000)
@@ -123,28 +123,28 @@ export default function LoadingGateStatus() {
       try {
         const raw = localStorage.getItem('tareWeightStatuses')
         if (raw) setTareWeights(JSON.parse(raw) as Item[])
-      } catch {}
+      } catch { }
     }
 
     const syncGates = () => {
       try {
         const raw = localStorage.getItem('loadingGateStatuses')
         if (raw) setGates(JSON.parse(raw) as Item[])
-      } catch {}
+      } catch { }
     }
 
     const syncWtPostLoadings = () => {
       try {
         const raw = localStorage.getItem('wtPostLoadingStatuses')
         if (raw) setWtPostLoadings(JSON.parse(raw) as Item[])
-      } catch {}
+      } catch { }
     }
 
     const syncGateExits = () => {
       try {
         const raw = localStorage.getItem('gateExitStatuses')
         if (raw) setGateExits(JSON.parse(raw) as Item[])
-      } catch {}
+      } catch { }
     }
 
     window.addEventListener('storage', syncTareWeights)
@@ -173,11 +173,11 @@ export default function LoadingGateStatus() {
   return (
     <div className="card p-4">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-slate-800 font-semibold">Loading Gate Status</h3>
+        <h3 className="text-slate-800 font-semibold">Station Status</h3>
       </div>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4">
         {/* Column 1: Tare Weight Section */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 border-r-2 border-slate-800 pr-3">
           <div className="bg-slate-100 rounded-ui p-2 text-center">
             <h4 className="text-xs font-semibold text-slate-700">Tare Weight</h4>
           </div>
@@ -202,9 +202,9 @@ export default function LoadingGateStatus() {
         </div>
 
         {/* Columns 2-3: Loading Gate Section */}
-        <div className="col-span-2 flex flex-col gap-2">
-          <div className="bg-blue-100 rounded-ui p-2 text-center">
-            <h4 className="text-xs font-semibold text-blue-700">Loading Gate</h4>
+        <div className="col-span-2 flex flex-col gap-2 border-r-2 border-slate-800 px-3">
+          <div className="bg-slate-100 rounded-ui p-2 text-center">
+            <h4 className="text-xs font-semibold text-slate-700">Loading Gate</h4>
           </div>
           <div className="grid grid-cols-4 gap-2">
             {gates.slice(0, 8).map((g) => {
@@ -228,7 +228,7 @@ export default function LoadingGateStatus() {
         </div>
 
         {/* Column 4: Wt Post Loading Section */}
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 pl-3">
           <div className="bg-slate-100 rounded-ui p-2 text-center">
             <h4 className="text-xs font-semibold text-slate-700">Wt Post Loading</h4>
           </div>
@@ -254,9 +254,9 @@ export default function LoadingGateStatus() {
       </div>
 
       {/* Gate Exit Section - Full Width */}
-      <div className="mt-4 flex flex-col gap-2">
-        <div className="bg-orange-100 rounded-ui p-2 text-center">
-          <h4 className="text-xs font-semibold text-orange-700">Gate Exit</h4>
+      <div className="mt-4 pt-4 border-t-2 border-slate-800 flex flex-col gap-2">
+        <div className="bg-slate-100 rounded-ui p-2 text-center">
+          <h4 className="text-xs font-semibold text-slate-700">Gate Exit</h4>
         </div>
         <div className="grid grid-cols-1 gap-2">
           {gateExits.map((item) => {
@@ -296,7 +296,7 @@ export default function LoadingGateStatus() {
               <span className="text-xl leading-none">×</span>
             </button>
             <h4 className="text-slate-800 font-semibold mb-2 pr-8">Allocate Loading Gate</h4>
-            <p className="text-sm text-slate-600 mb-3">Would you like to allocate this loading gate {pendingGate ? `(${pendingGate.id})` : ''} to this vehicle?</p>
+            <p className="text-sm text-slate-600 mb-3">Would you like to allocate this loading gate {pendingGate ? `(${pendingGate?.id})` : ''} to this vehicle?</p>
             <input
               value={vehicleNo}
               onChange={(e) => setVehicleNo(e.target.value.toUpperCase())}

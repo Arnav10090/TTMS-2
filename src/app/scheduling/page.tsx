@@ -8,7 +8,7 @@ import VehicleEntryTable from '@/components/scheduling/VehicleEntryTable'
 import FacilityMap from '@/components/scheduling/FacilityMap'
 import ManualsList from '@/components/scheduling/ManualsList'
 import MultiSelectDropdown from '@/components/scheduling/MultiSelectDropdown'
-import AlertBar from '@/components/scheduling/AlertBar'
+
 import { useRealTimeData } from '@/hooks/useRealTimeData'
 import SchedulingParkingToggle from '@/components/scheduling/SchedulingParkingToggle'
 import LoadingGateStatus from '@/components/scheduling/LoadingGateStatus'
@@ -36,14 +36,14 @@ export default function SchedulingPage() {
           parkingData={parkingData}
           onExportCSV={s.generateReport}
           onPrint={() => window.print()}
-          onAllot={(row)=>{
+          onAllot={(row) => {
             // Allocate parking spots based on area and position labels
-            const labels = (row.position || '').split(',').map(s=>s.trim()).filter(Boolean)
+            const labels = (row.position || '').split(',').map(s => s.trim()).filter(Boolean)
             if (labels.length === 0) {
               const fallback = s.selectedSlots
-              fallback.forEach(lbl => allocateSpot((row.area as 'AREA-1'|'AREA-2'), lbl, row.regNo))
+              fallback.forEach(lbl => allocateSpot((row.area as 'AREA-1' | 'AREA-2'), lbl, row.regNo))
             } else {
-              labels.forEach(lbl => allocateSpot((row.area as 'AREA-1'|'AREA-2'), lbl, row.regNo))
+              labels.forEach(lbl => allocateSpot((row.area as 'AREA-1' | 'AREA-2'), lbl, row.regNo))
             }
             // Persist vehicle -> loading gate assignment and mark gate occupied (skip if No Gate)
             if (row.loadingGate) {
@@ -53,18 +53,18 @@ export default function SchedulingPage() {
                 const map = raw ? JSON.parse(raw) as Record<string, string> : {}
                 map[row.regNo] = row.loadingGate
                 localStorage.setItem(key, JSON.stringify(map))
-              } catch {}
+              } catch { }
               try {
                 const key = 'loadingGateStatuses'
                 const raw = localStorage.getItem(key)
-                const gates = raw ? JSON.parse(raw) as {id:string; status:'available'|'occupied'|'reserved'}[] : Array.from({length:12},(_,i)=>({id:`G-${i+1}`,status:'available' as const}))
-                const next = gates.map(g=> g.id===row.loadingGate ? {...g, status:'occupied' as const} : g)
+                const gates = raw ? JSON.parse(raw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : Array.from({ length: 12 }, (_, i) => ({ id: `G-${i + 1}`, status: 'available' as const }))
+                const next = gates.map(g => g.id === row.loadingGate ? { ...g, status: 'occupied' as const } : g)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('loadingGateStatuses-updated'))
-              } catch {}
+              } catch { }
             }
           }}
-          onRevert={(row)=>{
+          onRevert={(row) => {
             // Revert parking assignment
             try {
               const pKey = 'vehicleParkingAssignments'
@@ -74,7 +74,7 @@ export default function SchedulingPage() {
               if (assigned) {
                 const ovKey = 'parkingStatusOverrides'
                 const ovRaw = localStorage.getItem(ovKey)
-                const ov = ovRaw ? JSON.parse(ovRaw) as Record<string, 'available'|'occupied'|'reserved'> : {}
+                const ov = ovRaw ? JSON.parse(ovRaw) as Record<string, 'available' | 'occupied' | 'reserved'> : {}
                 const k = `${assigned.area}-${assigned.label}`
                 ov[k] = 'available'
                 localStorage.setItem(ovKey, JSON.stringify(ov))
@@ -82,12 +82,12 @@ export default function SchedulingPage() {
                 localStorage.setItem(pKey, JSON.stringify(pMap))
                 // Update color map to green
                 const colorRaw = localStorage.getItem('parkingColorMap')
-                const colorMap = colorRaw ? JSON.parse(colorRaw) as Record<string, 'bg-green-500'|'bg-red-500'|'bg-yellow-500'> : {}
+                const colorMap = colorRaw ? JSON.parse(colorRaw) as Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> : {}
                 colorMap[k] = 'bg-green-500'
                 localStorage.setItem('parkingColorMap', JSON.stringify(colorMap))
                 window.dispatchEvent(new Event('parkingColorMap-updated'))
               }
-            } catch {}
+            } catch { }
             // Revert loading gate assignment
             try {
               const mapKey = 'vehicleLoadingGateAssignments'
@@ -99,14 +99,14 @@ export default function SchedulingPage() {
                 localStorage.setItem(mapKey, JSON.stringify(map))
                 const key = 'loadingGateStatuses'
                 const gRaw = localStorage.getItem(key)
-                const gates = gRaw ? JSON.parse(gRaw) as {id:string; status:'available'|'occupied'|'reserved'}[] : []
-                const next = gates.map(g=> g.id===gateId ? {...g, status:'available' as const} : g)
+                const gates = gRaw ? JSON.parse(gRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                const next = gates.map(g => g.id === gateId ? { ...g, status: 'available' as const } : g)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('loadingGateStatuses-updated'))
               }
-            } catch {}
+            } catch { }
             // Clear position in table for UX
-            s.setVehicleEntries((rows)=>rows.map(r=> r.id===row.id ? { ...r, position: '' } : r))
+            s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, position: '' } : r))
           }}
         />
         <FacilityMap />
@@ -117,7 +117,7 @@ export default function SchedulingPage() {
         <MultiSelectDropdown />
       </div>
 
-      <AlertBar alerts={s.alerts} onRefresh={s.refreshAlerts} />
+
     </DashboardLayout>
   )
 }

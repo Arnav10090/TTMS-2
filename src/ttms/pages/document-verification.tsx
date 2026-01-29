@@ -81,7 +81,7 @@ export default function TTMSDocumentVerificationPage() {
           onVerifyDocs={handleVerifyDocs}
           actionButton={
             <a
-              href="https://google.com"
+              href="http://localhost:3001"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 rounded-ui bg-blue-600 text-white text-base font-medium hover:bg-blue-700 transition-colors"
