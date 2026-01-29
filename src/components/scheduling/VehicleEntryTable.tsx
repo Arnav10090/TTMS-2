@@ -175,6 +175,14 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 </td>
                 <td className="px-4 py-3 w-[160px]">
                   {(() => {
+                    // Check if this vehicle has an allocated parking spot
+                    let isAllocated = false
+                    try {
+                      const raw = localStorage.getItem('vehicleParkingAssignments')
+                      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
+                      isAllocated = Boolean(map[r.regNo])
+                    } catch {}
+
                     const areaKey = (r.area || 'AREA-1') as 'AREA-1'|'AREA-2'
                     const options = availableByArea[areaKey] || []
                     const fallback = selectedSlots[0] ? selectedSlots[0].toUpperCase() : ''
@@ -184,7 +192,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                       <select
                         value={value}
                         onChange={(e) => setCell(r.id, 'position', e.target.value as VehicleEntry['position'])}
-                        className="border border-slate-300 rounded px-2 py-1 w-full"
+                        disabled={isAllocated}
+                        className={`border border-slate-300 rounded px-2 py-1 w-full ${isAllocated ? 'bg-slate-50 cursor-not-allowed opacity-60' : ''}`}
                       >
                         <option value="">Select spot</option>
                         {uniqueOptions.map((opt) => (
