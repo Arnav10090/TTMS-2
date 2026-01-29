@@ -47,11 +47,12 @@ export default function TTMSDocumentVerificationPage() {
     return checklistItems.filter(item => item.required)
   }
 
-  const getMissingFields = () => {
+  const getMissingFields = (tracking: string) => {
     const missing: string[] = []
 
     if (!vehicleRegNo) missing.push('Vehicle Registration Number')
-    if (!driverValid) missing.push('Driver Details (Name, Language, Phone)')
+    if (!driverValid) missing.push('Driver Details (with OTP verification)')
+    if (!tracking) missing.push('RFID Tracking Number')
 
     const requiredItems = getRequiredChecklistItems()
     requiredItems.forEach(item => {
@@ -63,8 +64,8 @@ export default function TTMSDocumentVerificationPage() {
     return missing
   }
 
-  const handleProceed = () => {
-    const missing = getMissingFields()
+  const handleProceed = (tracking: string) => {
+    const missing = getMissingFields(tracking)
     if (missing.length > 0) {
       alert(`Please complete the following required fields:\n\n${missing.map(f => `• ${f}`).join('\n')}`)
     } else {
