@@ -114,6 +114,7 @@ export default function TTMSSchedulingPage() {
                 colorMap[k] = 'bg-green-500'
                 localStorage.setItem('parkingColorMap', JSON.stringify(colorMap))
                 window.dispatchEvent(new Event('parkingColorMap-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               }
             } catch { }
             try {
