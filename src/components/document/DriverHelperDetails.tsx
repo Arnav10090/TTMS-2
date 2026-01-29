@@ -68,8 +68,8 @@ export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }
   }, [vehicleRegNo])
 
   useEffect(() => {
-    const dValid = driver.name.trim().length > 0 && driver.language.trim().length > 0 && driver.phone.length === 10 && driver.locationOn && driver.locationShared
-    const hValid = helper.name.trim().length > 0 && helper.language.trim().length > 0 && helper.phone.length === 10 && helper.locationOn && helper.locationShared
+    const dValid = driver.name.trim().length > 0 && driver.language.trim().length > 0 && driver.phone.length === 10 && driver.phoneVerified
+    const hValid = helper.name.trim().length > 0 && helper.language.trim().length > 0 && helper.phone.length === 10 && helper.phoneVerified
     onValidationChange?.({ driver: dValid, helper: hValid })
   }, [driver, helper, onValidationChange])
 
@@ -142,7 +142,8 @@ function Section({
     const otp = String(Math.floor(100000 + Math.random() * 900000));
     setGeneratedOtp(otp);
     setOtpSent(true);
-    alert(`Simulated OTP sent to ${person.phone}: ${otp}`);
+    const role = prefix === 'driver' ? 'Driver' : 'Helper';
+    alert(`OTP sent to ${role}'s phone number: ${otp}`);
   };
 
   const verifyOtp = () => {
@@ -178,8 +179,30 @@ function Section({
             aria-required
           />
         </div>
+        <div>
+          <label
+            htmlFor={`${prefix}-phone`}
+            className="block text-sm text-slate-600 mb-1"
+          >
+            Phone number: <span className="text-red-600">*</span>
+          </label>
+          <input
+            id={`${prefix}-phone`}
+            type="tel"
+            value={person.phone}
+            onChange={(e) => handlePhoneChange(e.target.value)}
+            placeholder="10 digit mobile"
+            className="w-full border border-slate-300 rounded-ui px-3 py-2"
+            inputMode="numeric"
+            maxLength={10}
+            aria-required
+          />
+          {person.phone.length > 0 && person.phone.length !== 10 && (
+            <div className="mt-1 text-xs text-red-600">Enter a valid 10 digit phone number</div>
+          )}
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
         <div>
           <label
             htmlFor={`${prefix}-language`}
@@ -250,57 +273,37 @@ function Section({
           )}
         </div>
         <div>
-          <label
-            htmlFor={`${prefix}-phone`}
-            className="block text-sm text-slate-600 mb-1"
-          >
-            Phone number: <span className="text-red-600">*</span>
-          </label>
-          <div className="flex gap-2">
-            <input
-              id={`${prefix}-phone`}
-              type="tel"
-              value={person.phone}
-              onChange={(e) => handlePhoneChange(e.target.value)}
-              placeholder="10 digit mobile"
-              className="w-full border border-slate-300 rounded-ui px-3 py-2"
-              inputMode="numeric"
-              maxLength={10}
-              aria-required
-            />
-
-            {!verified && person.phone.length === 10 && (
+          {!verified && person.phone.length === 10 && (
+            <div>
               <button
                 type="button"
                 onClick={sendOtp}
-                className="px-3 py-2 rounded bg-blue-600 text-white"
+                className="w-full px-3 py-2 rounded bg-blue-600 text-white font-medium mb-2"
               >
                 Send OTP
               </button>
-            )}
+            </div>
+          )}
 
-            {verified && (
-              <span className="px-3 py-2 rounded bg-green-600 text-white">
+          {verified && (
+            <div>
+              <span className="block w-full px-3 py-2 rounded bg-green-600 text-white text-center font-medium">
                 Verified
               </span>
-            )}
-          </div>
-
-          {person.phone.length > 0 && person.phone.length !== 10 && (
-            <div className="mt-1 text-xs text-red-600">Enter a valid 10 digit phone number</div>
+            </div>
           )}
 
           {otpSent && (
-            <div className="mt-2 flex items-center gap-2">
+            <div className="space-y-2">
               <input
                 value={otpInput}
                 onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, ""))}
                 placeholder="Enter OTP"
-                className="w-32 border border-slate-300 rounded-ui px-2 py-1"
+                className="w-full border border-slate-300 rounded-ui px-3 py-2"
               />
               <button
                 onClick={verifyOtp}
-                className="px-3 py-1 rounded bg-green-600 text-white"
+                className="w-full px-3 py-2 rounded bg-green-600 text-white font-medium"
               >
                 Verify
               </button>
@@ -317,9 +320,8 @@ function Section({
             onChange={(e) =>
               onChange({ ...person, locationOn: e.target.checked })
             }
-            aria-required
           />
-          <span>Location is ON on phone <span className="text-red-600">*</span></span>
+          <span>Location is ON on phone</span>
         </label>
         <label className="inline-flex items-center gap-2 text-sm text-slate-700">
           <input
@@ -329,10 +331,12 @@ function Section({
             onChange={(e) =>
               onChange({ ...person, locationShared: e.target.checked })
             }
-            aria-required
           />
-          <span>Location is SHARED from phone <span className="text-red-600">*</span></span>
+          <span>Location is SHARED from phone</span>
         </label>
+      </div>
+      <div className="mt-2 text-xs text-slate-500">
+        <span>Note: Subject to GPS mapping coverage in the plant.</span>
       </div>
     </div>
   );

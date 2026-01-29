@@ -19,6 +19,7 @@ export default function TTMSDocumentVerificationPage() {
   const [error, setError] = useState<string | null>(null)
   const [driverValid, setDriverValid] = useState(false)
   const [helperValid, setHelperValid] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [checklist, setChecklist] = useState({
     purchaseOrder: false,
     vehicleRegistration: false,
@@ -31,17 +32,50 @@ export default function TTMSDocumentVerificationPage() {
   })
 
   const checklistItems = [
-    { key: 'purchaseOrder', label: 'Purchase Order OK' },
-    { key: 'vehicleRegistration', label: 'Vehicle Registration OK' },
-    { key: 'vehiclePUC', label: 'Vehicle PUC OK' },
-    { key: 'vehicleInsurance', label: 'Vehicle Insurance OK' },
-    { key: 'driverDetails', label: 'Driver Details OK' },
-    { key: 'driverUniqueId', label: 'Driver Unique ID OK' },
-    { key: 'helperDetails', label: 'Helper Details OK' },
-    { key: 'helperUniqueId', label: 'Helper Unique ID OK' },
+    { key: 'purchaseOrder', label: 'Purchase Order OK', required: true },
+    { key: 'vehicleRegistration', label: 'Vehicle Registration OK', required: true },
+    { key: 'vehiclePUC', label: 'Vehicle PUC OK', required: true },
+    { key: 'vehicleInsurance', label: 'Vehicle Insurance OK', required: true },
+    { key: 'driverDetails', label: 'Driver Details OK', required: true },
+    { key: 'driverUniqueId', label: 'Driver Unique ID OK', required: true },
+    { key: 'helperDetails', label: 'Helper Details OK', required: true },
+    { key: 'helperUniqueId', label: 'Helper Unique ID OK', required: true },
   ]
 
-  const allChecklistItemsChecked = Object.values(checklist).every(v => v === true)
+  const getRequiredChecklistItems = () => {
+    return checklistItems.filter(item => item.required)
+  }
+
+  const getMissingFields = (tracking: string) => {
+    const missing: string[] = []
+
+    if (!vehicleRegNo) missing.push('Vehicle Registration Number')
+    if (!driverValid) missing.push('Driver Details (with OTP verification)')
+    if (!helperValid) missing.push('Helper Details (with OTP verification)')
+    if (!tracking) missing.push('RFID Tracking Number')
+
+    const requiredItems = getRequiredChecklistItems()
+    requiredItems.forEach(item => {
+      if (!checklist[item.key as keyof typeof checklist]) {
+        missing.push(item.label)
+      }
+    })
+
+    return missing
+  }
+
+  const handleProceed = (tracking: string) => {
+    const missing = getMissingFields(tracking)
+    if (missing.length > 0) {
+      alert(`Please complete the following required fields:\n\n${missing.map(f => `• ${f}`).join('\n')}`)
+    } else {
+      setIsLoading(true)
+      setTimeout(() => {
+        setIsLoading(false)
+        alert(`Documents of Vehicle no. ${vehicleRegNo} verified successfully!`)
+      }, 2000)
+    }
+  }
 
   const handleChecklistChange = (key: string) => {
     setChecklist(prev => ({ ...prev, [key]: !prev[key as keyof typeof checklist] }))
@@ -133,6 +167,8 @@ export default function TTMSDocumentVerificationPage() {
                   />
                   <label htmlFor={item.key} className="text-sm text-slate-600 cursor-pointer">
                     {item.label}
+                    {item.required && <span className="text-red-600 ml-1">*</span>}
+                    {!item.required && <span className="text-slate-400 text-xs ml-1">(optional)</span>}
                   </label>
                 </div>
               ))}
@@ -140,7 +176,7 @@ export default function TTMSDocumentVerificationPage() {
           </div>
           <div className="card p-4">
             <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
-            <RFIDModule extraReady={driverValid && helperValid && allChecklistItemsChecked} />
+            <RFIDModule onProceed={handleProceed} isLoading={isLoading} />
           </div>
         </div>
       </div>
