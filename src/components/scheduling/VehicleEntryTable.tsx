@@ -150,9 +150,9 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
               <tr key={r.id} className={`${i%2===0?'bg-white':'bg-[#f9fafb]'} border-t border-[#e5e7eb] hover:bg-blue-50`}>
                 <td className="px-4 py-3 w-[50px]"><input type="checkbox" checked={r.selected} onChange={(e)=>setCell(r.id,'selected',e.target.checked)} /></td>
                 <td className="px-4 py-3 w-[60px]">{r.sn}</td>
-                <td className="px-4 py-3 w-[160px]"><input type="datetime-local" value={r.gateEntryTime} onChange={(e)=>setCell(r.id,'gateEntryTime',e.target.value)} className="border border-slate-300 rounded px-2 py-1 w-full" /></td>
-                <td className="px-4 py-3 w-[160px]"><input type="text" value={r.regNo} onChange={(e)=>setCell(r.id,'regNo',e.target.value)} pattern="[A-Z]{2}[0-9]{2}-[0-9]{4}" className="border border-slate-300 rounded px-2 py-1 w-full" /></td>
-                <td className="px-4 py-3 w-[100px]">
+                <td className="px-4 py-3 w-[130px]"><input type="datetime-local" value={r.gateEntryTime} readOnly className="border border-slate-300 rounded px-2 py-1 w-full bg-slate-50 cursor-not-allowed" /></td>
+                <td className="px-4 py-3 w-[130px]"><input type="text" value={r.regNo} onChange={(e)=>setCell(r.id,'regNo',e.target.value)} pattern="[A-Z]{2}[0-9]{2}-[0-9]{4}" className="border border-slate-300 rounded px-2 py-1 w-full" /></td>
+                <td className="px-4 py-3 w-[140px]">
                   {/* Show assigned parking spot (if any) else allow area selection */}
                   {(() => {
                     try {
