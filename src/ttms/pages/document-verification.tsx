@@ -37,8 +37,8 @@ export default function TTMSDocumentVerificationPage() {
     { key: 'vehicleInsurance', label: 'Vehicle Insurance OK', required: true },
     { key: 'driverDetails', label: 'Driver Details OK', required: true },
     { key: 'driverUniqueId', label: 'Driver Unique ID OK', required: true },
-    { key: 'helperDetails', label: 'Helper Details OK', required: false },
-    { key: 'helperUniqueId', label: 'Helper Unique ID OK', required: false },
+    { key: 'helperDetails', label: 'Helper Details OK', required: true },
+    { key: 'helperUniqueId', label: 'Helper Unique ID OK', required: true },
   ]
 
   const getRequiredChecklistItems = () => {
