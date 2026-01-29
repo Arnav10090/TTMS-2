@@ -50,6 +50,7 @@ export default function TTMSDocumentVerificationPage() {
 
     if (!vehicleRegNo) missing.push('Vehicle Registration Number')
     if (!driverValid) missing.push('Driver Details (with OTP verification)')
+    if (!helperValid) missing.push('Helper Details (with OTP verification)')
     if (!tracking) missing.push('RFID Tracking Number')
 
     const requiredItems = getRequiredChecklistItems()
