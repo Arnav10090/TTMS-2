@@ -22,17 +22,21 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
   const [colorMapUpdate, setColorMapUpdate] = useState(0) // Track colorMap updates
+  const [assignmentUpdate, setAssignmentUpdate] = useState(0) // Track assignment updates
 
-  // Listen to colorMap updates from localStorage
+  // Listen to colorMap and assignment updates from localStorage
   useEffect(() => {
-    const handleColorMapUpdate = () => {
+    const handleUpdate = () => {
       setColorMapUpdate(prev => prev + 1)
+      setAssignmentUpdate(prev => prev + 1)
     }
-    window.addEventListener('parkingColorMap-updated', handleColorMapUpdate as any)
-    window.addEventListener('storage', handleColorMapUpdate)
+    window.addEventListener('parkingColorMap-updated', handleUpdate as any)
+    window.addEventListener('vehicleParkingAssignments-updated', handleUpdate as any)
+    window.addEventListener('storage', handleUpdate)
     return () => {
-      window.removeEventListener('parkingColorMap-updated', handleColorMapUpdate as any)
-      window.removeEventListener('storage', handleColorMapUpdate)
+      window.removeEventListener('parkingColorMap-updated', handleUpdate as any)
+      window.removeEventListener('vehicleParkingAssignments-updated', handleUpdate as any)
+      window.removeEventListener('storage', handleUpdate)
     }
   }, [])
 
