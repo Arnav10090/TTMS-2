@@ -112,7 +112,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
         <table className="min-w-full text-sm">
           <thead className="bg-[#f3f4f6] text-base font-semibold text-slate-700">
             <tr>
-              <th className="px-3 py-2"><input type="checkbox" checked={allPageSelected} onChange={(e)=>toggleAll(e.target.checked)} /></th>
+              <th className="px-4 py-3"><input type="checkbox" checked={allPageSelected} onChange={(e)=>toggleAll(e.target.checked)} /></th>
               {[
                 { key: 'sn', label: 'SN', w: 'w-[60px]' },
                 { key: 'gateEntryTime', label: 'Gate Entry Time', w: 'w-[160px]' },
