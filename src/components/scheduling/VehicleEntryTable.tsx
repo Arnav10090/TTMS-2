@@ -109,8 +109,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
       </div>
 
       <div className="overflow-x-auto border border-[#e5e7eb] rounded-ui">
-        <table className="min-w-full text-[12px]">
-          <thead className="bg-[#f3f4f6] text-[13px] font-semibold text-slate-700">
+        <table className="min-w-full text-sm">
+          <thead className="bg-[#f3f4f6] text-base font-semibold text-slate-700">
             <tr>
               <th className="px-3 py-2"><input type="checkbox" checked={allPageSelected} onChange={(e)=>toggleAll(e.target.checked)} /></th>
               {[
