@@ -92,6 +92,23 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
   // Removed auto-assignment of position to prevent interference with "Select spot" option
   // Users should explicitly select a position from the dropdown
 
+  // Memoize whether each vehicle can be reverted
+  const canRevertMap = useMemo(() => {
+    const map: Record<string, boolean> = {}
+    rows.forEach((r) => {
+      try {
+        const pRaw = localStorage.getItem('vehicleParkingAssignments')
+        const pMap = pRaw ? JSON.parse(pRaw) as Record<string, { area: string; label: string }> : {}
+        const gRaw = localStorage.getItem('vehicleLoadingGateAssignments')
+        const gMap = gRaw ? JSON.parse(gRaw) as Record<string, string> : {}
+        map[r.regNo] = Boolean(pMap[r.regNo] || gMap[r.regNo])
+      } catch {
+        map[r.regNo] = false
+      }
+    })
+    return map
+  }, [rows, assignmentUpdate])
+
   const toggleAll = (checked: boolean) => {
     const ids = new Set(paged.map(p => p.id))
     onRowsChange(rows.map(r => ids.has(r.id) ? { ...r, selected: checked } : r))
