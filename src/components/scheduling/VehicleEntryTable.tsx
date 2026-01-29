@@ -219,20 +219,20 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 </td>
                 <td className="px-4 py-3 w-[140px]">
                   {(() => {
-                    // Check if this vehicle has an allocated tare weight
-                    let isAllocated = false
+                    // Check if this vehicle has an allocated parking spot
+                    let isParkingAllocated = false
                     try {
-                      const raw = localStorage.getItem('vehicleTareWeightAssignments')
-                      const map = raw ? JSON.parse(raw) as Record<string, string> : {}
-                      isAllocated = Boolean(map[r.regNo])
+                      const raw = localStorage.getItem('vehicleParkingAssignments')
+                      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
+                      isParkingAllocated = Boolean(map[r.regNo])
                     } catch {}
 
                     return (
                       <select
                         value={r.tareWeight}
                         onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)}
-                        disabled={isAllocated}
-                        className={`border border-slate-300 rounded px-2 py-1 w-full ${isAllocated ? 'bg-slate-50 cursor-not-allowed opacity-60' : ''}`}
+                        disabled={isParkingAllocated}
+                        className={`border border-slate-300 rounded px-2 py-1 w-full ${isParkingAllocated ? 'bg-slate-50 cursor-not-allowed opacity-60' : ''}`}
                       >
                         <option value="">Select</option>
                         {Array.from({length:4},(_,i)=>`TW-${i+1}`).map((tw)=> <option key={tw} value={tw}>{tw}</option>)}
