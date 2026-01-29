@@ -33,11 +33,6 @@ export function useSchedulingState() {
 
   // initialize client-only randomized data on mount to avoid server/client mismatches
   useEffect(() => {
-    // Clear colorMap to start fresh with all green cells
-    try {
-      localStorage.removeItem('parkingColorMap')
-    } catch {}
-
     setOccupancyGrid(makeGrid(25, 'A'))
     setAvailableGrid(makeGrid(20, 'B'))
     setVehicleEntries(Array.from({ length: 13 }, (_, i) => ({
