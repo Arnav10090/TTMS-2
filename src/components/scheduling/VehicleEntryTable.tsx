@@ -199,7 +199,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     {Array.from({length:4},(_,i)=>`TW-${i+1}`).map((tw)=> <option key={tw} value={tw}>{tw}</option>)}
                   </select>
                 </td>
-                <td className="px-3 py-2">
+                <td className="px-4 py-3">
                   {(() => {
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
