@@ -83,7 +83,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
       'AREA-1': make('AREA-1'),
       'AREA-2': make('AREA-2'),
     }
-  }, [parkingData])
+  }, [parkingData, colorMapUpdate])
 
   // Removed auto-assignment of position to prevent interference with "Select spot" option
   // Users should explicitly select a position from the dropdown
