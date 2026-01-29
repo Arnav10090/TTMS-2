@@ -27,18 +27,14 @@ export default function SchedulingParkingArea({
 
   // Get vehicle number for a parking spot
   const getVehicleForSpot = (spotLabel: string): string | null => {
-    try {
-      const raw = localStorage.getItem('vehicleParkingAssignments')
-      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
-      const normalizedLabel = spotLabel.toUpperCase()
-      for (const [vehicle, assignment] of Object.entries(map)) {
-        const assignmentArea = assignment.area || ''
-        const assignmentLabel = (assignment.label || '').toUpperCase()
-        if (assignmentArea === areaKey && assignmentLabel === normalizedLabel) {
-          return vehicle
-        }
+    const normalizedLabel = spotLabel.toUpperCase()
+    for (const [vehicle, assignment] of Object.entries(vehicleAssignments)) {
+      const assignmentArea = assignment.area || ''
+      const assignmentLabel = (assignment.label || '').toUpperCase()
+      if (assignmentArea === areaKey && assignmentLabel === normalizedLabel) {
+        return vehicle
       }
-    } catch {}
+    }
     return null
   }
 
