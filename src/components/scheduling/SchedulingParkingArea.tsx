@@ -138,24 +138,21 @@ export default function SchedulingParkingArea({
             const vehicleNo = getVehicleForSpot(cell.label)
             const tooltipText = vehicleNo ? `${cell.label} - ${statusLabel} (${vehicleNo})` : `${cell.label} - ${statusLabel}`
             return (
-              <div key={`${r}-${c}`} className="relative">
+              <div key={`${r}-${c}`} className="relative group">
                 <button
                   onClick={(e) => { e.preventDefault() }}
                   disabled
                   aria-disabled
-                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default`}
-                  onMouseEnter={() => setHoveredCell(`${r}-${c}`)}
-                  onMouseLeave={() => setHoveredCell(null)}
+                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-default w-full`}
+                  title={tooltipText}
                   aria-label={tooltipText}
                 >
                   <span className="text-[11px] md:text-xs font-medium">{cell.label}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
                 </button>
-                {hoveredCell === `${r}-${c}` && (
-                  <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10">
-                    {tooltipText}
-                  </div>
-                )}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                  {tooltipText}
+                </div>
               </div>
             )
           })
