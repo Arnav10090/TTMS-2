@@ -69,6 +69,7 @@ export default function TTMSDocumentVerificationPage() {
       alert(`Please complete the following required fields:\n\n${missing.map(f => `• ${f}`).join('\n')}`)
     } else {
       alert('All required fields are complete. Proceeding...')
+      alert(`Documents of Vehicle no. ${vehicleRegNo} verified successfully!`)
     }
   }
 
