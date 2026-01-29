@@ -176,7 +176,7 @@ export default function TTMSDocumentVerificationPage() {
           </div>
           <div className="card p-4">
             <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
-            <RFIDModule onProceed={handleProceed} />
+            <RFIDModule onProceed={handleProceed} isLoading={isLoading} />
           </div>
         </div>
       </div>
