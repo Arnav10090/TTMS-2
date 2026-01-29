@@ -89,15 +89,20 @@ export default function SchedulingParkingArea({
       // Force a re-render to update tooltips with new vehicle assignments
       setColorMap(prev => ({ ...prev }))
     }
+
     window.addEventListener('storage', sync)
     window.addEventListener('parkingColorMap-updated', sync as any)
     window.addEventListener('vehicleParkingAssignments-updated', sync as any)
+
+    // Initial sync on mount
+    sync()
+
     return () => {
       window.removeEventListener('storage', sync)
       window.removeEventListener('parkingColorMap-updated', sync as any)
       window.removeEventListener('vehicleParkingAssignments-updated', sync as any)
     }
-  }, [])
+  }, [areaKey, grid])
 
   const openConfirm = (label: string) => {
     setPendingLabel(label)
