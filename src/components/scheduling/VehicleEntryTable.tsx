@@ -324,16 +324,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                       Allot
                     </button>
                     {(() => {
-                      // Use assignmentUpdate as a dependency key to ensure this block re-evaluates
-                      void assignmentUpdate
-                      let canRevert = false
-                      try {
-                        const pRaw = localStorage.getItem('vehicleParkingAssignments')
-                        const pMap = pRaw ? JSON.parse(pRaw) as Record<string, { area: string; label: string }> : {}
-                        const gRaw = localStorage.getItem('vehicleLoadingGateAssignments')
-                        const gMap = gRaw ? JSON.parse(gRaw) as Record<string, string> : {}
-                        canRevert = Boolean(pMap[r.regNo] || gMap[r.regNo])
-                      } catch {}
+                      const canRevert = canRevertMap[r.regNo] ?? false
                       return (
                         <button
                           className="px-3 py-1.5 rounded-ui bg-slate-100 text-slate-800 hover:bg-slate-200 disabled:opacity-60"
