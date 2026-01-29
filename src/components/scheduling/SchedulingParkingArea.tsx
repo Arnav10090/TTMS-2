@@ -25,17 +25,18 @@ export default function SchedulingParkingArea({
   // Derive area key from the title (expects "AREA-1" or "AREA-2" to be present)
   const areaKey = (title.match(/AREA-1|AREA-2/)?.[0] as 'AREA-1' | 'AREA-2') ?? 'AREA-1'
 
-  // Get vehicle number for a parking spot
-  const getVehicleForSpot = (spotLabel: string): string | null => {
+  // Get all vehicles allocated to a parking spot
+  const getVehiclesForSpot = (spotLabel: string): string[] => {
     const normalizedLabel = spotLabel.toUpperCase()
+    const vehicles: string[] = []
     for (const [vehicle, assignment] of Object.entries(vehicleAssignments)) {
       const assignmentArea = assignment.area || ''
       const assignmentLabel = (assignment.label || '').toUpperCase()
       if (assignmentArea === areaKey && assignmentLabel === normalizedLabel) {
-        return vehicle
+        vehicles.push(vehicle)
       }
     }
-    return null
+    return vehicles
   }
 
   // Persisted map: `${area}-${label}` -> color class
