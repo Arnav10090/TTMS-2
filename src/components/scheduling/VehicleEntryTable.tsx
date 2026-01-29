@@ -223,7 +223,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     {Array.from({length:4},(_,i)=>`WPL-${i+1}`).map((wpl)=> <option key={wpl} value={wpl}>{wpl}</option>)}
                   </select>
                 </td>
-                <td className="px-3 py-2 text-center">
+                <td className="px-4 py-3 text-center">
                   <div className="flex gap-2 justify-center">
                     <button
                       className="px-3 py-1.5 rounded-ui bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
