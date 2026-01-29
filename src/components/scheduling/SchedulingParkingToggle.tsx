@@ -7,9 +7,11 @@ import { ParkingData } from '@/types/dashboard'
 export default function SchedulingParkingToggle({
   data,
   onSelect,
+  onAllocate,
 }: {
   data: ParkingData
   onSelect: (label: string) => void
+  onAllocate?: (area: string, label: string, vehicleNo: string) => void
 }) {
   const areas = useMemo(() => ['AREA-1','AREA-2'] as const, [])
   const [active, setActive] = useState<typeof areas[number]>('AREA-1')
@@ -36,6 +38,7 @@ export default function SchedulingParkingToggle({
         title={`Real-Time Parking Occupancy - ${active}`}
         grid={data[active]}
         onSelect={onSelect}
+        onAllocate={(label, vehicleNo) => onAllocate?.(active, label, vehicleNo)}
       />
     </div>
   )

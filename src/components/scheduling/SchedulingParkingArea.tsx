@@ -25,17 +25,18 @@ export default function SchedulingParkingArea({
   // Derive area key from the title (expects "AREA-1" or "AREA-2" to be present)
   const areaKey = (title.match(/AREA-1|AREA-2/)?.[0] as 'AREA-1' | 'AREA-2') ?? 'AREA-1'
 
-  // Get vehicle number for a parking spot
-  const getVehicleForSpot = (spotLabel: string): string | null => {
+  // Get all vehicles allocated to a parking spot
+  const getVehiclesForSpot = (spotLabel: string): string[] => {
     const normalizedLabel = spotLabel.toUpperCase()
+    const vehicles: string[] = []
     for (const [vehicle, assignment] of Object.entries(vehicleAssignments)) {
       const assignmentArea = assignment.area || ''
       const assignmentLabel = (assignment.label || '').toUpperCase()
       if (assignmentArea === areaKey && assignmentLabel === normalizedLabel) {
-        return vehicle
+        vehicles.push(vehicle)
       }
     }
-    return null
+    return vehicles
   }
 
   // Persisted map: `${area}-${label}` -> color class
@@ -172,8 +173,8 @@ export default function SchedulingParkingArea({
           row.map((cell, c) => {
             const currentColor = (colorMap[`${areaKey}-${cell.label}`] ?? spotColor(cell.status))
             const statusLabel = currentColor === 'bg-green-500' ? 'available' : currentColor === 'bg-red-500' ? 'occupied' : 'allocated'
-            const vehicleNo = getVehicleForSpot(cell.label)
-            const tooltipText = vehicleNo ? `${cell.label} - ${statusLabel} (${vehicleNo})` : `${cell.label} - ${statusLabel}`
+            const allocatedVehicles = getVehiclesForSpot(cell.label)
+            const tooltipText = allocatedVehicles.length > 0 ? `${cell.label} - ${statusLabel}` : `${cell.label} - ${statusLabel}`
             return (
               <div key={`${r}-${c}`} className="relative group">
                 <button
@@ -185,8 +186,17 @@ export default function SchedulingParkingArea({
                   <span className="text-[11px] md:text-xs font-medium">{cell.label}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
                 </button>
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded whitespace-nowrap z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                  {tooltipText}
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-w-xs">
+                  <div className="font-semibold mb-1">{cell.label} - {statusLabel}</div>
+                  {allocatedVehicles.length > 0 ? (
+                    <div className="space-y-1">
+                      {allocatedVehicles.map((vehicle, idx) => (
+                        <div key={idx} className="text-white/90">{vehicle}</div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-white/90">No vehicles allocated</div>
+                  )}
                 </div>
               </div>
             )
