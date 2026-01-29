@@ -37,7 +37,7 @@ export function useSchedulingState() {
   useEffect(() => {
     setOccupancyGrid(makeGrid(25, 'A'))
     setAvailableGrid(makeGrid(20, 'B'))
-    setVehicleEntries(Array.from({ length: 8 }, (_, i) => ({
+    setVehicleEntries(Array.from({ length: 13 }, (_, i) => ({
       id: (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') ? crypto.randomUUID() : `v-${i + 1}`,
       sn: i + 1,
       gateEntryTime: new Date(Date.now() - i * 600000).toISOString().slice(0, 16),
