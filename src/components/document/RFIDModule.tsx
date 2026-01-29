@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 
-export default function RFIDModule({ onProceed }: { onProceed?: (tracking: string) => void }) {
+export default function RFIDModule({ onProceed, isLoading = false }: { onProceed?: (tracking: string) => void; isLoading?: boolean }) {
   const [rfid, setRfid] = useState('')
   const [tracking, setTracking] = useState('')
 
