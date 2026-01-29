@@ -75,7 +75,6 @@ export default function SchedulingParkingArea({
   const vehiclePattern = /^[A-Z]{2}\d{2}-\d{4}$/
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
   const [toast, setToast] = useState<{message: string} | null>(null)
-  const [hoveredCell, setHoveredCell] = useState<string | null>(null)
 
   // Sync color map and vehicle assignments from localStorage when updated elsewhere
   useEffect(() => {
