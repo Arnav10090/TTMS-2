@@ -11,6 +11,16 @@ function statusColor(s: ItemStatus) {
 }
 
 export default function LoadingGateStatus() {
+  // Clear all statuses on mount to ensure fresh start with all green cells
+  React.useEffect(() => {
+    try {
+      localStorage.removeItem('loadingGateStatuses')
+      localStorage.removeItem('tareWeightStatuses')
+      localStorage.removeItem('wtPostLoadingStatuses')
+      localStorage.removeItem('gateExitStatuses')
+    } catch { }
+  }, [])
+
   const [tareWeights, setTareWeights] = useState<Item[]>(() => {
     const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch { }
@@ -18,10 +28,6 @@ export default function LoadingGateStatus() {
   })
 
   const [gates, setGates] = useState<Item[]>(() => {
-    try {
-      const raw = localStorage.getItem('loadingGateStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
-    } catch { }
     const init = Array.from({ length: 12 }, (_, i) => ({ id: `G-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch { }
     return init
