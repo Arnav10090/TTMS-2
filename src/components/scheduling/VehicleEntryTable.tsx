@@ -193,13 +193,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 w-[140px]">
                   <select value={r.tareWeight} onChange={(e)=>setCell(r.id,'tareWeight',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
                     <option value="">Select</option>
                     {Array.from({length:4},(_,i)=>`TW-${i+1}`).map((tw)=> <option key={tw} value={tw}>{tw}</option>)}
                   </select>
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 w-[140px]">
                   {(() => {
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
@@ -217,13 +217,13 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                     )
                   })()}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-3 w-[140px]">
                   <select value={r.wtPostLoading} onChange={(e)=>setCell(r.id,'wtPostLoading',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
                     <option value="">Select</option>
                     {Array.from({length:4},(_,i)=>`WPL-${i+1}`).map((wpl)=> <option key={wpl} value={wpl}>{wpl}</option>)}
                   </select>
                 </td>
-                <td className="px-4 py-3 text-center">
+                <td className="px-4 py-3 w-[120px] text-center">
                   <div className="flex gap-2 justify-center">
                     <button
                       className="px-3 py-1.5 rounded-ui bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-60"
