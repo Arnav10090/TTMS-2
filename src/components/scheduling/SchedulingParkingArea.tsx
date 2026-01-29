@@ -87,6 +87,14 @@ export default function SchedulingParkingArea({
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
   const [toast, setToast] = useState<{message: string} | null>(null)
 
+  // Clear localStorage on component mount to ensure all cells start green
+  useEffect(() => {
+    try {
+      localStorage.removeItem('parkingColorMap')
+      localStorage.removeItem('vehicleParkingAssignments')
+    } catch {}
+  }, [])
+
   // Sync color map and vehicle assignments from localStorage when updated elsewhere
   useEffect(() => {
     const sync = () => {
@@ -114,7 +122,7 @@ export default function SchedulingParkingArea({
       })
     })
 
-    // Clear parkingColorMap and initialize with all green
+    // Initialize with all green
     try {
       localStorage.setItem('parkingColorMap', JSON.stringify(initMap))
       setColorMap(initMap)
