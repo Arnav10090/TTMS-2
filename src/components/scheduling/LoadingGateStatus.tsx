@@ -12,7 +12,7 @@ function statusColor(s: ItemStatus) {
 
 export default function LoadingGateStatus() {
   // Clear all statuses on mount to ensure fresh start with all green cells
-  React.useEffect(() => {
+  useEffect(() => {
     try {
       localStorage.removeItem('loadingGateStatuses')
       localStorage.removeItem('tareWeightStatuses')
