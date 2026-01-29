@@ -95,6 +95,10 @@ export default function SchedulingParkingArea({
         const saved = localStorage.getItem('parkingColorMap')
         if (saved) setColorMap(JSON.parse(saved))
       } catch {}
+      try {
+        const raw = localStorage.getItem('vehicleParkingAssignments')
+        if (raw) setVehicleAssignments(JSON.parse(raw))
+      } catch {}
       // Force a re-render to update tooltips with new vehicle assignments
       setColorMap(prev => ({ ...prev }))
     }
