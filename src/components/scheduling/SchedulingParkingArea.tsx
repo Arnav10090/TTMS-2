@@ -114,11 +114,10 @@ export default function SchedulingParkingArea({
       })
     })
 
+    // Clear parkingColorMap and initialize with all green
     try {
-      const saved = localStorage.getItem('parkingColorMap')
-      const savedMap = saved ? JSON.parse(saved) : {}
-      // Merge: start with all green, then override with any saved allocations
-      setColorMap({ ...initMap, ...savedMap })
+      localStorage.setItem('parkingColorMap', JSON.stringify(initMap))
+      setColorMap(initMap)
     } catch {
       setColorMap(initMap)
     }
