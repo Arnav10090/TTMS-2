@@ -69,9 +69,11 @@ export default function TTMSDocumentVerificationPage() {
     if (missing.length > 0) {
       alert(`Please complete the following required fields:\n\n${missing.map(f => `• ${f}`).join('\n')}`)
     } else {
+      setIsLoading(true)
       setTimeout(() => {
+        setIsLoading(false)
         alert(`Documents of Vehicle no. ${vehicleRegNo} verified successfully!`)
-      }, 1000)
+      }, 2000)
     }
   }
 
