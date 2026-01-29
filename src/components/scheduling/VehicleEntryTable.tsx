@@ -242,6 +242,14 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                 </td>
                 <td className="px-4 py-3 w-[140px]">
                   {(() => {
+                    // Check if this vehicle has an allocated parking spot
+                    let isParkingAllocated = false
+                    try {
+                      const raw = localStorage.getItem('vehicleParkingAssignments')
+                      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {}
+                      isParkingAllocated = Boolean(map[r.regNo])
+                    } catch {}
+
                     try {
                       const raw = localStorage.getItem('vehicleLoadingGateAssignments')
                       const map = raw ? JSON.parse(raw) as Record<string, string> : {}
@@ -251,7 +259,12 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
                       }
                     } catch {}
                     return (
-                      <select value={r.loadingGate} onChange={(e)=>setCell(r.id,'loadingGate',e.target.value as any)} className="border border-slate-300 rounded px-2 py-1 w-full">
+                      <select
+                        value={r.loadingGate}
+                        onChange={(e)=>setCell(r.id,'loadingGate',e.target.value as any)}
+                        disabled={isParkingAllocated}
+                        className={`border border-slate-300 rounded px-2 py-1 w-full ${isParkingAllocated ? 'bg-slate-50 cursor-not-allowed opacity-60' : ''}`}
+                      >
                         <option value="">Select</option>
                         {Array.from({length:8},(_,i)=>`G-${i+1}`).map((g)=> <option key={g} value={g}>{g}</option>)}
                       </select>
