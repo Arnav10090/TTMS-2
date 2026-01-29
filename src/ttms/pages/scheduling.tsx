@@ -26,7 +26,8 @@ export default function TTMSSchedulingPage() {
         <LoadingGateStatus />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold text-slate-700 mb-4">Scheduling Table</h3>
         <VehicleEntryTable
           rows={s.vehicleEntries}
           onRowsChange={s.setVehicleEntries}
@@ -199,12 +200,14 @@ export default function TTMSSchedulingPage() {
             s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, position: '' } : r))
           }}
         />
+      </div>
+
+      <div className="mt-4">
         <FacilityMap />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+      <div className="mt-4">
         <ManualsList />
-        <MultiSelectDropdown />
       </div>
 
 
