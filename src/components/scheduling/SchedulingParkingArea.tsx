@@ -40,11 +40,29 @@ export default function SchedulingParkingArea({
 
   // Persisted map: `${area}-${label}` -> color class
   const [colorMap, setColorMap] = useState<Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'>>(() => {
+    // Initialize all cells as green on first load
+    const initialMap: Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> = {}
+    grid.forEach(row => {
+      row.forEach(cell => {
+        const k = `${areaKey}-${cell.label}`
+        initialMap[k] = 'bg-green-500'
+      })
+    })
+
     try {
       const saved = localStorage.getItem('parkingColorMap')
-      if (saved) return JSON.parse(saved)
+      if (saved) {
+        const loaded = JSON.parse(saved)
+        return { ...initialMap, ...loaded }
+      }
     } catch {}
-    return {}
+
+    // Save initial green map to localStorage
+    try {
+      localStorage.setItem('parkingColorMap', JSON.stringify(initialMap))
+    } catch {}
+
+    return initialMap
   })
 
   // Track vehicle assignments for re-rendering
