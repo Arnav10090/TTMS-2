@@ -160,6 +160,8 @@ export default function TTMSDocumentVerificationPage() {
                   />
                   <label htmlFor={item.key} className="text-sm text-slate-600 cursor-pointer">
                     {item.label}
+                    {item.required && <span className="text-red-600 ml-1">*</span>}
+                    {!item.required && <span className="text-slate-400 text-xs ml-1">(optional)</span>}
                   </label>
                 </div>
               ))}
@@ -167,7 +169,7 @@ export default function TTMSDocumentVerificationPage() {
           </div>
           <div className="card p-4">
             <h3 className="font-medium text-slate-700 mb-3">RFID / Tracking Module</h3>
-            <RFIDModule extraReady={driverValid && helperValid && allChecklistItemsChecked} />
+            <RFIDModule onProceed={handleProceed} />
           </div>
         </div>
       </div>
