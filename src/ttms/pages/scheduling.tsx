@@ -182,6 +182,7 @@ export default function TTMSSchedulingPage() {
                 const next = items.map(item => item.id === exitId ? { ...item, status: 'available' as const } : item)
                 localStorage.setItem(key, JSON.stringify(next))
                 window.dispatchEvent(new Event('gateExitStatuses-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               }
             } catch { }
             s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, position: '' } : r))
