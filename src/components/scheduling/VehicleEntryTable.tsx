@@ -59,7 +59,8 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
       .flat()
       .filter((cell) => {
         const key = `${area}-${cell.label}`
-        const currentColor = (colorMap[key] ?? spotColor(cell.status))
+        // Default to green if not in colorMap (all cells start as available)
+        const currentColor = (colorMap[key] ?? 'bg-green-500')
         return currentColor === 'bg-green-500'
       })
       .map((cell) => cell.label.toUpperCase())
