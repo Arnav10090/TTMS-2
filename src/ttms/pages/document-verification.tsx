@@ -31,17 +31,44 @@ export default function TTMSDocumentVerificationPage() {
   })
 
   const checklistItems = [
-    { key: 'purchaseOrder', label: 'Purchase Order OK' },
-    { key: 'vehicleRegistration', label: 'Vehicle Registration OK' },
-    { key: 'vehiclePUC', label: 'Vehicle PUC OK' },
-    { key: 'vehicleInsurance', label: 'Vehicle Insurance OK' },
-    { key: 'driverDetails', label: 'Driver Details OK' },
-    { key: 'driverUniqueId', label: 'Driver Unique ID OK' },
-    { key: 'helperDetails', label: 'Helper Details OK' },
-    { key: 'helperUniqueId', label: 'Helper Unique ID OK' },
+    { key: 'purchaseOrder', label: 'Purchase Order OK', required: true },
+    { key: 'vehicleRegistration', label: 'Vehicle Registration OK', required: true },
+    { key: 'vehiclePUC', label: 'Vehicle PUC OK', required: true },
+    { key: 'vehicleInsurance', label: 'Vehicle Insurance OK', required: true },
+    { key: 'driverDetails', label: 'Driver Details OK', required: true },
+    { key: 'driverUniqueId', label: 'Driver Unique ID OK', required: true },
+    { key: 'helperDetails', label: 'Helper Details OK', required: false },
+    { key: 'helperUniqueId', label: 'Helper Unique ID OK', required: false },
   ]
 
-  const allChecklistItemsChecked = Object.values(checklist).every(v => v === true)
+  const getRequiredChecklistItems = () => {
+    return checklistItems.filter(item => item.required)
+  }
+
+  const getMissingFields = () => {
+    const missing: string[] = []
+
+    if (!vehicleRegNo) missing.push('Vehicle Registration Number')
+    if (!driverValid) missing.push('Driver Details (Name, Language, Phone)')
+
+    const requiredItems = getRequiredChecklistItems()
+    requiredItems.forEach(item => {
+      if (!checklist[item.key as keyof typeof checklist]) {
+        missing.push(item.label)
+      }
+    })
+
+    return missing
+  }
+
+  const handleProceed = () => {
+    const missing = getMissingFields()
+    if (missing.length > 0) {
+      alert(`Please complete the following required fields:\n\n${missing.map(f => `• ${f}`).join('\n')}`)
+    } else {
+      alert('All required fields are complete. Proceeding...')
+    }
+  }
 
   const handleChecklistChange = (key: string) => {
     setChecklist(prev => ({ ...prev, [key]: !prev[key as keyof typeof checklist] }))
