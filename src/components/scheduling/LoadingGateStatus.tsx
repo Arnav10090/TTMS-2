@@ -75,6 +75,22 @@ export default function LoadingGateStatus() {
   const [vehicleNo, setVehicleNo] = useState('')
   const vehiclePattern = /^[A-Z]{2}\d{2}-\d{4}$/
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+
+  // Helper to count vehicles at a station
+  const countVehiclesAtStation = (itemId: string, itemType: 'tare' | 'gate' | 'wtpost' | 'exit'): number => {
+    try {
+      const key = itemType === 'tare' ? 'vehicleTareWeightAssignments' : itemType === 'gate' ? 'vehicleLoadingGateAssignments' : itemType === 'wtpost' ? 'vehicleWtPostLoadingAssignments' : 'vehicleGateExitAssignments'
+      const raw = localStorage.getItem(key)
+      const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+      let count = 0
+      for (const assignedId of Object.values(map)) {
+        if (assignedId === itemId) count++
+      }
+      return count
+    } catch { }
+    return 0
+  }
 
   const openConfirm = (gate: Item) => { setPendingGate(gate); setVehicleNo(''); setConfirmOpen(true) }
   const closeConfirm = () => { setConfirmOpen(false); setPendingGate(null) }
