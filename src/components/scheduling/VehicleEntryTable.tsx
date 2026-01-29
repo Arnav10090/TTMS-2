@@ -126,7 +126,7 @@ export default function VehicleEntryTable({ rows, onRowsChange, selectedSlots, p
               ].map((c) => (
                 <th
                   key={c.key}
-                  className={`px-3 py-2 ${c.align ?? 'text-left'} ${c.w} cursor-pointer`}
+                  className={`px-4 py-3 ${c.align ?? 'text-left'} ${c.w} cursor-pointer`}
                   onClick={() => {
                     if (sortKey === (c.key as keyof VehicleEntry)) {
                       setSortDir(sortDir === 'asc' ? 'desc' : 'asc')
