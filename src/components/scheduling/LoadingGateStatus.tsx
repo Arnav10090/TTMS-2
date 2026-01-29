@@ -34,10 +34,6 @@ export default function LoadingGateStatus() {
   })
 
   const [gateExits, setGateExits] = useState<Item[]>(() => {
-    try {
-      const raw = localStorage.getItem('gateExitStatuses')
-      if (raw) return JSON.parse(raw) as Item[]
-    } catch { }
     const init = Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('gateExitStatuses', JSON.stringify(init)) } catch { }
     return init
