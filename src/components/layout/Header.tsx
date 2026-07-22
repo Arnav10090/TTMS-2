@@ -1,13 +1,16 @@
 "use client"
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, memo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { format } from 'date-fns'
 
-export default function Header() {
+const DEFAULT_HEADER_HEIGHT = 64
+
+const Header = memo(function Header() {
   const [now, setNow] = useState<Date | null>(null)
   const [mounted, setMounted] = useState(false)
   const { pathname } = useLocation()
+  const headerRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -16,13 +19,32 @@ export default function Header() {
     return () => clearInterval(t)
   }, [])
 
+  // ResizeObserver to track header height and update CSS custom property
+  useEffect(() => {
+    const headerEl = headerRef.current
+    if (!headerEl) return
+
+    // Set initial height
+    const initialHeight = headerEl.getBoundingClientRect().height || DEFAULT_HEADER_HEIGHT
+    document.documentElement.style.setProperty('--header-height', `${initialHeight}px`)
+
+    // Observe size changes
+    const observer = new ResizeObserver((entries) => {
+      const height = entries[0].contentRect.height || DEFAULT_HEADER_HEIGHT
+      document.documentElement.style.setProperty('--header-height', `${height}px`)
+    })
+
+    observer.observe(headerEl)
+    return () => observer.disconnect()
+  }, [])
+
   const isPtms = pathname.startsWith('/ptms')
   const title = isPtms
     ? 'Pickling Tank Monitoring System (PTMS)'
     : 'Truck Turnaround Time Monitoring System (TTMS)'
 
   return (
-    <header className="bg-white border-b border-slate-200">
+    <header ref={headerRef} className="header-fixed bg-white border-b border-slate-200">
       <div className="w-full px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-slate-700 text-lg font-bold">Customer Name</span>
@@ -39,4 +61,8 @@ export default function Header() {
       </div>
     </header>
   )
-}
+})
+
+Header.displayName = 'Header'
+
+export default Header

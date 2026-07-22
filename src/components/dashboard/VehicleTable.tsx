@@ -51,6 +51,22 @@ function getNextStage(currentStage: StageKey): StageKey | null {
   return currentIndex < order.length - 1 ? order[currentIndex + 1] : null;
 }
 
+// Calculate actual progress percentage based on completed stages
+function calculateActualProgress(row: VehicleRow): number {
+  const order: StageKey[] = [
+    "gateEntry",
+    "tareWeighing",
+    "loading",
+    "postLoadingWeighing",
+    "gateExit",
+  ];
+
+  const completedCount = order.filter(stage => row.stages[stage].state === "completed").length;
+  const totalStages = order.length;
+
+  return Math.round((completedCount / totalStages) * 100);
+}
+
 // Calculate truck idle time for a specific stage
 // Idle time starts counting after 1.5x the standard time for that stage
 function calculateStageIdleTime(row: VehicleRow, stage: StageKey): number {
@@ -106,7 +122,7 @@ function getStageStatus(
   const stdTime = STAGE_STANDARDS[stage];
   const ratio = stdTime ? stageState.waitTime / stdTime : 0;
 
-  // 1) Green Light - Stage completed
+  // 1) Completed - Teal (light) #99F6E4
   if (stageState.state === "completed") {
     return {
       status: "completed" as const,
@@ -122,7 +138,7 @@ function getStageStatus(
     if (stage === 'gateEntry') {
       return {
         status: "active" as const,
-        className: "status-cell status-next",
+        className: "status-cell status-ongoing",
         shouldAlert: false,
         shouldBlink: false,
       };
@@ -131,39 +147,29 @@ function getStageStatus(
     const threshold1_5x = stdTime * 1.5;
     const threshold2x = stdTime * 2.0;
 
-    // Critical - much higher than standard (>= 2x)
-    if (stageState.waitTime >= threshold2x) {
-      return {
-        status: "critical" as const,
-        className: "status-cell status-critical",
-        shouldAlert: true,
-        shouldBlink: true,
-      };
-    }
-
-    // Blink when exceed 1.5x standard
+    // Delayed - Purple (light) #DDD6FE - should blink
     if (stageState.waitTime > threshold1_5x) {
       return {
-        status: "active" as const,
-        className: "status-cell status-next",
+        status: "delayed" as const,
+        className: "status-cell status-delayed",
         shouldAlert: true,
         shouldBlink: true,
       };
     }
 
-    // Normal ongoing stage - orange
+    // Normal ongoing stage - Blue (light) #BFDBFE
     return {
       status: "active" as const,
-      className: "status-cell status-next",
+      className: "status-cell status-ongoing",
       shouldAlert: false,
       shouldBlink: false,
     };
   }
 
-  // Default case
+  // Pending - Slate outline
   return {
     status: "inactive" as const,
-    className: "status-cell status-inactive",
+    className: "status-cell status-pending",
     shouldAlert: false,
     shouldBlink: false,
   };
@@ -243,6 +249,9 @@ function TimeCell({
     }
   };
 
+  // Only show time if stage is completed
+  const displayTime = status === "completed" ? display : "";
+
   return (
     <button
       onClick={handleClick}
@@ -251,18 +260,14 @@ function TimeCell({
       title={`${label} • ${st.state} (${st.waitTime}/${st.stdTime}m)`}
     >
       {status === "completed" && <Check size={14} className="text-white" />}
-      {status === "critical" && <Siren size={14} className="text-white" />}
-      {(status === "active" || status === "inactive") && (
-        <span className="w-2 h-2 rounded-full bg-white/90" />
-      )}
-      <span className="ml-1 font-semibold">{display}</span>
+      {displayTime && <span className="ml-1 font-semibold">{displayTime}</span>}
     </button>
   );
 }
 
 export default function VehicleTable({ data }: { data: VehicleRow[] }) {
-  const [sortKey, setSortKey] = useState<keyof VehicleRow>("reportingTime");
-  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+  const [sortKey, setSortKey] = useState<keyof VehicleRow>("sn");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("asc");
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [day, setDay] = useState<Date | null>(null);
@@ -273,17 +278,12 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
   const [selectedStage, setSelectedStage] = useState<StageKey | null>(null);
   const pageSize = 7;
 
-  // Generate random reporting times in descending order
+  // Use the actual timestamp from the data (generated deterministically in service)
   const dataWithTimes = useMemo(() => {
-    const now = new Date();
-    return data.map((row, index) => {
-      if (!row.reportingTime) {
-        // Generate random time within last 8 hours, with descending order for top vehicles
-        const minutesAgo = Math.floor(Math.random() * 480); // 0-480 minutes (8 hours)
-        const reportingTime = new Date(now.getTime() - minutesAgo * 60000);
-        return { ...row, reportingTime };
-      }
-      return row;
+    return data.map((row) => {
+      // Use existing timestamp, convert strings to Date objects if needed
+      const reportingTime = row.timestamp ? new Date(row.timestamp) : new Date();
+      return { ...row, reportingTime };
     });
   }, [data]);
 
@@ -470,44 +470,20 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
           </label>
           <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg px-3 py-2">
             <div className="flex items-center gap-1.5">
-              <span className="legend-blink-box"></span>
-              <span className="text-xs text-gray-700">Too much time</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "3px",
-                  backgroundColor: "#f59e0b",
-                }}
-              ></span>
-              <span className="text-xs text-gray-700">Ongoing</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "3px",
-                  backgroundColor: "#22c55e",
-                }}
-              ></span>
+              <span className="legend-completed"></span>
               <span className="text-xs text-gray-700">Completed</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "16px",
-                  height: "16px",
-                  borderRadius: "3px",
-                  backgroundColor: "#6b7280",
-                }}
-              ></span>
-              <span className="text-xs text-gray-700">Not reached</span>
+              <span className="legend-ongoing"></span>
+              <span className="text-xs text-gray-700">Ongoing</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="legend-delayed"></span>
+              <span className="text-xs text-gray-700">Delayed</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <span className="legend-pending"></span>
+              <span className="text-xs text-gray-700">Pending</span>
             </div>
           </div>
         </div>
@@ -623,18 +599,18 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
                     <div className="flex items-center gap-2 justify-center">
                       <div className="w-full min-w-[80px]">
                         <ProgressBar
-                          value={row.progress}
+                          value={calculateActualProgress(row)}
                           color={
-                            row.progress >= 80
-                              ? "green"
-                              : row.progress >= 50
-                                ? "yellow"
-                                : "red"
+                            calculateTotalDwellTime(row) === 0
+                              ? "blue"  // On track - Blue
+                              : calculateDwellRatio(row) < 0.3
+                                ? "purple"  // Slight delay - Purple
+                                : "slate"  // Severe delay - Slate (dark)
                           }
                         />
                       </div>
                       <span className="text-xs text-slate-600 tabular-nums w-[28px] text-right">
-                        {Math.round(row.progress)}%
+                        {calculateActualProgress(row)}%
                       </span>
                     </div>
                   </td>
@@ -669,103 +645,120 @@ export default function VehicleTable({ data }: { data: VehicleRow[] }) {
         .status-cell {
           display: inline-flex;
           align-items: center;
-          padding: 2px 6px;
+          justify-content: center;
+          padding: 4px 8px;
           border-radius: 4px;
           font-size: 0.75rem;
           font-weight: 500;
+          min-width: 70px;
+          min-height: 28px;
         }
         
+        /* Completed - Teal (dark) #14b8a6 */
         .status-completed {
-          background-color: #22c55e;
+          background-color: #14b8a6;
           color: white;
         }
         
-        .status-next {
-          /* Ongoing stage - orange */
-          background-color: #f59e0b;
+        /* Ongoing - Blue (dark) #3b82f6 */
+        .status-ongoing {
+          background-color: #3b82f6;
           color: white;
         }
         
-        .status-critical {
-          background-color: #dc2626;
+        /* Delayed - Purple (dark) #9333ea - with blink */
+        .status-delayed {
+          background-color: #9333ea;
           color: white;
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         
-        .status-inactive {
-          background-color: #6b7280;
-          color: white;
+        /* Pending - Slate outline */
+        .status-pending {
+          background-color: transparent;
+          border: 2px solid #64748b;
+          color: #64748b;
         }
 
-        @keyframes legendBlink {
+        /* Legend styles */
+        .legend-completed {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border-radius: 9999px;
+          background-color: #14b8a6;
+        }
+        
+        .legend-ongoing {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border-radius: 9999px;
+          background-color: #3b82f6;
+        }
+        
+        .legend-delayed {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border-radius: 9999px;
+          background-color: #9333ea;
+          animation: delayedBlink 1s ease-in-out infinite;
+        }
+        
+        .legend-pending {
+          display: inline-block;
+          width: 16px;
+          height: 16px;
+          border-radius: 9999px;
+          background-color: transparent;
+          border: 2px solid #64748b;
+        }
+
+        @keyframes delayedBlink {
           0% {
             opacity: 1;
-            background-color: #ef4444; /* Red */
+            background-color: #9333ea;
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.7);
+          }
+          25% {
+            opacity: 0.4;
+            background-color: #c026d3;
+            transform: scale(1.05);
+            box-shadow: 0 0 0 4px rgba(192, 38, 211, 0.4);
           }
           50% {
-             opacity: 0.1;
-             background-color: #fbbf24; /* Amber */
+            opacity: 0.2;
+            background-color: #e879f9;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 8px rgba(232, 121, 249, 0.2);
+          }
+          75% {
+            opacity: 0.4;
+            background-color: #c026d3;
+            transform: scale(1.05);
+            box-shadow: 0 0 0 4px rgba(192, 38, 211, 0.4);
           }
           100% {
             opacity: 1;
-            background-color: #ef4444; /* Red */
+            background-color: #9333ea;
+            transform: scale(1);
+            box-shadow: 0 0 0 0 rgba(147, 51, 234, 0.7);
           }
         }
- 
- .legend-blink-box {
-   display: inline-block;
-   width: 16px;
-   height: 16px;
-   border-radius: 3px;
-   background-color: #ef4444;
-   animation: legendBlink 0.8s ease-in-out infinite;
- }
         
         .hard-blink {
-  animation: urgentBlink 0.8s ease-in-out infinite;
-}
+          animation: delayedBlink 0.8s ease-in-out infinite;
+        }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: .5;
-  }
-}
-
-@keyframes urgentBlink {
-  0% {
-    opacity: 1;
-    background-color: #ef4444;
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-  25% {
-    opacity: 0.3;
-    background-color: #fbbf24;
-    transform: scale(1.1);
-    box-shadow: 0 0 0 8px rgba(251, 191, 36, 0.3);
-  }
-  50% {
-    opacity: 0.1;
-    background-color: #fbbf24;
-    transform: scale(1.15);
-    box-shadow: 0 0 0 12px rgba(251, 191, 36, 0.1);
-  }
-  75% {
-    opacity: 0.3;
-    background-color: #ef4444;
-    transform: scale(1.1);
-    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.3);
-  }
-  100% {
-    opacity: 1;
-    background-color: #ef4444;
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-  }
-}
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: .5;
+          }
+        }
       `}</style>
 
       <VehicleLocationModal

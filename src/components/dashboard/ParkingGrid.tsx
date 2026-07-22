@@ -6,17 +6,73 @@ import { useEffect, useMemo, useState } from "react";
 function Spot({
   color,
   label,
+  area,
 }: {
   color: "bg-green-500" | "bg-red-500" | "bg-yellow-500";
   label: string;
+  area: "AREA-1" | "AREA-2";
 }) {
+  const [vehicles, setVehicles] = useState<string[]>([]);
+
+  // Get allocated vehicles for this spot
+  const getVehiclesForSpot = (): string[] => {
+    try {
+      const raw = localStorage.getItem('vehicleParkingAssignments');
+      const map = raw ? JSON.parse(raw) as Record<string, { area: string; label: string }> : {};
+      const vehicles: string[] = [];
+
+      for (const [vehicle, assignment] of Object.entries(map)) {
+        if (assignment.area === area && assignment.label.toUpperCase() === label.toUpperCase()) {
+          vehicles.push(vehicle);
+        }
+      }
+      return vehicles;
+    } catch {
+      return [];
+    }
+  };
+
+  // Initialize and listen for updates
+  useEffect(() => {
+    setVehicles(getVehiclesForSpot());
+
+    const handleUpdate = () => {
+      setVehicles(getVehiclesForSpot());
+    };
+
+    window.addEventListener('vehicleParkingAssignments-updated', handleUpdate as any);
+    window.addEventListener('storage', handleUpdate);
+
+    return () => {
+      window.removeEventListener('vehicleParkingAssignments-updated', handleUpdate as any);
+      window.removeEventListener('storage', handleUpdate);
+    };
+  }, [area, label]);
+
+  const statusLabel = color === 'bg-green-500' ? 'available' : color === 'bg-red-500' ? 'occupied' : 'allocated';
+  const tooltipText = vehicles.length > 0 ? `${label} - ${statusLabel}` : `${label} - ${statusLabel}`;
+
   return (
-    <div
-      className={`relative rounded-ui ${color} text-white flex items-center justify-center h-10 md:h-12`}
-      title={label}
-    >
-      <span className="text-[11px] md:text-xs font-medium">{label}</span>
-      <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
+    <div className="relative group">
+      <div
+        className={`relative rounded-ui ${color} text-white flex items-center justify-center h-10 md:h-12`}
+        title={tooltipText}
+      >
+        <span className="text-[11px] md:text-xs font-medium">{label}</span>
+        <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
+      </div>
+      <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-w-xs whitespace-nowrap">
+        <div className="font-semibold mb-1">{label} - {statusLabel}</div>
+        {vehicles.length > 0 ? (
+          <div className="space-y-1">
+            {vehicles.map((vehicle, idx) => (
+              <div key={idx} className="text-white/90">{vehicle}</div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-white/90">No vehicles allocated</div>
+        )}
+      </div>
     </div>
   );
 }
@@ -34,7 +90,7 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
     try {
       const saved = localStorage.getItem("parkingColorMap");
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch { }
     return {};
   });
 
@@ -44,12 +100,13 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
     status === "available"
       ? "bg-green-500"
       : status === "occupied"
-      ? "bg-red-500"
-      : "bg-yellow-500";
+        ? "bg-red-500"
+        : "bg-yellow-500";
 
   // (Removed separate load effect; state is hydrated synchronously)
 
-  // Ensure every current cell has a color; for new/missing entries, initialize from current status
+  // Ensure every current cell has a color; for new/missing entries, initialize as green
+  // Dashboard should respect the scheduling page state from localStorage
   useEffect(() => {
     const next: Record<
       string,
@@ -60,8 +117,10 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
       g.forEach((row) =>
         row.forEach((cell) => {
           const k = `${areaKey}-${cell.label}`;
+
+          // Only initialize if not already set (preserve scheduling page state)
           if (!next[k]) {
-            next[k] = statusToColor(cell.status);
+            next[k] = 'bg-green-500'; // Default to green for new cells
           }
         })
       );
@@ -77,7 +136,7 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
       setColorMap(next);
       try {
         localStorage.setItem("parkingColorMap", JSON.stringify(next));
-      } catch {}
+      } catch { }
     }
   }, [data, colorMap]);
 
@@ -86,13 +145,15 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
       try {
         const saved = localStorage.getItem("parkingColorMap");
         if (saved) setColorMap(JSON.parse(saved));
-      } catch {}
+      } catch { }
     };
     window.addEventListener("storage", sync);
     window.addEventListener("parkingColorMap-updated", sync as any);
+    window.addEventListener("vehicleParkingAssignments-updated", sync as any);
     return () => {
       window.removeEventListener("storage", sync);
       window.removeEventListener("parkingColorMap-updated", sync as any);
+      window.removeEventListener("vehicleParkingAssignments-updated", sync as any);
     };
   }, []);
 
@@ -102,11 +163,27 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
       label: string;
     }[];
     const total = flat.length;
-    const available = flat.filter((c) => c.status === "available").length;
-    const occupied = flat.filter((c) => c.status === "occupied").length;
-    const reserved = flat.filter((c) => c.status === "reserved").length;
+
+    // Calculate stats based on actual colorMap (synced with scheduling page)
+    let available = 0;
+    let occupied = 0;
+    let reserved = 0;
+
+    flat.forEach((cell) => {
+      const k = `${active}-${cell.label}`;
+      const color = colorMap[k] ?? 'bg-green-500'; // Default to green
+
+      if (color === 'bg-green-500') {
+        available++;
+      } else if (color === 'bg-red-500') {
+        occupied++;
+      } else if (color === 'bg-yellow-500') {
+        reserved++;
+      }
+    });
+
     return [{ area: active, total, available, occupied, reserved }];
-  }, [data, active]);
+  }, [data, active, colorMap]);
 
   const Mini = ({
     label,
@@ -122,15 +199,14 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
         {label}
       </div>
       <div
-        className={`text-sm font-bold ${
-          color === "green"
+        className={`text-sm font-bold ${color === "green"
             ? "text-green-600"
             : color === "red"
-            ? "text-red-600"
-            : color === "yellow"
-            ? "text-yellow-600"
-            : "text-blue-600"
-        }`}
+              ? "text-red-600"
+              : color === "yellow"
+                ? "text-yellow-600"
+                : "text-blue-600"
+          }`}
       >
         {value}
       </div>
@@ -168,11 +244,10 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
             <button
               key={a}
               onClick={() => setActive(a)}
-              className={`px-3 py-1.5 min-w-[64px] flex items-center justify-center rounded-full text-sm whitespace-nowrap leading-none ${
-                active === a
+              className={`px-3 py-1.5 min-w-[64px] flex items-center justify-center rounded-full text-sm whitespace-nowrap leading-none ${active === a
                   ? "bg-cssPrimary text-white"
                   : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
+                }`}
             >
               {a}
             </button>
@@ -184,7 +259,7 @@ export default function ParkingGrid({ data }: { data: ParkingData }) {
           row.map((cell, c) => {
             const k = `${active}-${cell.label}`;
             const color = colorMap[k] ?? statusToColor(cell.status);
-            return <Spot key={`${r}-${c}`} color={color} label={cell.label} />;
+            return <Spot key={`${r}-${c}`} color={color} label={cell.label} area={active} />;
           })
         )}
       </div>

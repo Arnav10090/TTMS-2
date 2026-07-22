@@ -26,7 +26,7 @@ export default function AlertBanner() {
   return (
     <div className="ticker" role="status" aria-live="polite">
       {/* Duplicate content to achieve seamless continuous scroll */}
-      <div className="ticker-inner" style={style}>
+      <div className="ticker-inner text-black" style={style}>
         {text} &nbsp; • &nbsp; {text}
       </div>
     </div>

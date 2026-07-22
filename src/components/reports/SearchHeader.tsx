@@ -6,6 +6,7 @@ import Badge from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useRealTimeData } from '@/hooks/useRealTimeData'
+import { VehicleRow } from '@/types/vehicle'
 
 const shifts = ['Shift', 'Shift-A', 'Shift-B', 'Shift-C'] as const
 
@@ -14,17 +15,21 @@ type Props = {
   onVehicleChange?: (reg: string) => void
   shift: typeof shifts[number]
   onShiftChange: (s: typeof shifts[number]) => void
+  vehicleList?: VehicleRow[]
 }
 
-export default function SearchHeader({ value, onVehicleChange, shift, onShiftChange }: Props) {
+export default function SearchHeader({ value, onVehicleChange, shift, onShiftChange, vehicleList }: Props) {
   const { vehicleData } = useRealTimeData()
   const [query, setQuery] = useState(value ?? '')
   const [open, setOpen] = useState(false)
   const [showAll, setShowAll] = useState(false)
 
   const options = useMemo(() => {
-    const base = vehicleData.map((v) => v.regNo)
-    const set = Array.from(new Set(base))
+    const src = vehicleList ?? vehicleData
+    // Only include vehicles whose Gate Exit stage is completed
+    const completedOnly = src.filter((v) => v.stages && v.stages.gateExit && v.stages.gateExit.state === 'completed')
+    const base = completedOnly.map((v) => v.regNo)
+    let set = Array.from(new Set(base))
 
     // Filter vehicles based on selected shift
     let filteredByShift = set
@@ -145,7 +150,7 @@ export default function SearchHeader({ value, onVehicleChange, shift, onShiftCha
           </SelectTrigger>
           <SelectContent className="bg-popover border-border z-50 shadow-lg">
             {shifts.map((s) => (
-              <SelectItem key={s} value={s} className="hover:bg-primary/10 cursor-pointer">{s}</SelectItem>
+              <SelectItem key={s} value={s} className="hover:bg-primary/10 cursor-pointer">{s === 'Shift' ? 'All' : s}</SelectItem>
             ))}
           </SelectContent>
         </Select>

@@ -1,10 +1,12 @@
-export default function ProgressBar({ value, color = 'blue', showLabel = false }: { value: number; color?: 'blue'|'green'|'yellow'|'red'; showLabel?: boolean }) {
+export default function ProgressBar({ value, color = 'blue', showLabel = false }: { value: number; color?: 'blue'|'green'|'yellow'|'red'|'purple'|'slate'; showLabel?: boolean }) {
   const clamped = Math.max(0, Math.min(100, Math.round(value)))
   const colorMap = {
-    blue: '#3b82f6',
+    blue: '#3b82f6',      // On track
     green: '#10b981',
     yellow: '#f59e0b',
     red: '#ef4444',
+    purple: '#a855f7',    // Slight delay
+    slate: '#475569',     // Severe delay (dark)
   }
   const fillColor = colorMap[color]
   const labelColor = clamped >= 60 ? '#ffffff' : '#475569'

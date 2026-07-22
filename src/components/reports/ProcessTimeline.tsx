@@ -41,7 +41,7 @@ export default function ProcessTimeline({
       }}
     >
       <div className="flex items-center gap-3 mb-2">
-        <h3 className="text-white font-semibold">Process Timeline</h3>
+        <h3 className="text-black font-semibold">Process Timeline</h3>
         {vehicle ? (
           <span className="text-white text-sm font-bold">{vehicle}</span>
         ) : null}
@@ -64,11 +64,11 @@ export default function ProcessTimeline({
                   background: colorMap[s.key],
                 }}
               >
-                <div className="flex items-center gap-2 text-white">
+                <div className="flex items-center gap-2 text-black">
                   <span className="opacity-90">{iconMap[s.key as ReportStepKey]}</span>
                   <span className="text-sm font-medium">{s.label}</span>
                 </div>
-                <div className="text-white/90 text-xl font-bold mt-1">{s.minutes} min</div>
+                <div className="text-black/90 text-xl font-bold mt-1">{s.minutes} min</div>
                 {idx < steps.length - 1 && (
                   <div className="absolute -right-2 top-1/2 -translate-y-1/2 h-3 w-3 rotate-45 bg-white/30" />
                 )}

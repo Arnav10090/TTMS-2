@@ -23,6 +23,11 @@ export default function VehicleQueueTable({
   const [remarks, setRemarks] = useState<Record<string, string>>({})
   // Store items currently being edited (true = show input)
   const [editing, setEditing] = useState<Record<string, boolean>>({})
+  // Track verified vehicles (doc verification completed)
+  const [verifiedVehicles, setVerifiedVehicles] = useState<string[]>([])
+
+  // Helper to normalize regNo for comparison
+  const normalizeRegNo = (r: string) => r.replace(/\s|-/g, '').toUpperCase()
 
   useEffect(() => {
     try {
@@ -31,6 +36,21 @@ export default function VehicleQueueTable({
         setRemarks(JSON.parse(stored))
       }
     } catch { }
+
+    // Load verified vehicles
+    const loadVerified = () => {
+      try {
+        const raw = localStorage.getItem('verifiedVehicles')
+        if (raw) {
+          setVerifiedVehicles(JSON.parse(raw))
+        }
+      } catch { }
+    }
+    loadVerified()
+
+    // Listen for verified vehicles updates
+    window.addEventListener('verifiedVehicles-updated', loadVerified)
+    return () => window.removeEventListener('verifiedVehicles-updated', loadVerified)
   }, [])
 
   const handleRemarkChange = (regNo: string, val: string) => {
@@ -90,19 +110,19 @@ export default function VehicleQueueTable({
           </thead>
           <tbody>
             {topTen.map((vehicle, index) => {
-              const reportingMinutes = index * 5
-              const reportingTime = formatTime(reportingMinutes)
+              const reportingTime = vehicle.timestamp ? new Date(vehicle.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) : formatTime(index * 5)
               const savedValue = remarks[vehicle.regNo]
               const isEditing = editing[vehicle.regNo] ?? (!savedValue) // Default to edit if no value
+              const isVerified = verifiedVehicles.includes(normalizeRegNo(vehicle.regNo))
 
               return (
                 <tr
                   key={vehicle.sn}
                   className={`${index % 2 === 0 ? 'bg-white' : 'bg-[#f9fafb]'} border-t border-[#e5e7eb] hover:bg-blue-50`}
                 >
-                  <td className="px-3 py-2 font-medium text-gray-900 text-center">{index + 1}</td>
-                  <td className="px-3 py-2 font-medium text-gray-900 text-center">{vehicle.regNo}</td>
-                  <td className="px-3 py-2 text-gray-700 text-center">{reportingTime}</td>
+                  <td className={`px-3 py-2 font-medium text-center ${isVerified ? 'text-red-600' : 'text-gray-900'}`}>{index + 1}</td>
+                  <td className={`px-3 py-2 font-medium text-center ${isVerified ? 'text-red-600' : 'text-gray-900'}`}>{vehicle.regNo}</td>
+                  <td className={`px-3 py-2 text-center ${isVerified ? 'text-red-600' : 'text-gray-700'}`}>{reportingTime}</td>
                   <td className="px-3 py-2 text-gray-700 text-center align-middle">
                     {isEditing ? (
                       <div className="flex items-center gap-2 w-full">
@@ -145,9 +165,13 @@ export default function VehicleQueueTable({
                   <td className="px-3 py-2 text-center">
                     <button
                       onClick={() => onVerifyDocs(vehicle.regNo)}
-                      className="px-3 py-1.5 rounded-ui bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors"
+                      disabled={isVerified}
+                      className={`px-3 py-1.5 rounded-ui text-sm font-medium transition-colors ${isVerified
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
+                        }`}
                     >
-                      Verify Docs
+                      {isVerified ? 'Verified' : 'Verify Docs'}
                     </button>
                   </td>
                 </tr>

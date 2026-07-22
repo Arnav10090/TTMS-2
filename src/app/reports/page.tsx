@@ -11,11 +11,11 @@ import { useRealTimeData } from '@/hooks/useRealTimeData'
 import { VehicleRow } from '@/types/vehicle'
 
 const baseSteps: ReportStep[] = [
-  { key: 'gateEntry', label: 'Gate Entry', minutes: 15, color: '#1976D2' },
-  { key: 'tareWeight', label: 'Tare Weight', minutes: 9, color: '#9E9E9E' },
-  { key: 'loading', label: 'Loading', minutes: 35, color: '#FF9800' },
-  { key: 'postLoadingWeight', label: 'Weight after Loading', minutes: 13, color: '#FFC107' },
-  { key: 'gateExit', label: 'Gate Exit', minutes: 18, color: '#4CAF50' },
+  { key: 'gateEntry', label: 'Gate Entry', minutes: 5, color: '#1976D2' },
+  { key: 'tareWeight', label: 'Tare Weight', minutes: 15, color: '#9E9E9E' },
+  { key: 'loading', label: 'Loading', minutes: 75, color: '#FF9800' },
+  { key: 'postLoadingWeight', label: 'Weight after Loading', minutes: 25, color: '#FFC107' },
+  { key: 'gateExit', label: 'Gate Exit', minutes: 30, color: '#4CAF50' },
 ]
 
 function mapVehicleToSteps(row: VehicleRow): ReportStep[] {
@@ -40,7 +40,10 @@ function mapVehicleToSteps(row: VehicleRow): ReportStep[] {
 export default function Page() {
   const { vehicleData } = useRealTimeData()
 
-  const [vehicle, setVehicle] = useState<string>('')
+  // Only include vehicles whose Gate Exit stage is completed for KPIs and dropdown
+  const completedVehicles = vehicleData.filter((v) => v.stages && v.stages.gateExit && v.stages.gateExit.state === 'completed')
+
+  const [vehicle, setVehicle] = useState<string>('MH12AB4829')
   const [shift, setShift] = useState<'Day'|'Shift-A'|'Shift-B'|'Shift-C'>('Day')
   const [active, setActive] = useState<ReportStepKey>('loading')
   const [steps, setSteps] = useState<ReportStep[]>(baseSteps)
@@ -79,12 +82,12 @@ export default function Page() {
       <div className="space-y-4">
         {/* KPI cards row */}
         <div className="w-full">
-          <SummaryCards horizontal />
+          <SummaryCards horizontal vehicleData={completedVehicles} />
         </div>
 
         {/* Vehicle filter */}
         <div>
-          <SearchHeader value={vehicle} onVehicleChange={setVehicle} shift={shift} onShiftChange={setShift} />
+          <SearchHeader value={vehicle} onVehicleChange={setVehicle} shift={shift} onShiftChange={setShift} vehicleList={completedVehicles} />
         </div>
 
         {/* Timeline and total bar */}

@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useMemo, useState } from 'react'
-import DashboardLayout from '@/components/layout/DashboardLayout'
 import SearchHeader from '@/components/reports/SearchHeader'
 import ProcessTimeline from '@/components/reports/ProcessTimeline'
 import SummaryCards from '@/components/reports/SummaryCards'
@@ -42,6 +41,11 @@ function mapVehicleToSteps(row: VehicleRow): ReportStep[] {
 
 export default function TTMSReportsPage() {
   const { vehicleData } = useRealTimeData()
+  // Only include vehicles whose Gate Exit stage is completed for KPIs and dropdown
+  const completedVehicles = vehicleData.filter((v) => v.stages && v.stages.gateExit && v.stages.gateExit.state === 'completed')
+
+  const hasCompleted = completedVehicles.length > 0
+  const zeroSteps = baseSteps.map((s) => ({ ...s, minutes: 0 }))
 
   const [vehicle, setVehicle] = useState<string>('')
   const [shift, setShift] = useState<'Shift'|'Shift-A'|'Shift-B'|'Shift-C'>('Shift')
@@ -58,6 +62,7 @@ export default function TTMSReportsPage() {
   }, [])
 
   useEffect(() => {
+    if (!hasCompleted) return
     const iv = setInterval(() => {
       setSteps((prev) => prev.map((s) => ({
         ...s,
@@ -68,11 +73,15 @@ export default function TTMSReportsPage() {
   }, [])
 
   useEffect(() => {
+    if (!hasCompleted) {
+      setSteps(zeroSteps)
+      return
+    }
     if (!vehicle) {
       setSteps(baseSteps)
       return
     }
-    const row = vehicleData.find((r) => r.regNo === vehicle)
+    const row = completedVehicles.find((r) => r.regNo === vehicle)
     if (row) setSteps(mapVehicleToSteps(row))
     else setSteps(baseSteps)
   }, [vehicle, vehicleData])
@@ -80,7 +89,7 @@ export default function TTMSReportsPage() {
   const totals = useMemo(() => steps.reduce((t, s) => t + s.minutes, 0), [steps])
 
   return (
-    <DashboardLayout>
+    <>
       <div className="space-y-4">
         <div className="flex items-center justify-end gap-4 mb-4">
           <TimeRangeToggle
@@ -96,24 +105,24 @@ export default function TTMSReportsPage() {
         </div>
 
         <div className="w-full">
-          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} vehicleData={vehicleData} />
+          <SummaryCards horizontal range={range} customFrom={customFrom} customTo={customTo} vehicleData={completedVehicles} />
         </div>
 
         <div className="w-full">
-          <DwellTimeBars vehicleData={vehicleData} range={range} customFrom={customFrom} customTo={customTo} />
+          <DwellTimeBars vehicleData={completedVehicles} range={range} customFrom={customFrom} customTo={customTo} />
         </div>
 
         <div>
-          <SearchHeader value={vehicle} onVehicleChange={setVehicle} shift={shift} onShiftChange={setShift} />
+          <SearchHeader value={vehicle} onVehicleChange={setVehicle} shift={shift} onShiftChange={setShift} vehicleList={completedVehicles} />
         </div>
 
         <div className="space-y-4">
-          <ProcessTimeline steps={steps} active={active} onSelect={setActive} vehicle={vehicle} />
+          <ProcessTimeline steps={steps} active={active} onSelect={setActive} vehicle={hasCompleted ? vehicle : undefined} />
           <TotalTimeStackedBar steps={steps} active={active} onSelect={setActive} />
-          <DwellTimeVisualization vehicle={vehicleData.find((v) => v.regNo === vehicle)} />
+          <DwellTimeVisualization vehicle={hasCompleted ? vehicleData.find((v) => v.regNo === vehicle) : undefined} />
         </div>
 
       </div>
-    </DashboardLayout>
+    </>
   )
 }

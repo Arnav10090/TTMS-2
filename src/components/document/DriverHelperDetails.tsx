@@ -38,6 +38,10 @@ const LANGUAGES = [
 ];
 
 export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }: { vehicleRegNo?: string; onValidationChange?: (valid: { driver: boolean; helper: boolean }) => void }) {
+  const normalize = (r?: string) => (r || '').replace(/\s|-/g, '').toUpperCase()
+
+  const storageKeyFor = (prefix: 'driver' | 'helper', reg?: string) => `${prefix}Details-${normalize(reg)}`
+
   const [driver, setDriver] = useState<Person>({
     name: "",
     language: "",
@@ -52,6 +56,18 @@ export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }
     locationOn: false,
     locationShared: false,
   });
+  // Load persisted data for the current vehicle
+  useEffect(() => {
+    try {
+      if (!vehicleRegNo) return
+      const dk = storageKeyFor('driver', vehicleRegNo)
+      const hk = storageKeyFor('helper', vehicleRegNo)
+      const savedDriver = localStorage.getItem(dk)
+      const savedHelper = localStorage.getItem(hk)
+      if (savedDriver) setDriver(JSON.parse(savedDriver))
+      if (savedHelper) setHelper(JSON.parse(savedHelper))
+    } catch { }
+  }, [vehicleRegNo])
 
   // Prefill demo driver/helper details when vehicleRegNo is provided
   useEffect(() => {
@@ -60,16 +76,61 @@ export default function DriverHelperDetails({ vehicleRegNo, onValidationChange }
       setHelper({ name: '', language: '', phone: '', locationOn: false, locationShared: false })
       return
     }
+
+    // Always prefill with fresh data (location checkboxes unchecked) - don't check for existing data
+    if (vehicleRegNo === 'MH12AB4829') {
+      const driverData = { name: 'Mohan Kumar', language: 'Hindi', phone: '9009009009', locationOn: false, locationShared: false, phoneVerified: false }
+      const helperData = { name: 'Sohan Kumar', language: 'Hindi', phone: '8008008008', locationOn: false, locationShared: false, phoneVerified: false }
+      setDriver(driverData)
+      setHelper(helperData)
+      try {
+        localStorage.setItem(storageKeyFor('driver', vehicleRegNo), JSON.stringify(driverData))
+        localStorage.setItem(storageKeyFor('helper', vehicleRegNo), JSON.stringify(helperData))
+      } catch {}
+      return
+    }
+
+    // For other vehicles, check if data exists first
+    try {
+      const dk = storageKeyFor('driver', vehicleRegNo)
+      const hk = storageKeyFor('helper', vehicleRegNo)
+      const hasDriver = !!localStorage.getItem(dk)
+      const hasHelper = !!localStorage.getItem(hk)
+      if (hasDriver || hasHelper) return
+    } catch {}
+
     const digits = vehicleRegNo.replace(/\D/g, '')
     const last4 = (digits ? digits.slice(-4) : '0001')
     const makePhone = (prefix: string) => (prefix + last4).padEnd(10, '0').slice(0, 10)
-    setDriver({ name: 'John Doe', language: 'English', phone: makePhone('90000'), locationOn: false, locationShared: false, phoneVerified: false })
-    setHelper({ name: 'Jane Smith', language: 'Hindi', phone: makePhone('90001'), locationOn: false, locationShared: false, phoneVerified: false })
+    const driverData = { name: 'John Doe', language: 'English', phone: makePhone('90000'), locationOn: false, locationShared: false, phoneVerified: false }
+    const helperData = { name: 'Jane Smith', language: 'Hindi', phone: makePhone('90001'), locationOn: false, locationShared: false, phoneVerified: false }
+    setDriver(driverData)
+    setHelper(helperData)
+    try {
+      localStorage.setItem(storageKeyFor('driver', vehicleRegNo), JSON.stringify(driverData))
+      localStorage.setItem(storageKeyFor('helper', vehicleRegNo), JSON.stringify(helperData))
+    } catch {}
   }, [vehicleRegNo])
 
+  // Persist driver changes to localStorage per-vehicle
   useEffect(() => {
-    const dValid = driver.name.trim().length > 0 && driver.language.trim().length > 0 && driver.phone.length === 10 && driver.phoneVerified
-    const hValid = helper.name.trim().length > 0 && helper.language.trim().length > 0 && helper.phone.length === 10 && helper.phoneVerified
+    try {
+      if (!vehicleRegNo) return
+      if (driver.name) localStorage.setItem(storageKeyFor('driver', vehicleRegNo), JSON.stringify(driver))
+    } catch {}
+  }, [driver, vehicleRegNo])
+
+  // Persist helper changes to localStorage per-vehicle
+  useEffect(() => {
+    try {
+      if (!vehicleRegNo) return
+      if (helper.name) localStorage.setItem(storageKeyFor('helper', vehicleRegNo), JSON.stringify(helper))
+    } catch {}
+  }, [helper, vehicleRegNo])
+
+  useEffect(() => {
+    const dValid = driver.name.trim().length > 0 && driver.language.trim().length > 0 && driver.phone.length === 10 && !!driver.phoneVerified
+    const hValid = helper.name.trim().length > 0 && helper.language.trim().length > 0 && helper.phone.length === 10 && !!helper.phoneVerified
     onValidationChange?.({ driver: dValid, helper: hValid })
   }, [driver, helper, onValidationChange])
 
@@ -129,7 +190,7 @@ function Section({
   }, [person.language]);
 
   const handlePhoneChange = (val: string) => {
-    const digits = val.replace(/\D/g, "").slice(0,10);
+    const digits = val.replace(/\D/g, "").slice(0, 10);
     onChange({ ...person, phone: digits, phoneVerified: false });
     setVerified(false);
     setOtpSent(false);
@@ -225,8 +286,8 @@ function Section({
                 readOnly={customCommitted}
                 placeholder="Enter custom language"
                 className={`flex-1 border border-slate-300 rounded-ui px-3 py-2 ${customCommitted
-                    ? "bg-slate-100 text-slate-700 cursor-default"
-                    : ""
+                  ? "bg-slate-100 text-slate-700 cursor-default"
+                  : ""
                   }`}
               />
               {customCommitted ? (

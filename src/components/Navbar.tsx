@@ -4,18 +4,52 @@ import { ThemeToggle } from './ThemeToggle';
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@/components/ui/tooltip';
 import { useLastStatsUpdate } from '@/lib/lastUpdate';
 import { formatDateTimeDisplay } from '@/lib/datetime';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface NavbarProps {
   isCollapsed: boolean;
 }
 
+const DEFAULT_HEADER_HEIGHT = 64;
+
 export const Navbar = ({ isCollapsed }: NavbarProps) => {
   const [now, setNow] = useState<Date>(() => new Date());
+  const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const id = setInterval(() => setNow(new Date()), 1000);
     return () => clearInterval(id);
+  }, []);
+
+  // ResizeObserver to track header height and update CSS custom property
+  useEffect(() => {
+    const headerEl = headerRef.current;
+    if (!headerEl) return;
+
+    // Set initial height
+    const initialHeight = headerEl.getBoundingClientRect().height || DEFAULT_HEADER_HEIGHT;
+    document.documentElement.style.setProperty('--header-height', `${initialHeight}px`);
+
+    // Check if ResizeObserver is available
+    if (typeof ResizeObserver === 'undefined') {
+      console.warn('ResizeObserver is not available. Using default header height.');
+      return;
+    }
+
+    // Observe size changes
+    const observer = new ResizeObserver((entries) => {
+      try {
+        const height = entries[0].contentRect.height || DEFAULT_HEADER_HEIGHT;
+        document.documentElement.style.setProperty('--header-height', `${height}px`);
+      } catch (error) {
+        console.error('Error updating header height:', error);
+        // Fallback to default height on error
+        document.documentElement.style.setProperty('--header-height', `${DEFAULT_HEADER_HEIGHT}px`);
+      }
+    });
+
+    observer.observe(headerEl);
+    return () => observer.disconnect();
   }, []);
 
   const LastUpdatedText = () => {
@@ -39,7 +73,14 @@ export const Navbar = ({ isCollapsed }: NavbarProps) => {
 
   return (
     <header
-      className={`fixed top-0 right-0 ${isCollapsed ? 'left-20' : 'left-64'} h-16 glass-panel border-b border-border/50 flex items-center justify-between px-6 z-40 transition-all duration-300`}
+      ref={headerRef}
+      className={`w-full h-16 glass-panel border-b border-border/50 flex items-center justify-between px-6`}
+      style={{
+        // Use transform instead of left/right for better performance
+        transform: isCollapsed ? 'translateX(5rem)' : 'translateX(16rem)',
+        transition: 'transform 300ms ease-in-out',
+        width: isCollapsed ? 'calc(100% - 5rem)' : 'calc(100% - 16rem)',
+      }}
     >
       <div className="flex items-center gap-3">
         <TankIcon className="w-6 h-6 text-primary" />

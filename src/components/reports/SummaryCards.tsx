@@ -60,10 +60,11 @@ export default function SummaryCards({ horizontal = false, range = 'today', cust
       avgDwellTime: Math.round(scaleNumberByRange(dwellMetrics.avgDwellTime, range, undefined, customFrom, customTo) * 10) / 10,
       dwellRatio: dwellMetrics.dwellRatio, // Already in percentage form
     }
+    const trucksCount = vehicleData.length
     return {
       ...c,
-      primary: { ...c.primary, value: Math.round(scaleNumberByRange(c.primary.value, range, undefined, customFrom, customTo)) },
-      metric: { ...c.metric, total: scaledMetricTotal, avg: Math.round(scaleNumberByRange(c.metric.avg, range, undefined, customFrom, customTo) * 10) / 10 },
+      primary: { ...c.primary, value: Math.round(scaleNumberByRange(trucksCount, range, undefined, customFrom, customTo)) },
+      metric: { ...c.metric, total: scaledMetricTotal, avg: Math.round(scaleNumberByRange(dwellMetrics.avgDwellTime, range, undefined, customFrom, customTo) * 10) / 10 },
       dwell: scaledDwell,
     }
   })

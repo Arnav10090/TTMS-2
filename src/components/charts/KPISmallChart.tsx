@@ -3,14 +3,14 @@
 import { ResponsiveContainer, LineChart, Line, Tooltip } from 'recharts'
 import { RangeMode } from '@/components/ui/TimeRangeToggle'
 import { CapacityData, TurnaroundData, VehiclesData, DispatchData } from '@/types/kpi'
-import { rangeFactor } from '@/utils/range'
+// All time ranges now show the same real-time values (no scaling)
 
 function daysInMonth(year: number, month: number) {
   return new Date(year, month + 1, 0).getDate()
 }
 
-export default function KPISmallChart({ metric, capacity, turnaround, vehicles, dispatch, range, height } : {
-  metric: 'capacity'|'ttr'|'vehicles'|'dispatch'
+export default function KPISmallChart({ metric, capacity, turnaround, vehicles, dispatch, range, height }: {
+  metric: 'capacity' | 'ttr' | 'vehicles' | 'dispatch'
   capacity?: CapacityData
   turnaround?: TurnaroundData
   vehicles?: VehiclesData
@@ -39,20 +39,14 @@ export default function KPISmallChart({ metric, capacity, turnaround, vehicles, 
     const base = turnaround ? Math.max(0, Math.round(turnaround.avgDay)) : 0
     data = makeSeries(base, 0.12)
   } else if (metric === 'vehicles') {
-    let total = 0
-    if (range === 'today') total = vehicles ? (vehicles.inDay + vehicles.outDay) : 0
-    else if (range === 'monthly') total = vehicles ? Math.max(0, Math.round(vehicles.inCum / Math.max(1, points))) : 0
-    else total = vehicles ? Math.max(0, Math.round(vehicles.inCum / 12)) : 0
+    // All time ranges show the same real-time vehicle counts (use entry count only to avoid double-counting)
+    const total = vehicles ? vehicles.inDay : 0
     const base = Math.max(0, total)
     data = makeSeries(base, 0.35)
   } else if (metric === 'dispatch') {
-    const target = dispatch ? dispatch.targetDay * rangeFactor(range) : 0
-    const progress = (() => {
-      if (!dispatch) return 0
-      if (range === 'today') return dispatch.today
-      if (range === 'monthly') return dispatch.cumMonth
-      return dispatch.cumMonth * 12
-    })()
+    // All time ranges show the same real-time dispatch values
+    const target = dispatch ? dispatch.targetDay : 0
+    const progress = dispatch ? dispatch.today : 0
 
     // Determine how far the orange "progress" line should extend across the chart
     let ratio = 0

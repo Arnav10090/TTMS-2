@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 
-export default function RFIDModule({ onProceed, isLoading = false }: { onProceed?: (tracking: string) => void; isLoading?: boolean }) {
+export default function RFIDModule({ onProceed, isLoading = false, extraReady = true }: { onProceed?: (tracking: string) => void; isLoading?: boolean; extraReady?: boolean }) {
   const [rfid, setRfid] = useState('')
   const [tracking, setTracking] = useState('')
 
@@ -20,13 +20,13 @@ export default function RFIDModule({ onProceed, isLoading = false }: { onProceed
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-sm text-slate-600 mb-1">RFID Tracking no. Input <span className="text-red-600">*</span></label>
+        <label className="block text-sm text-slate-600 mb-1">RFID no. Input <span className="text-red-600">*</span></label>
         <div className="flex gap-2">
           <input
             value={rfid}
             onChange={(e) => setRfid(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') applyTracking() }}
-            placeholder="Assign Tracking No."
+            placeholder="Assign RFID No."
             className="flex-1 border border-slate-300 rounded-ui px-3 py-2"
             aria-required
             required
@@ -50,7 +50,7 @@ export default function RFIDModule({ onProceed, isLoading = false }: { onProceed
         </div>
       </div>
       <div className="flex items-center gap-2 text-lg text-slate-600">
-        <span className="font-medium">Tracking No:</span>
+        <span className="font-medium">RFID No:</span>
         {tracking ? (
           <span className="font-mono font-semibold text-base">{tracking}</span>
         ) : (
@@ -60,9 +60,23 @@ export default function RFIDModule({ onProceed, isLoading = false }: { onProceed
       <div className="flex items-center gap-2 mt-4">
         <div className="ml-auto" />
         <button
-          onClick={() => onProceed?.(tracking)}
+          onClick={() => {
+            console.log('Proceed button clicked, tracking value:', tracking);
+            console.log('onProceed callback exists?', !!onProceed);
+            if (!tracking) {
+              console.warn('No tracking number assigned!');
+              alert('Please enter and assign a tracking number first!');
+              return;
+            }
+            if (onProceed) {
+              console.log('Calling onProceed with:', tracking);
+              onProceed(tracking);
+            } else {
+              console.error('onProceed callback is not defined!');
+            }
+          }}
           className="px-4 py-2 rounded-ui bg-green-600 hover:bg-green-700 text-white disabled:opacity-70 disabled:cursor-not-allowed flex items-center gap-2"
-          disabled={isLoading}
+          disabled={isLoading || !extraReady || !tracking}
         >
           {isLoading && (
             <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -10,8 +10,13 @@
   --danger: #ef4444;
   --background: #f8fafc;
   --card: #ffffff;
+  
+  /* Layout dimensions for fixed positioning */
+  --header-height: 64px;
+  --footer-height: 80px;
 }
 
+html { overflow-y: scroll; }
 html, body { height: 100%; }
 body { @apply bg-background text-slate-800; }
 .dark body { @apply bg-slate-900 text-slate-100; }
@@ -70,13 +75,85 @@ body { @apply bg-background text-slate-800; }
   50% { box-shadow: 0 0 0 6px rgba(245, 158, 11, 0.2); }
 }
 
-.animate-blink { animation: blink 1s infinite; }
-.animate-ping-urgent { animation: ping-urgent 0.5s infinite; }
-.animate-glow { animation: glow 1.5s ease-in-out infinite; }
+.animate-blink { 
+  animation: blink 1s infinite;
+  /* Prevent layout recalculation */
+  will-change: opacity;
+}
+.animate-ping-urgent { 
+  animation: ping-urgent 0.5s infinite;
+  /* Prevent layout recalculation */
+  will-change: transform, opacity;
+}
+.animate-glow { 
+  animation: glow 1.5s ease-in-out infinite;
+  /* Prevent layout recalculation */
+  will-change: box-shadow;
+}
 
 /* Status cell styling */
-.status-cell { @apply px-3 py-1.5 rounded-full text-center text-xs font-semibold min-w-[140px] inline-flex items-center justify-center gap-1; transition: all 0.3s ease-in-out; }
+.status-cell { 
+  @apply px-3 py-1.5 rounded-full text-center text-xs font-semibold min-w-[140px] inline-flex items-center justify-center gap-1; 
+  transition: all 0.3s ease-in-out;
+  /* Prevent layout recalculation during transitions */
+  will-change: transform, opacity;
+}
 .status-completed { @apply bg-green-500 text-white; }
 .status-active { @apply bg-red-500 text-white animate-pulse; }
 .status-warning { @apply bg-orange-500 text-white animate-blink; }
 .status-critical { @apply bg-red-600 text-white animate-ping-urgent; }
+
+/* Fixed positioning for header and footer */
+.header-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: var(--header-height, 64px);
+  z-index: 1000;
+  /* Performance optimizations */
+  will-change: transform;
+  contain: layout style paint;
+  /* Prevent layout recalculation */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.footer-fixed {
+  position: fixed !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  min-height: var(--footer-height, 80px);
+  z-index: 9999 !important;
+  /* Performance optimizations */
+  will-change: transform;
+  contain: layout style paint;
+  /* Prevent layout recalculation */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Ensure visibility */
+  visibility: visible !important;
+  display: block !important;
+  pointer-events: auto !important;
+}
+
+/* Content wrapper with proper spacing */
+.content-wrapper {
+  padding-top: var(--header-height, 64px);
+  /* padding-bottom removed in favor of spacer in RootLayout */
+  min-height: 100vh;
+  /* Prevent layout shift during transitions */
+  contain: layout;
+}
+
+/* Root layout container */
+.root-layout {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  /* Optimize layout performance */
+  contain: layout;
+}

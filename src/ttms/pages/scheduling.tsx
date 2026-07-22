@@ -1,6 +1,5 @@
 "use client"
 
-import DashboardLayout from '@/components/layout/DashboardLayout'
 import { useSchedulingState } from '@/hooks/useSchedulingState'
 import VehicleEntryTable from '@/components/scheduling/VehicleEntryTable'
 import FacilityMap from '@/components/scheduling/FacilityMap'
@@ -15,7 +14,7 @@ export default function TTMSSchedulingPage() {
   const { parkingData, allocateSpot } = useRealTimeData()
 
   return (
-    <DashboardLayout>
+    <>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
         <SchedulingParkingToggle
@@ -50,6 +49,8 @@ export default function TTMSSchedulingPage() {
                 const map = raw ? JSON.parse(raw) as Record<string, string> : {}
                 map[row.regNo] = row.tareWeight
                 localStorage.setItem(key, JSON.stringify(map))
+                window.dispatchEvent(new Event('vehicleTareWeightAssignments-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               } catch { }
               try {
                 const key = 'tareWeightStatuses'
@@ -67,6 +68,8 @@ export default function TTMSSchedulingPage() {
                 const map = raw ? JSON.parse(raw) as Record<string, string> : {}
                 map[row.regNo] = row.loadingGate
                 localStorage.setItem(key, JSON.stringify(map))
+                window.dispatchEvent(new Event('vehicleLoadingGateAssignments-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               } catch { }
               try {
                 const key = 'loadingGateStatuses'
@@ -84,6 +87,8 @@ export default function TTMSSchedulingPage() {
                 const map = raw ? JSON.parse(raw) as Record<string, string> : {}
                 map[row.regNo] = row.wtPostLoading
                 localStorage.setItem(key, JSON.stringify(map))
+                window.dispatchEvent(new Event('vehicleWtPostLoadingAssignments-updated'))
+                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
               } catch { }
               try {
                 const key = 'wtPostLoadingStatuses'
@@ -94,99 +99,171 @@ export default function TTMSSchedulingPage() {
                 window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
               } catch { }
             }
+              // Remove any pending markers for these allocations now that allotment is persisted
+              try {
+                const pKey = 'vehicleTareWeightPending'
+                const pRaw = localStorage.getItem(pKey)
+                const pMap = pRaw ? JSON.parse(pRaw) as Record<string, string> : {}
+                if (pMap[row.regNo]) { delete pMap[row.regNo]; localStorage.setItem(pKey, JSON.stringify(pMap)); window.dispatchEvent(new Event('vehicleTareWeightPending-updated')) }
+              } catch { }
+              try {
+                const pKey = 'vehicleLoadingGatePending'
+                const pRaw = localStorage.getItem(pKey)
+                const pMap = pRaw ? JSON.parse(pRaw) as Record<string, string> : {}
+                if (pMap[row.regNo]) { delete pMap[row.regNo]; localStorage.setItem(pKey, JSON.stringify(pMap)); window.dispatchEvent(new Event('vehicleLoadingGatePending-updated')) }
+              } catch { }
+              try {
+                const pKey = 'vehicleWtPostLoadingPending'
+                const pRaw = localStorage.getItem(pKey)
+                const pMap = pRaw ? JSON.parse(pRaw) as Record<string, string> : {}
+                if (pMap[row.regNo]) { delete pMap[row.regNo]; localStorage.setItem(pKey, JSON.stringify(pMap)); window.dispatchEvent(new Event('vehicleWtPostLoadingPending-updated')) }
+              } catch { }
           }}
-          onRevert={(row) => {
-            try {
-              const pKey = 'vehicleParkingAssignments'
-              const pRaw = localStorage.getItem(pKey)
-              const pMap = pRaw ? JSON.parse(pRaw) as Record<string, { area: string; label: string }> : {}
-              const assigned = pMap[row.regNo]
-              if (assigned) {
-                const ovKey = 'parkingStatusOverrides'
-                const ovRaw = localStorage.getItem(ovKey)
-                const ov = ovRaw ? JSON.parse(ovRaw) as Record<string, 'available' | 'occupied' | 'reserved'> : {}
-                const k = `${assigned.area}-${assigned.label}`
-                ov[k] = 'available'
-                localStorage.setItem(ovKey, JSON.stringify(ov))
-                delete pMap[row.regNo]
-                localStorage.setItem(pKey, JSON.stringify(pMap))
-                const colorRaw = localStorage.getItem('parkingColorMap')
-                const colorMap = colorRaw ? JSON.parse(colorRaw) as Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> : {}
-                colorMap[k] = 'bg-green-500'
-                localStorage.setItem('parkingColorMap', JSON.stringify(colorMap))
-                window.dispatchEvent(new Event('parkingColorMap-updated'))
-                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
-              }
-            } catch { }
-            try {
-              const mapKey = 'vehicleTareWeightAssignments'
-              const raw = localStorage.getItem(mapKey)
-              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
-              const tweightId = map[row.regNo]
-              if (tweightId) {
-                delete map[row.regNo]
-                localStorage.setItem(mapKey, JSON.stringify(map))
-                const key = 'tareWeightStatuses'
-                const tRaw = localStorage.getItem(key)
-                const items = tRaw ? JSON.parse(tRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
-                const next = items.map(item => item.id === tweightId ? { ...item, status: 'available' as const } : item)
-                localStorage.setItem(key, JSON.stringify(next))
-                window.dispatchEvent(new Event('tareWeightStatuses-updated'))
-                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
-              }
-            } catch { }
-            try {
-              const mapKey = 'vehicleLoadingGateAssignments'
-              const raw = localStorage.getItem(mapKey)
-              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
-              const gateId = map[row.regNo]
-              if (gateId) {
-                delete map[row.regNo]
-                localStorage.setItem(mapKey, JSON.stringify(map))
-                const key = 'loadingGateStatuses'
-                const gRaw = localStorage.getItem(key)
-                const gates = gRaw ? JSON.parse(gRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
-                const next = gates.map(g => g.id === gateId ? { ...g, status: 'available' as const } : g)
-                localStorage.setItem(key, JSON.stringify(next))
-                window.dispatchEvent(new Event('loadingGateStatuses-updated'))
-                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
-              }
-            } catch { }
-            try {
-              const mapKey = 'vehicleWtPostLoadingAssignments'
-              const raw = localStorage.getItem(mapKey)
-              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
-              const wpostId = map[row.regNo]
-              if (wpostId) {
-                delete map[row.regNo]
-                localStorage.setItem(mapKey, JSON.stringify(map))
-                const key = 'wtPostLoadingStatuses'
-                const wRaw = localStorage.getItem(key)
-                const items = wRaw ? JSON.parse(wRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
-                const next = items.map(item => item.id === wpostId ? { ...item, status: 'available' as const } : item)
-                localStorage.setItem(key, JSON.stringify(next))
-                window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
-                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
-              }
-            } catch { }
-            try {
-              const mapKey = 'vehicleGateExitAssignments'
-              const raw = localStorage.getItem(mapKey)
-              const map = raw ? JSON.parse(raw) as Record<string, string> : {}
-              const exitId = map[row.regNo]
-              if (exitId) {
-                delete map[row.regNo]
-                localStorage.setItem(mapKey, JSON.stringify(map))
-                const key = 'gateExitStatuses'
-                const eRaw = localStorage.getItem(key)
-                const items = eRaw ? JSON.parse(eRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
-                const next = items.map(item => item.id === exitId ? { ...item, status: 'available' as const } : item)
-                localStorage.setItem(key, JSON.stringify(next))
-                window.dispatchEvent(new Event('gateExitStatuses-updated'))
-                window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
-              }
-            } catch { }
-            s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, position: '' } : r))
+          onRevert={(row, target) => {
+            // Helper to check if we should revert a specific target
+            const shouldRevert = (t: string) => !target || target === t
+
+            if (shouldRevert('parking')) {
+              try {
+                const pKey = 'vehicleParkingAssignments'
+                const pRaw = localStorage.getItem(pKey)
+                const pMap = pRaw ? JSON.parse(pRaw) as Record<string, { area: string; label: string }> : {}
+                const assigned = pMap[row.regNo]
+                if (assigned) {
+                  const ovKey = 'parkingStatusOverrides'
+                  const ovRaw = localStorage.getItem(ovKey)
+                  const ov = ovRaw ? JSON.parse(ovRaw) as Record<string, 'available' | 'occupied' | 'reserved'> : {}
+                  const k = `${assigned.area}-${assigned.label}`
+                  ov[k] = 'available'
+                  localStorage.setItem(ovKey, JSON.stringify(ov))
+                  window.dispatchEvent(new Event('parkingStatusOverrides-updated'))
+                  delete pMap[row.regNo]
+                  localStorage.setItem(pKey, JSON.stringify(pMap))
+                  const colorRaw = localStorage.getItem('parkingColorMap')
+                  const colorMap = colorRaw ? JSON.parse(colorRaw) as Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> : {}
+                  colorMap[k] = 'bg-green-500'
+                  localStorage.setItem('parkingColorMap', JSON.stringify(colorMap))
+                  window.dispatchEvent(new Event('parkingColorMap-updated'))
+                  window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
+                }
+              } catch { }
+            }
+
+            if (shouldRevert('tare')) {
+              try {
+                const mapKey = 'vehicleTareWeightAssignments'
+                const raw = localStorage.getItem(mapKey)
+                const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+                const tweightId = map[row.regNo]
+                if (tweightId) {
+                  delete map[row.regNo]
+                  localStorage.setItem(mapKey, JSON.stringify(map))
+
+                  // specific logic: check if any other vehicle is still using this ID
+                  const stillOccupied = Object.values(map).includes(tweightId)
+                  if (!stillOccupied) {
+                    const key = 'tareWeightStatuses'
+                    const tRaw = localStorage.getItem(key)
+                    const items = tRaw ? JSON.parse(tRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                    const next = items.map(item => item.id === tweightId ? { ...item, status: 'available' as const } : item)
+                    localStorage.setItem(key, JSON.stringify(next))
+                    window.dispatchEvent(new Event('tareWeightStatuses-updated'))
+                  }
+                  window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
+                }
+              } catch { }
+            }
+
+            if (shouldRevert('gate')) {
+              try {
+                const mapKey = 'vehicleLoadingGateAssignments'
+                const raw = localStorage.getItem(mapKey)
+                const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+                const gateId = map[row.regNo]
+                if (gateId) {
+                  delete map[row.regNo]
+                  localStorage.setItem(mapKey, JSON.stringify(map))
+
+                  // specific logic: check if any other vehicle is still using this ID
+                  const stillOccupied = Object.values(map).includes(gateId)
+                  if (!stillOccupied) {
+                    const key = 'loadingGateStatuses'
+                    const gRaw = localStorage.getItem(key)
+                    const gates = gRaw ? JSON.parse(gRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                    const next = gates.map(g => g.id === gateId ? { ...g, status: 'available' as const } : g)
+                    localStorage.setItem(key, JSON.stringify(next))
+                    window.dispatchEvent(new Event('loadingGateStatuses-updated'))
+                  }
+                  window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
+                }
+              } catch { }
+            }
+
+            if (shouldRevert('wtpost')) {
+              try {
+                const mapKey = 'vehicleWtPostLoadingAssignments'
+                const raw = localStorage.getItem(mapKey)
+                const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+                const wpostId = map[row.regNo]
+                if (wpostId) {
+                  delete map[row.regNo]
+                  localStorage.setItem(mapKey, JSON.stringify(map))
+
+                  // specific logic: check if any other vehicle is still using this ID
+                  const stillOccupied = Object.values(map).includes(wpostId)
+                  if (!stillOccupied) {
+                    const key = 'wtPostLoadingStatuses'
+                    const wRaw = localStorage.getItem(key)
+                    const items = wRaw ? JSON.parse(wRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                    const next = items.map(item => item.id === wpostId ? { ...item, status: 'available' as const } : item)
+                    localStorage.setItem(key, JSON.stringify(next))
+                    window.dispatchEvent(new Event('wtPostLoadingStatuses-updated'))
+                  }
+                  window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
+                }
+              } catch { }
+            }
+
+            if (shouldRevert('exit')) {
+              try {
+                const mapKey = 'vehicleGateExitAssignments'
+                const raw = localStorage.getItem(mapKey)
+                const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+                const exitId = map[row.regNo]
+                if (exitId) {
+                  delete map[row.regNo]
+                  localStorage.setItem(mapKey, JSON.stringify(map))
+
+                  // specific logic: check if any other vehicle is still using this ID
+                  const stillOccupied = Object.values(map).includes(exitId)
+                  if (!stillOccupied) {
+                    const key = 'gateExitStatuses'
+                    const eRaw = localStorage.getItem(key)
+                    const items = eRaw ? JSON.parse(eRaw) as { id: string; status: 'available' | 'occupied' | 'reserved' }[] : []
+                    const next = items.map(item => item.id === exitId ? { ...item, status: 'available' as const } : item)
+                    localStorage.setItem(key, JSON.stringify(next))
+                    window.dispatchEvent(new Event('gateExitStatuses-updated'))
+                  }
+                  window.dispatchEvent(new Event('vehicleParkingAssignments-updated'))
+                }
+              } catch { }
+            }
+
+            if (shouldRevert('tare')) {
+              s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, tareWeight: '' } : r))
+            }
+
+            if (shouldRevert('gate')) {
+              s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, loadingGate: '' } : r))
+            }
+
+            if (shouldRevert('wtpost')) {
+              s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, wtPostLoading: '' } : r))
+            }
+
+            if (shouldRevert('parking')) {
+              s.setVehicleEntries((rows) => rows.map(r => r.id === row.id ? { ...r, position: '' } : r))
+            }
           }}
         />
       </div>
@@ -197,6 +274,6 @@ export default function TTMSSchedulingPage() {
       </div>
 
 
-    </DashboardLayout>
+    </>
   )
 }

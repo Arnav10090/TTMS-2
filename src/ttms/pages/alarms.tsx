@@ -1,14 +1,14 @@
 "use client"
 
-import DashboardLayout from '@/components/layout/DashboardLayout'
 import { useEffect, useMemo, useState } from 'react'
 import { AlertManager } from '@/utils/alerts'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { getVehicleByIndex, getVehicleEntryTime } from '@/utils/vehicleData'
 
 export default function TTMSAlarmsPage() {
   const [rows, setRows] = useState<any[]>([])
   const [query, setQuery] = useState('')
-  const [severity, setSeverity] = useState<'all'|'critical'|'warning'|'info'>('all')
+  const [severity, setSeverity] = useState<'all' | 'critical' | 'warning' | 'info'>('all')
   const [start, setStart] = useState<string>('')
   const [end, setEnd] = useState<string>('')
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
@@ -19,7 +19,13 @@ export default function TTMSAlarmsPage() {
       const hist = AlertManager.listHistory() || []
       const ack = AlertManager.listAcknowledged() || []
       const pending = AlertManager.listPending() || []
-      let combined = [...pending, ...ack, ...hist]
+
+      // Filter out acknowledged alarms that are currently shown in the footer
+      // SystemAlertsBanner shows exactly the first 10 acknowledged alarms (no deduplication)
+      // So we just need to skip those first 10
+      const ackToShow = ack.slice(10)
+
+      let combined = [...pending, ...ackToShow, ...hist]
       const sampleIds = [
         'sample-warning-1',
         'sample-warning-2',
@@ -31,60 +37,74 @@ export default function TTMSAlarmsPage() {
       const warningSamples = [
         {
           id: 'sample-warning-1',
-          vehicleRegNo: 'MH12-2145',
-          stage: 'Loading Bay A',
+          vehicleRegNo: getVehicleByIndex(1),
+          stage: 'Loading Gate',
           waitTime: 22,
           standardTime: 12,
           exceedanceRatio: 1.83,
-          alertLevel: 'warning',
-          timestamp: new Date(now - 1000 * 60 * 12),
-          message: 'Vehicle MH12-2145 waiting longer than expected at Loading Bay A'
+          alertLevel: 'warning' as const,
+          timestamp: getVehicleEntryTime(1),
+          message: `Vehicle ${getVehicleByIndex(1)} waiting longer than expected at Loading Gate`,
+          recipients: []
         },
         {
           id: 'sample-warning-2',
-          vehicleRegNo: 'MH12-2090',
-          stage: 'Fuel Station',
+          vehicleRegNo: getVehicleByIndex(2),
+          stage: 'Tare Weight Station',
           waitTime: 15,
           standardTime: 8,
           exceedanceRatio: 1.88,
-          alertLevel: 'warning',
-          timestamp: new Date(now - 1000 * 60 * 18),
-          message: 'Vehicle MH12-2090 experiencing delay at Fuel Station'
+          alertLevel: 'warning' as const,
+          timestamp: getVehicleEntryTime(2),
+          message: `Vehicle ${getVehicleByIndex(2)} experiencing delay at Tare Weight Station`,
+          recipients: []
         }
       ]
       const infoSamples = [
         {
           id: 'sample-info-1',
           vehicleRegNo: 'Maintenance-02',
-          stage: 'Gate 5',
+          stage: 'Entry Gate',
           waitTime: 4,
           standardTime: 12,
           exceedanceRatio: 0.33,
-          alertLevel: 'info',
+          alertLevel: 'info' as const,
           timestamp: new Date(now - 1000 * 60 * 6),
-          message: 'Minor congestion cleared at Gate 5'
+          message: 'Minor congestion cleared at Entry Gate',
+          recipients: []
         },
         {
           id: 'sample-info-2',
           vehicleRegNo: 'System-Notice',
-          stage: 'Control Room',
+          stage: 'Gate Exit',
           waitTime: 2,
           standardTime: 10,
           exceedanceRatio: 0.2,
-          alertLevel: 'info',
+          alertLevel: 'info' as const,
           timestamp: new Date(now - 1000 * 60 * 2),
-          message: 'Shift handover note: weighbridge sensors calibrated'
+          message: 'Too Mant Vehicles at Gate Exit',
+          recipients: []
         }
       ]
       const warningCount = combined.filter((r: any) => (r.alertLevel ?? 'warning') === 'warning').length
       const infoCount = combined.filter((r: any) => (r.alertLevel ?? 'warning') === 'info').length
+      let samples = []
       if (warningCount < 2) {
-        combined = [...warningSamples.slice(0, 2 - warningCount), ...combined]
+        samples.push(...warningSamples.slice(0, 2 - warningCount))
       }
       if (infoCount < 2) {
-        combined = [...infoSamples.slice(0, 2 - infoCount), ...combined]
+        samples.push(...infoSamples.slice(0, 2 - infoCount))
       }
-      setRows(combined)
+
+      // Re-order for display:
+      // 1. Overflowed Footer Alarms (11th+ alarms) - Requested by user to be at the top
+      // 2. Sample Warnings/Infos
+      // 3. Pending Alarms
+      // 4. History Alarms
+      // Note: We deliberately exclude 'ackToShow' from the 'rest' spread because we put it first
+      const rest = [...pending, ...hist]
+
+      setRows([...ackToShow, ...samples, ...rest])
     }
     refresh()
     const iv = setInterval(refresh, 4000)
@@ -120,13 +140,13 @@ export default function TTMSAlarmsPage() {
   useEffect(() => { setPage(1) }, [query, severity, start, end])
 
   return (
-    <DashboardLayout>
+    <>
       <div className="card p-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Alarms</h2>
           <div className="flex items-center gap-2 flex-wrap">
-            <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
-            <Select value={severity} onValueChange={(s) => setSeverity(s as 'all'|'critical'|'warning'|'info')}>
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
+            <Select value={severity} onValueChange={(s) => setSeverity(s as 'all' | 'critical' | 'warning' | 'info')}>
               <SelectTrigger className="border-border hover:border-primary hover:bg-primary/5 hover:shadow-md focus:border-primary focus:shadow-lg transition-all duration-200 w-[160px]">
                 <SelectValue placeholder="All Severities" />
               </SelectTrigger>
@@ -137,8 +157,8 @@ export default function TTMSAlarmsPage() {
                 <SelectItem value="info" className="hover:bg-primary/10 cursor-pointer">Info</SelectItem>
               </SelectContent>
             </Select>
-            <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
-            <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
+            <input type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
+            <input type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
           </div>
         </div>
 
@@ -148,7 +168,7 @@ export default function TTMSAlarmsPage() {
               <tr className="text-left text-xs text-slate-500 border-b">
                 <th className="py-2 px-2">Time</th>
                 <th className="py-2 px-2">Reg No</th>
-                <th className="py-2 px-2">RFID / Stage</th>
+                <th className="py-2 px-2">Stage</th>
                 <th className="py-2 px-2">Message</th>
                 <th className="py-2 px-2 text-center">Wait (m)</th>
                 <th className="py-2 px-2 text-center">Std (m)</th>
@@ -169,7 +189,7 @@ export default function TTMSAlarmsPage() {
                   <tr key={r.id} className="border-b last:border-b-0 hover:bg-blue-50 hover:shadow-sm transition-all duration-150 cursor-pointer">
                     <td className="py-2 px-2 text-xs text-slate-600">{new Date(r.timestamp).toLocaleString('en-GB')}</td>
                     <td className="py-2 px-2 font-medium">{r.vehicleRegNo}</td>
-                    <td className="py-2 px-2 text-slate-600">{r.stage || r.rfidNo || '-'}</td>
+                    <td className="py-2 px-2 text-slate-600">{r.stage || '-'}</td>
                     <td className="py-2 px-2">
                       <div className="flex items-center gap-2">
                         <span className={`px-2 py-0.5 rounded text-xs ${badgeClass}`}>{label}</span>
@@ -187,7 +207,7 @@ export default function TTMSAlarmsPage() {
 
         <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-200">
           <div className="flex items-center gap-4">
-            <div className="text-xs text-slate-600">Showing {filtered.length === 0 ? 0 : Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
+            <div className="text-xs text-slate-600">Showing {filtered.length === 0 ? 0 : Math.min(filtered.length, (page - 1) * rowsPerPage + 1)} to {Math.min(filtered.length, page * rowsPerPage)} of {filtered.length} entries</div>
             <div>
               <label className="block text-xs font-medium text-slate-600 mb-1">Rows per page</label>
               <Select value={String(rowsPerPage)} onValueChange={(val) => setRowsPerPage(parseInt(val))}>
@@ -204,16 +224,16 @@ export default function TTMSAlarmsPage() {
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <button onClick={()=>setPage(1)} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">First</button>
-            <button onClick={()=>setPage((p)=>Math.max(1, p-1))} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">« Prev</button>
+            <button onClick={() => setPage(1)} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">First</button>
+            <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">« Prev</button>
             {Array.from({ length: totalPages }).slice(0, 7).map((_, i) => (
               <button key={i} onClick={() => setPage(i + 1)} className={`px-3 py-1 rounded text-sm ${page === i + 1 ? 'bg-cyan-500 text-white border border-cyan-500' : 'border border-slate-300 hover:bg-slate-50'}`}>{i + 1}</button>
             ))}
-            <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Next »</button>
-            <button onClick={()=>setPage(totalPages)} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Last</button>
+            <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Next »</button>
+            <button onClick={() => setPage(totalPages)} disabled={page === totalPages} className="px-3 py-1 rounded border border-slate-300 text-sm hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">Last</button>
           </div>
         </div>
       </div>
-    </DashboardLayout>
+    </>
   )
 }

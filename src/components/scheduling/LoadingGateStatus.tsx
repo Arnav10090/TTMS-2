@@ -11,39 +11,48 @@ function statusColor(s: ItemStatus) {
 }
 
 export default function LoadingGateStatus() {
-  // Clear all statuses on mount to ensure fresh start with all green cells
-  useEffect(() => {
-    try {
-      localStorage.removeItem('loadingGateStatuses')
-      localStorage.removeItem('tareWeightStatuses')
-      localStorage.removeItem('wtPostLoadingStatuses')
-      localStorage.removeItem('gateExitStatuses')
-    } catch { }
-  }, [])
-
+  // Load statuses from localStorage on mount
   const [tareWeights, setTareWeights] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('tareWeightStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch { }
     const init = Array.from({ length: 4 }, (_, i) => ({ id: `TW-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('tareWeightStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
   const [gates, setGates] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('loadingGateStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch { }
     const init = Array.from({ length: 12 }, (_, i) => ({ id: `G-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('loadingGateStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
   const [wtPostLoadings, setWtPostLoadings] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('wtPostLoadingStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch { }
     const init = Array.from({ length: 4 }, (_, i) => ({ id: `WPL-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('wtPostLoadingStatuses', JSON.stringify(init)) } catch { }
     return init
   })
 
   const [gateExits, setGateExits] = useState<Item[]>(() => {
+    try {
+      const raw = localStorage.getItem('gateExitStatuses')
+      if (raw) return JSON.parse(raw) as Item[]
+    } catch { }
     const init = Array.from({ length: 1 }, (_, i) => ({ id: `GE-${i + 1}`, status: 'available' as const }))
     try { localStorage.setItem('gateExitStatuses', JSON.stringify(init)) } catch { }
     return init
   })
+
+  const [updateTick, setUpdateTick] = useState(0)
 
   // Helper to get vehicle number for an allocated item
   const getVehicleForItem = (itemId: string, itemType: 'tare' | 'gate' | 'wtpost' | 'exit'): string | null => {
@@ -51,11 +60,13 @@ export default function LoadingGateStatus() {
       const key = itemType === 'tare' ? 'vehicleTareWeightAssignments' : itemType === 'gate' ? 'vehicleLoadingGateAssignments' : itemType === 'wtpost' ? 'vehicleWtPostLoadingAssignments' : 'vehicleGateExitAssignments'
       const raw = localStorage.getItem(key)
       const map = raw ? JSON.parse(raw) as Record<string, string> : {}
+      const vehicles: string[] = []
       for (const [vehicle, assignedId] of Object.entries(map)) {
         if (assignedId === itemId) {
-          return vehicle
+          vehicles.push(vehicle)
         }
       }
+      return vehicles.length > 0 ? vehicles.join(', ') : null
     } catch { }
     return null
   }
@@ -63,7 +74,8 @@ export default function LoadingGateStatus() {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [pendingGate, setPendingGate] = useState<Item | null>(null)
   const [vehicleNo, setVehicleNo] = useState('')
-  const vehiclePattern = /^[A-Z]{2}\d{2}-\d{4}$/
+  // Updated pattern to support new format (MH12AB1234) and old format (MH12-1234)
+  const vehiclePattern = /^[A-Z]{2}\d{2}[A-Z]{0,2}-?\d{4}$/
   const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
 
   const openConfirm = (gate: Item) => { setPendingGate(gate); setVehicleNo(''); setConfirmOpen(true) }
@@ -94,20 +106,8 @@ export default function LoadingGateStatus() {
   }
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setGates((prev) => {
-        const next = prev.map((g) => {
-          if (Math.random() > 0.92) {
-            const order: ItemStatus[] = ['available', 'occupied', 'reserved']
-            const idx = Math.floor(Math.random() * order.length)
-            return { ...g, status: order[idx] }
-          }
-          return g
-        })
-        try { localStorage.setItem('loadingGateStatuses', JSON.stringify(next)) } catch { }
-        return next
-      })
-    }, 30000)
+
+    // Removed random simulation interval
 
     const syncTareWeights = () => {
       try {
@@ -137,25 +137,33 @@ export default function LoadingGateStatus() {
       } catch { }
     }
 
+    const handleAssignmentUpdate = () => {
+      setUpdateTick(prev => prev + 1)
+    }
+
     window.addEventListener('storage', syncTareWeights)
     window.addEventListener('storage', syncGates)
     window.addEventListener('storage', syncWtPostLoadings)
     window.addEventListener('storage', syncGateExits)
+    window.addEventListener('storage', handleAssignmentUpdate)
     window.addEventListener('tareWeightStatuses-updated', syncTareWeights as any)
     window.addEventListener('loadingGateStatuses-updated', syncGates as any)
     window.addEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
     window.addEventListener('gateExitStatuses-updated', syncGateExits as any)
+    window.addEventListener('vehicleParkingAssignments-updated', handleAssignmentUpdate as any)
 
     return () => {
-      clearInterval(id)
+      // clearInterval(id)
       window.removeEventListener('storage', syncTareWeights)
       window.removeEventListener('storage', syncGates)
       window.removeEventListener('storage', syncWtPostLoadings)
       window.removeEventListener('storage', syncGateExits)
+      window.removeEventListener('storage', handleAssignmentUpdate)
       window.removeEventListener('tareWeightStatuses-updated', syncTareWeights as any)
       window.removeEventListener('loadingGateStatuses-updated', syncGates as any)
       window.removeEventListener('wtPostLoadingStatuses-updated', syncWtPostLoadings as any)
       window.removeEventListener('gateExitStatuses-updated', syncGateExits as any)
+      window.removeEventListener('vehicleParkingAssignments-updated', handleAssignmentUpdate as any)
     }
   }, [])
 
@@ -310,7 +318,7 @@ export default function LoadingGateStatus() {
               className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
             />
             {!isVehicleValid && vehicleNo && (
-              <div className="text-xs text-red-600 mb-2">Format must be like MH12-1000</div>
+              <div className="text-xs text-red-600 mb-2">Format must be like MH12AB1234</div>
             )}
             <div className="flex justify-end gap-2">
               <button onClick={closeConfirm} className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm">No</button>

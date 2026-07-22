@@ -44,7 +44,7 @@ export default function SchedulingParkingArea({
     try {
       const saved = localStorage.getItem('parkingColorMap')
       if (saved) return JSON.parse(saved)
-    } catch {}
+    } catch { }
     return {}
   })
 
@@ -53,7 +53,7 @@ export default function SchedulingParkingArea({
     try {
       const raw = localStorage.getItem('vehicleParkingAssignments')
       return raw ? JSON.parse(raw) : {}
-    } catch {}
+    } catch { }
     return {}
   })
 
@@ -62,12 +62,12 @@ export default function SchedulingParkingArea({
 
   // (Removed separate load effect; state is hydrated synchronously)
 
-  // Ensure colors for current grid; all cells start as green
+  // Ensure colors for current grid; all cells start as green unless already allocated
   useEffect(() => {
     const next = { ...colorMap } as Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'>
     grid.forEach(row => row.forEach(cell => {
       const k = `${areaKey}-${cell.label}`
-      // Initialize all cells as green, but preserve any existing allocations (yellow/red)
+      // Only initialize if not already set (preserve allocations from localStorage)
       if (!next[k]) {
         next[k] = 'bg-green-500'
       }
@@ -76,40 +76,11 @@ export default function SchedulingParkingArea({
       Object.keys(next).some(k => next[k] !== colorMap[k as keyof typeof colorMap])
     if (changed) {
       setColorMap(next)
-      try { localStorage.setItem('parkingColorMap', JSON.stringify(next)) } catch {}
+      try { localStorage.setItem('parkingColorMap', JSON.stringify(next)) } catch { }
     }
-  }, [grid, areaKey, colorMap])
+  }, [grid, areaKey])
 
-  // UI state for confirm modal and toast
-  const [confirmOpen, setConfirmOpen] = useState(false)
-  const [pendingLabel, setPendingLabel] = useState<string | null>(null)
-  const [vehicleNo, setVehicleNo] = useState<string>('')
-  const vehiclePattern = /^[A-Z]{2}\d{2}-\d{4}$/
-  const isVehicleValid = vehiclePattern.test(vehicleNo.trim())
-  const [toast, setToast] = useState<{message: string} | null>(null)
-
-  // Clear localStorage and initialize on component mount (only once)
-  useEffect(() => {
-    try {
-      localStorage.removeItem('parkingColorMap')
-      localStorage.removeItem('vehicleParkingAssignments')
-    } catch {}
-
-    // Initialize all cells as green on mount only
-    const initMap: Record<string, 'bg-green-500' | 'bg-red-500' | 'bg-yellow-500'> = {}
-    grid.forEach(row => {
-      row.forEach(cell => {
-        initMap[`${areaKey}-${cell.label}`] = 'bg-green-500'
-      })
-    })
-
-    try {
-      localStorage.setItem('parkingColorMap', JSON.stringify(initMap))
-      setColorMap(initMap)
-    } catch {
-      setColorMap(initMap)
-    }
-  }, []) // Only run on mount
+  const [toast, setToast] = useState<{ message: string } | null>(null)
 
   // Sync color map and vehicle assignments from localStorage when updated elsewhere
   useEffect(() => {
@@ -117,11 +88,11 @@ export default function SchedulingParkingArea({
       try {
         const saved = localStorage.getItem('parkingColorMap')
         if (saved) setColorMap(JSON.parse(saved))
-      } catch {}
+      } catch { }
       try {
         const raw = localStorage.getItem('vehicleParkingAssignments')
         if (raw) setVehicleAssignments(JSON.parse(raw))
-      } catch {}
+      } catch { }
     }
 
     window.addEventListener('storage', sync)
@@ -135,36 +106,6 @@ export default function SchedulingParkingArea({
     }
   }, [])
 
-  const openConfirm = (label: string) => {
-    setPendingLabel(label)
-    setVehicleNo('')
-    setConfirmOpen(true)
-  }
-
-  const closeConfirm = () => {
-    setConfirmOpen(false)
-    setPendingLabel(null)
-  }
-
-  const handleAllocate = () => {
-    if (!pendingLabel) return
-    const label = pendingLabel
-    const entered = vehicleNo.trim()
-    if (!entered || !vehiclePattern.test(entered)) return // enforce format guard
-    // Call upstream allocate to synchronize across app and dashboard
-    onAllocate?.(label, entered)
-    // Update local color map immediately to red
-    const k = `${areaKey}-${label}`
-    const next = { ...colorMap, [k]: 'bg-yellow-500' as const }
-    setColorMap(next)
-    try { localStorage.setItem('parkingColorMap', JSON.stringify(next)) } catch {}
-    // Show toast
-    setToast({ message: `Parking spot ${label} allocated to ${entered || 'vehicle'}.` })
-    setTimeout(() => setToast(null), 5000)
-    // Close the dialog automatically after allocation
-    closeConfirm()
-  }
-
   const body = (
     <>
       {!hideTitle && title ? (<h3 className="text-slate-800 font-semibold mb-3">{title}</h3>) : null}
@@ -177,15 +118,14 @@ export default function SchedulingParkingArea({
             const tooltipText = allocatedVehicles.length > 0 ? `${cell.label} - ${statusLabel}` : `${cell.label} - ${statusLabel}`
             return (
               <div key={`${r}-${c}`} className="relative group">
-                <button
-                  onClick={() => openConfirm(cell.label)}
-                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition cursor-pointer hover:opacity-90 w-full`}
+                <div
+                  className={`relative rounded-ui ${currentColor} text-white flex items-center justify-center h-10 md:h-12 transition w-full`}
                   title={tooltipText}
                   aria-label={tooltipText}
                 >
                   <span className="text-[11px] md:text-xs font-medium">{cell.label}</span>
                   <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-white/80" />
-                </button>
+                </div>
                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 bg-slate-900 text-white text-xs px-2 py-1 rounded z-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none max-w-xs">
                   <div className="font-semibold mb-1">{cell.label} - {statusLabel}</div>
                   {allocatedVehicles.length > 0 ? (
@@ -221,44 +161,7 @@ export default function SchedulingParkingArea({
         </div>
       )}
 
-      {confirmOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="relative z-10 w-[92%] max-w-md rounded-xl bg-white shadow-2xl border border-slate-200 p-4">
-            <button
-              aria-label="Close"
-              onClick={closeConfirm}
-              className="absolute top-2 right-2 inline-flex items-center justify-center w-8 h-8 rounded-md hover:bg-slate-100 text-slate-500 hover:text-slate-700"
-            >
-              <span className="text-xl leading-none">×</span>
-            </button>
-            <h4 className="text-slate-800 font-semibold mb-2 pr-8">Allocate Parking Spot</h4>
-            <p className="text-sm text-slate-600 mb-3">Would you like to allocate this parking spot {pendingLabel ? `(${pendingLabel})` : ''} to this vehicle?</p>
-            <input
-              value={vehicleNo}
-              onChange={(e) => setVehicleNo(e.target.value.toUpperCase())}
-              placeholder="Enter vehicle number"
-              className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3"
-            />
-            {!isVehicleValid && vehicleNo && (
-              <div className="text-xs text-red-600 mb-2">Format must be like MH12-1000</div>
-            )}
-            <div className="flex justify-end gap-2">
-              <button onClick={closeConfirm} className="px-3 py-1.5 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 text-sm">No</button>
-              <button
-                onClick={handleAllocate}
-                disabled={!isVehicleValid}
-                aria-disabled={!isVehicleValid}
-                className={`px-3 py-1.5 rounded-md text-white text-sm ${
-                  !isVehicleValid ? 'bg-blue-400 cursor-not-allowed opacity-60' : 'bg-blue-600 hover:bg-blue-700'
-                }`}
-              >
-                Yes, Allocate
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal removed */}
 
       {toast && (
         <div className="fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-sm px-4 py-2 rounded-md shadow-lg">{toast.message}</div>

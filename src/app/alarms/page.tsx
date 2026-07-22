@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/Button'
 export default function Page() {
   const [rows, setRows] = useState<any[]>([])
   const [query, setQuery] = useState('')
-  const [severity, setSeverity] = useState<'all'|'critical'|'warning'|'info'>('all')
+  const [severity, setSeverity] = useState<'all' | 'critical' | 'warning' | 'info'>('all')
   const [start, setStart] = useState<string>('')
   const [end, setEnd] = useState<string>('')
   const [rowsPerPage, setRowsPerPage] = useState<number>(50)
@@ -38,9 +38,10 @@ export default function Page() {
           waitTime: 22,
           standardTime: 12,
           exceedanceRatio: 1.83,
-          alertLevel: 'warning',
+          alertLevel: 'warning' as const,
           timestamp: new Date(now - 1000 * 60 * 12),
-          message: 'Vehicle MH12-2145 waiting longer than expected at Loading Bay A'
+          message: 'Vehicle MH12-2145 waiting longer than expected at Loading Bay A',
+          recipients: []
         },
         {
           id: 'sample-warning-2',
@@ -49,9 +50,10 @@ export default function Page() {
           waitTime: 15,
           standardTime: 8,
           exceedanceRatio: 1.88,
-          alertLevel: 'warning',
+          alertLevel: 'warning' as const,
           timestamp: new Date(now - 1000 * 60 * 18),
-          message: 'Vehicle MH12-2090 experiencing delay at Fuel Station'
+          message: 'Vehicle MH12-2090 experiencing delay at Fuel Station',
+          recipients: []
         }
       ]
       const infoSamples = [
@@ -62,9 +64,10 @@ export default function Page() {
           waitTime: 4,
           standardTime: 12,
           exceedanceRatio: 0.33,
-          alertLevel: 'info',
+          alertLevel: 'info' as const,
           timestamp: new Date(now - 1000 * 60 * 6),
-          message: 'Minor congestion cleared at Gate 5'
+          message: 'Minor congestion cleared at Gate 5',
+          recipients: []
         },
         {
           id: 'sample-info-2',
@@ -73,9 +76,10 @@ export default function Page() {
           waitTime: 2,
           standardTime: 10,
           exceedanceRatio: 0.2,
-          alertLevel: 'info',
+          alertLevel: 'info' as const,
           timestamp: new Date(now - 1000 * 60 * 2),
-          message: 'Shift handover note: weighbridge sensors calibrated'
+          message: 'Shift handover note: weighbridge sensors calibrated',
+          recipients: []
         }
       ]
       const warningCount = combined.filter((r: any) => (r.alertLevel ?? 'warning') === 'warning').length
@@ -127,15 +131,15 @@ export default function Page() {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold">Alarms</h2>
           <div className="flex items-center gap-2">
-            <input value={query} onChange={(e)=>setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
-            <select value={severity} onChange={(e)=>setSeverity(e.target.value as 'all'|'critical'|'warning'|'info')} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
+            <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search reg no, stage, message..." className="px-3 py-2 border rounded-md" />
+            <select value={severity} onChange={(e) => setSeverity(e.target.value as 'all' | 'critical' | 'warning' | 'info')} className="px-3 py-2 border rounded-md hover:border-blue-400 hover:bg-blue-50 hover:shadow-sm focus:border-blue-500 focus:shadow-lg transition-all duration-200">
               <option value="all" className="hover:bg-blue-100">All Severities</option>
               <option value="critical" className="hover:bg-blue-100">Critical</option>
               <option value="warning" className="hover:bg-blue-100">Warning</option>
               <option value="info" className="hover:bg-blue-100">Info</option>
             </select>
-            <input type="datetime-local" value={start} onChange={(e)=>setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
-            <input type="datetime-local" value={end} onChange={(e)=>setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
+            <input type="datetime-local" value={start} onChange={(e) => setStart(e.target.value)} className="px-3 py-2 border rounded-md" />
+            <input type="datetime-local" value={end} onChange={(e) => setEnd(e.target.value)} className="px-3 py-2 border rounded-md" />
           </div>
         </div>
 
@@ -145,7 +149,7 @@ export default function Page() {
               <tr className="text-left text-xs text-slate-500 border-b">
                 <th className="py-2 px-2">Time</th>
                 <th className="py-2 px-2">Reg No</th>
-                <th className="py-2 px-2">RFID / Stage</th>
+                <th className="py-2 px-2">Stage</th>
                 <th className="py-2 px-2">Message</th>
                 <th className="py-2 px-2 text-center">Wait (m)</th>
                 <th className="py-2 px-2 text-center">Std (m)</th>
@@ -166,7 +170,7 @@ export default function Page() {
                   <tr key={r.id} className="border-b last:border-b-0 hover:bg-blue-50 hover:shadow-sm transition-all duration-150 cursor-pointer">
                     <td className="py-2 px-2 text-xs text-slate-600">{new Date(r.timestamp).toLocaleString('en-GB')}</td>
                     <td className="py-2 px-2 font-medium">{r.vehicleRegNo}</td>
-                    <td className="py-2 px-2 text-slate-600">{r.stage || r.rfidNo || '-'}</td>
+                    <td className="py-2 px-2 text-slate-600">{r.stage || '-'}</td>
                     <td className="py-2 px-2">
                       <div className="flex items-center gap-2">
                         <span className={`px-2 py-0.5 rounded text-xs ${badgeClass}`}>{label}</span>
@@ -183,11 +187,11 @@ export default function Page() {
         </div>
 
         <div className="flex items-center justify-between mt-3">
-          <div className="text-sm text-slate-600">Showing {Math.min(filtered.length, (page-1)*rowsPerPage+1)} to {Math.min(filtered.length, page*rowsPerPage)} of {filtered.length} entries</div>
+          <div className="text-sm text-slate-600">Showing {Math.min(filtered.length, (page - 1) * rowsPerPage + 1)} to {Math.min(filtered.length, page * rowsPerPage)} of {filtered.length} entries</div>
           <div className="flex items-center gap-2">
-            <button onClick={()=>setPage((p)=>Math.max(1, p-1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Previous</button>
+            <button onClick={() => setPage((p) => Math.max(1, p - 1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Previous</button>
             <div className="px-3 py-1 text-sm">Page {page} / {totalPages}</div>
-            <button onClick={()=>setPage((p)=>Math.min(totalPages, p+1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Next</button>
+            <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} className="px-3 py-1 rounded bg-slate-100 hover:bg-slate-200">Next</button>
           </div>
         </div>
       </div>

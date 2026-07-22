@@ -9,6 +9,7 @@ type Document = {
   type: 'aadhar' | 'car_papers' | 'purchase_order' | 'invoice' | 'license' | 'photo'
   uploadedDate: string
   fileSize: string
+  url?: string
 }
 
 const getDocumentIcon = (type: Document['type']) => {
@@ -48,31 +49,74 @@ export default function CustomerDocumentsViewer({ vehicleRegNo, onOpen, openedSr
   const [query, setQuery] = useState('')
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null)
 
-  const documents: Document[] = useMemo(() => [
-    { id: 'DOC-001', name: 'Aadhar Card', type: 'aadhar', uploadedDate: '2024-09-15', fileSize: '2.3 MB' },
-    { id: 'DOC-002', name: 'Car Registration Papers', type: 'car_papers', uploadedDate: '2024-09-16', fileSize: '1.8 MB' },
-    { id: 'DOC-003', name: 'Purchase Order #PO-2024-089', type: 'purchase_order', uploadedDate: '2024-09-20', fileSize: '458 KB' },
-    { id: 'DOC-004', name: 'Vehicle Insurance Certificate', type: 'car_papers', uploadedDate: '2024-09-16', fileSize: '890 KB' },
-    { id: 'DOC-005', name: 'Tax Invoice', type: 'invoice', uploadedDate: '2024-09-22', fileSize: '325 KB' },
-    { id: 'DOC-006', name: 'Driving License', type: 'license', uploadedDate: '2024-09-15', fileSize: '1.2 MB' },
-    { id: 'DOC-007', name: 'Vehicle Photo - Front', type: 'photo', uploadedDate: '2024-09-18', fileSize: '3.1 MB' },
-    { id: 'DOC-008', name: 'PAN Card', type: 'aadhar', uploadedDate: '2024-09-15', fileSize: '1.5 MB' },
-  ], [])
+  const documents: Document[] = useMemo(() => [], [])
 
   const filtered = useMemo(() => {
-    // Require vehicleRegNo to show documents. If provided, simulate documents uploaded for that vehicle by selecting a subset
+    // Show the actual PDFs found in public folder
     if (vehicleRegNo && vehicleRegNo.trim()) {
-      const digits = vehicleRegNo.replace(/\D/g, '')
-      const idx = digits ? parseInt(digits.slice(-1)) % documents.length : 0
-      const out: Document[] = []
-      for (let i = 0; i < Math.min(5, documents.length); i++) {
-        out.push(documents[(idx + i) % documents.length])
-      }
+      const out: Document[] = [
+        {
+          id: 'DOC-REG-MH12',
+          name: 'Vehicle_Registration_MH12AB4829.pdf',
+          type: 'car_papers',
+          uploadedDate: '2024-09-28',
+          fileSize: '2.51 KB',
+          url: '/Customer_docs/Vehicle_Registration_MH12AB4829.pdf'
+        },
+        {
+          id: 'DOC-INS-MH12',
+          name: 'Vehicle_Insurance_MH12AB4829.pdf',
+          type: 'car_papers',
+          uploadedDate: '2024-09-29',
+          fileSize: '2.58 KB',
+          url: '/Customer_docs/Vehicle_Insurance_MH12AB4829.pdf'
+        },
+        {
+          id: 'DOC-PUC-MH12',
+          name: 'PUC_MH12AB4829.pdf',
+          type: 'car_papers',
+          uploadedDate: '2024-09-30',
+          fileSize: '2.39 KB',
+          url: '/Customer_docs/PUC_MH12AB4829.pdf'
+        },
+        {
+          id: 'DOC-AADHAAR-MK',
+          name: 'Aadhaar_Mohan_Kumar.pdf',
+          type: 'aadhar',
+          uploadedDate: '2024-09-29',
+          fileSize: '2.21 KB',
+          url: '/Customer_docs/Aadhaar_Mohan_Kumar.pdf'
+        },
+        {
+          id: 'DOC-AADHAAR-SK',
+          name: 'Aadhaar_Sohan_Kumar.pdf',
+          type: 'aadhar',
+          uploadedDate: '2024-09-29',
+          fileSize: '2.21 KB',
+          url: '/Customer_docs/Aadhaar_Sohan_Kumar.pdf'
+        },
+        {
+          id: 'DOC-PO',
+          name: 'Purchase_Order.pdf',
+          type: 'purchase_order',
+          uploadedDate: '2024-09-28',
+          fileSize: '3.05 KB',
+          url: '/Customer_docs/Purchase_Order.pdf'
+        },
+        {
+          id: 'DOC-DO',
+          name: 'Delivery_Order.pdf',
+          type: 'invoice',
+          uploadedDate: '2024-09-28',
+          fileSize: '2.71 KB',
+          url: '/Customer_docs/Delivery_Order.pdf'
+        }
+      ]
+
       return out.filter(doc => doc.name.toLowerCase().includes(query.toLowerCase()))
     }
-    // No vehicleRegNo -> no documents shown
     return []
-  }, [documents, query, vehicleRegNo])
+  }, [query, vehicleRegNo])
 
   useEffect(() => {
     if (openedSrc === null) setSelectedDoc(null)
@@ -80,7 +124,7 @@ export default function CustomerDocumentsViewer({ vehicleRegNo, onOpen, openedSr
 
   const handleDocumentClick = (doc: Document) => {
     setSelectedDoc(doc)
-    const url = generateDocPreviewUrl(doc)
+    const url = doc.url || generateDocPreviewUrl(doc)
     if (onOpen) onOpen(url)
   }
 

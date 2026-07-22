@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import KPICard from '@/components/ui/KPICard'
 import { Gauge, TrendingUp, TrendingDown, Minus } from 'lucide-react'
 import { CapacityData } from '@/types/kpi'
@@ -14,6 +15,43 @@ export default function CapacityUtilizationKPI({
   loading?: boolean
   range: RangeMode
 }) {
+  const DEFAULT_PLANT_CAPACITY = 120
+  const SPECIAL_VEH = 'MH12AB4829'
+
+  const [derived, setDerived] = useState(() => {
+    const plantCapacity = data.plantCapacity || DEFAULT_PLANT_CAPACITY
+    const trucksInside = data.trucksInside || 0
+    const utilization = (typeof data.utilization === 'number' && data.utilization > 0)
+      ? data.utilization
+      : Math.round((trucksInside / plantCapacity) * 100)
+    return { plantCapacity, trucksInside, utilization }
+  })
+
+  useEffect(() => {
+    const compute = () => {
+      try {
+        const plantCapacity = data.plantCapacity || DEFAULT_PLANT_CAPACITY
+        let trucksInside = data.trucksInside || 0
+        const raw = localStorage.getItem('vehicleGateEntryPending')
+        if (raw) {
+          const map = JSON.parse(raw) as Record<string, string>
+          const key = SPECIAL_VEH.replace(/\s|-/g, '').toUpperCase()
+          if (map[key]) trucksInside = trucksInside + 1
+        }
+        const utilization = (typeof data.utilization === 'number' && data.utilization > 0)
+          ? data.utilization
+          : Math.round((trucksInside / plantCapacity) * 100)
+        setDerived({ plantCapacity, trucksInside, utilization })
+      } catch (err) {
+        // fallback to defaults
+        setDerived({ plantCapacity: DEFAULT_PLANT_CAPACITY, trucksInside: data.trucksInside || 0, utilization: data.utilization || 0 })
+      }
+    }
+
+    compute()
+    window.addEventListener('vehicleGateEntryPending-updated', compute)
+    return () => window.removeEventListener('vehicleGateEntryPending-updated', compute)
+  }, [data])
   // Determine status based on utilization
   const getUtilizationStatus = (utilization: number) => {
     if (utilization >= 80) return { tone: 'green' as const, label: 'Optimal' }
@@ -21,7 +59,7 @@ export default function CapacityUtilizationKPI({
     return { tone: 'red' as const, label: 'Low' }
   }
 
-  const status = getUtilizationStatus(data.utilization)
+  const status = getUtilizationStatus(derived.utilization)
 
   // Get trend icon
   const getTrendIcon = () => {
@@ -44,7 +82,7 @@ export default function CapacityUtilizationKPI({
           label: 'Utilization',
           value: (
             <div className="flex items-center gap-2">
-              <span className="text-2xl font-bold">{data.utilization}%</span>
+              <span className="text-2xl font-bold">{derived.utilization}%</span>
               <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${status.tone === 'green' ? 'bg-emerald-100 text-emerald-700' :
                 status.tone === 'yellow' ? 'bg-amber-100 text-amber-700' :
                   'bg-red-100 text-red-700'
@@ -56,11 +94,11 @@ export default function CapacityUtilizationKPI({
         },
         {
           label: 'Plant Capacity',
-          value: scaleDisplayValue(data.plantCapacity, range)
+          value: scaleDisplayValue(derived.plantCapacity, range)
         },
         {
           label: 'Trucks Inside Plant',
-          value: scaleDisplayValue(data.trucksInside, range)
+          value: scaleDisplayValue(derived.trucksInside, range)
         },
         {
           label: 'Trend',

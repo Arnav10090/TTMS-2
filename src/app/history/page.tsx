@@ -17,12 +17,25 @@ function enhanceRows(rows: VehicleRow[]) {
         ? 'Monitor minor delays'
         : 'On schedule'
 
+    // Special data for MH12AB4829
+    if (r.regNo === 'MH12AB4829') {
+      console.log('Found MH12AB4829, applying custom data')
+      return {
+        ...r,
+        driverName: 'Mohan Kumar',
+        driverPhone: '9009009009',
+        customer: 'Rahul Sharma',
+        customerEmailId: 'Rahul_Sharma@gmail.com',
+        remarks,
+      }
+    }
+
     return {
       ...r,
       driverName: `Driver ${r.sn}`,
       driverPhone: `+91 90000${String(r.sn).padStart(3, '0')}`,
       customer: `Customer ${((r.sn % 5) + 1)}`,
-      customerRef: `CUST-${1000 + r.sn}`,
+      customerEmailId: `customer${((r.sn % 5) + 1)}@example.com`,
       remarks,
     }
   })
@@ -36,8 +49,8 @@ export default function HistoryPage() {
   const [customerFilter, setCustomerFilter] = useState('')
   const [start, setStart] = useState<string>('')
   const [end, setEnd] = useState<string>('')
-  const [sortKey, setSortKey] = useState<string>('timestamp')
-  const [sortDir, setSortDir] = useState<'asc'|'desc'>('desc')
+  const [sortKey, setSortKey] = useState<string>('sn')
+  const [sortDir, setSortDir] = useState<'asc'|'desc'>('asc')
   const [page, setPage] = useState(1)
   const pageSize = 12
 
@@ -46,7 +59,10 @@ export default function HistoryPage() {
     setLoading(true)
     dashboardService.getVehicleRows().then((data) => {
       if (!mounted) return
-      setRows(enhanceRows(data))
+      const enhanced = enhanceRows(data)
+      // Sort by sn ascending initially
+      const sorted = enhanced.sort((a, b) => a.sn - b.sn)
+      setRows(sorted)
       setLoading(false)
     })
     return () => { mounted = false }
@@ -144,7 +160,7 @@ export default function HistoryPage() {
                 { key: 'driverName', label: 'Driver' },
                 { key: 'driverPhone', label: 'Phone' },
                 { key: 'customer', label: 'Customer' },
-                { key: 'customerRef', label: 'Customer Ref' },
+                { key: 'customerEmailId', label: 'Customer Email ID' },
                 { key: 'gateEntry', label: 'Gate Entry' },
                 { key: 'tareWeighing', label: 'Tare Weighing' },
                 { key: 'loading', label: 'Loading' },
@@ -201,7 +217,7 @@ export default function HistoryPage() {
                 <td className="px-3 py-2 text-sm text-center">{r.driverName}</td>
                 <td className="px-3 py-2 text-sm text-center">{r.driverPhone}</td>
                 <td className="px-3 py-2 text-sm text-center">{r.customer}</td>
-                <td className="px-3 py-2 text-sm text-center">{r.customerRef}</td>
+                <td className="px-3 py-2 text-sm text-center">{r.customerEmailId}</td>
 
                 <td className="px-3 py-2 text-sm text-center">{times['gateEntry']}</td>
                 <td className="px-3 py-2 text-sm text-center">{times['tareWeighing']}</td>
