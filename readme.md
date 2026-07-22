@@ -8,7 +8,7 @@
 
 ## 🚀 Overview
 
-The **TTMS web app** is a modern web application designed for real-time monitoring and management of industrial truck movements. It features a robust dual-system architecture:
+The **TTMS web application** is a modern web application designed for real-time monitoring and management of industrial truck movements. It features a robust dual-system architecture:
 
 1.  **TTMS (Truck Turnaroun Time Monitoring System)**: Focuses on logistics, scheduling, and documentation for transport operations.
 
